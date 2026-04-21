@@ -7,7 +7,7 @@
 
 ---
 
-# 🪙 BrainCoins - Sistema de Moeda Estudantil 🧠
+# 🧠📖 BrainCoins - Sistema de Moeda Estudantil 🪙
 
 > [!NOTE]
 > Breve descrição do projeto. **Foque no principal valor/benefício.**  
