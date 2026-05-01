@@ -2,19 +2,18 @@ package com.lab3.moeda.model;
 
 import java.util.List;
 
-public abstract class UsuarioEntity<E> {
+public abstract class UsuarioEntity {
     protected String nome;
     protected String email;
     protected String senha;
-    protected List<E> historico;
+
+    protected UsuarioEntity() {}
 
     protected UsuarioEntity(String nome) {
         this.nome = nome;
         this.email = "";
         this.senha = "";
     }
-
-    protected UsuarioEntity() {}
 
     protected String getEmail() { return email; }
 
@@ -27,6 +26,4 @@ public abstract class UsuarioEntity<E> {
     protected void setSenha(String senha) {
         this.senha = senha;
     }
-
-    protected abstract List<E> consultarHistorico();
 }
