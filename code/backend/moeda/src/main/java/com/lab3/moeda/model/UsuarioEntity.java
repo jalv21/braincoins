@@ -1,7 +1,10 @@
 package com.lab3.moeda.model;
 
+import jakarta.persistence.MappedSuperclass;
+
 import java.util.List;
 
+@MappedSuperclass
 public abstract class UsuarioEntity {
     protected String nome;
     protected String email;

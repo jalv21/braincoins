@@ -2,7 +2,6 @@ package com.lab3.moeda.model;
 
 import jakarta.persistence.*;
 
-import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -11,41 +10,51 @@ public class AlunoEntity extends UsuarioAcademicoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true, nullable = false, length = 11)
     private String cpf;
+
+    @Column(unique = true, nullable = false, length = 9)
     private String rg;
+
+    @Column(nullable = false, length = 200)
     private String endereco;
+
+    @Column(nullable = false, length = 100)
+    private String instituicao;
+
+    @Column(nullable = false, length = 100)
     private String curso;
 
     public AlunoEntity() {
         super();
     }
 
-    public AlunoEntity(String nome, String cpf, String rg, String endereco, String curso) {
+    public AlunoEntity(String nome, String cpf, String rg, String endereco, String instituicao, String curso) {
         super(nome);
         this.cpf = cpf;
         this.rg = rg;
         this.endereco = endereco;
+        this.instituicao = instituicao;
         this.curso = curso;
     }
 
-    public int getSaldo() { return saldoMoedas; }
-
     @Override
     public void creditarMoedas(int valor) {
-        if(saldoMoedas > LIMITE_MOEDAS)
-            throw new IllegalStateException("Não foi possível creditar. " +
+        if((saldo + valor) > LIMITE_MOEDAS)
+            throw new IllegalStateException("Não foi possível creditar." +
                     " Saldo do aluno excedeu o limite de moedas.");
 
-        saldoMoedas += valor;
+        saldo += valor;
     }
 
     @Override
     public void debitarMoedas(int valor) {
-        if((saldoMoedas - valor) < 0)
-            throw new IllegalStateException("Não foi possível debitar. " +
-                    "Aluno não tem saldo suficiente.");
+        if((saldo - valor) < 0)
+            throw new IllegalStateException("Não foi possível debitar." +
+                    " Saldo do aluno insuficiente.");
 
-        saldoMoedas -= valor;
+        saldo -= valor;
     }
 
     @Override
