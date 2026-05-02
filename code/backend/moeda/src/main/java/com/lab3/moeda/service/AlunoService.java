@@ -8,6 +8,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class AlunoService {
@@ -35,6 +36,14 @@ public class AlunoService {
                 .stream()
                 .map(this::toResponseDTO)
                 .toList();
+    }
+
+    // READ - por ID
+    @Transactional
+    public AlunoResponseDTO buscarPorId(int id) {
+        AlunoEntity aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Aluno não encontrado."));
+        return toResponseDTO(aluno);
     }
 
     // Conversão entidade → DTO de resposta

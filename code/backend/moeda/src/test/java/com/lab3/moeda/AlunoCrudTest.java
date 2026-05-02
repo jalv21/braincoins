@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
-public class CrudTest {
+public class AlunoCrudTest {
     @Autowired
     private AlunoRepository alunoRepository;
     private AlunoService alunoService;
@@ -81,5 +81,19 @@ public class CrudTest {
         listaAlunos.add(alunoService.criar(aluno2Request));
         listaAlunos.add(alunoService.criar(aluno3Request));
         assertEquals(alunoService.listarTodos(), listaAlunos);
+    }
+
+    @Test
+    void searchById() {
+        List<AlunoResponseDTO> requests = new LinkedList<>();
+        requests.add(alunoService.criar(aluno1Request));
+        requests.add(alunoService.criar(aluno2Request));
+        requests.add(alunoService.criar(aluno3Request));
+
+        for(int i = 1; i <= 3; i++) {
+            AlunoResponseDTO alunoAtual = alunoService.buscarPorId(i);
+            AlunoResponseDTO alunoListaAtual = requests.get(i - 1);
+            assertEquals(alunoAtual, alunoListaAtual);
+        }
     }
 }
