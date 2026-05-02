@@ -6,5 +6,6 @@ public record AlunoRequestDTO(
         String rg,
         String endereco,
         String instituicao,
-        String curso
+        String curso,
+        String email
 ) {}

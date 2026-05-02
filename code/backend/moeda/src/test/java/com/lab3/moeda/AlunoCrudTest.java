@@ -26,9 +26,9 @@ public class AlunoCrudTest {
 
     @BeforeEach
     void setUp() {
-        alice = new AlunoEntity("Alice", "12345678910", "123456789", "Rua 1", "UFMG", "Biologia");
-        beatriz = new AlunoEntity("Beatriz", "23456789101", "234567890", "Rua 2", "UFMG", "Letras");
-        carol = new AlunoEntity("Carol", "34567891011", "345678910", "Rua 3", "USP", "Direito");
+        alice = new AlunoEntity("Alice", "12345678910", "123456789", "Rua 1", "UFMG", "Biologia", "alice123@gmail.com");
+        beatriz = new AlunoEntity("Beatriz", "23456789101", "234567890", "Rua 2", "UFMG", "Letras", "beatriz123@gmail.com");
+        carol = new AlunoEntity("Carol", "34567891011", "345678910", "Rua 3", "USP", "Direito", "carol123@gmail.com");
 
         alunoService = new AlunoService(alunoRepository);
 
@@ -38,7 +38,8 @@ public class AlunoCrudTest {
                 alice.getRg(),
                 alice.getEndereco(),
                 alice.getInstituicao(),
-                alice.getCurso()
+                alice.getCurso(),
+                alice.getEmail()
         );
 
         aluno2Request = new AlunoRequestDTO(
@@ -47,7 +48,8 @@ public class AlunoCrudTest {
                 beatriz.getRg(),
                 beatriz.getEndereco(),
                 beatriz.getInstituicao(),
-                beatriz.getCurso()
+                beatriz.getCurso(),
+                beatriz.getEmail()
         );
 
         aluno3Request = new AlunoRequestDTO(
@@ -56,7 +58,8 @@ public class AlunoCrudTest {
                 carol.getRg(),
                 carol.getEndereco(),
                 carol.getInstituicao(),
-                carol.getCurso()
+                carol.getCurso(),
+                carol.getEmail()
         );
     }
 
@@ -107,6 +110,7 @@ public class AlunoCrudTest {
                 "",
                 aluno1Request.endereco(),
                 aluno1Request.instituicao(),
+                aluno1Request.email(),
                 "Física"
         );
         edicoesAlunos.add(alunoService.criar(alunoEditado));
