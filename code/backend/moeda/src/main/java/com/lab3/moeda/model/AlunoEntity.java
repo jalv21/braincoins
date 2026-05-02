@@ -45,7 +45,7 @@ public class AlunoEntity extends UsuarioAcademicoEntity {
             throw new IllegalStateException("Não foi possível creditar." +
                     " Saldo do aluno excedeu o limite de moedas.");
 
-        saldo += valor;
+        saldo += (short) valor;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class AlunoEntity extends UsuarioAcademicoEntity {
             throw new IllegalStateException("Não foi possível debitar." +
                     " Saldo do aluno insuficiente.");
 
-        saldo -= valor;
+        saldo -= (short) valor;
     }
 
     @Override
