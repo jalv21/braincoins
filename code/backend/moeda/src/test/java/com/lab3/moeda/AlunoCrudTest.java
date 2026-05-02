@@ -85,15 +85,32 @@ public class AlunoCrudTest {
 
     @Test
     void searchById() {
-        List<AlunoResponseDTO> requests = new LinkedList<>();
-        requests.add(alunoService.criar(aluno1Request));
-        requests.add(alunoService.criar(aluno2Request));
-        requests.add(alunoService.criar(aluno3Request));
+        List<AlunoResponseDTO> responses = new LinkedList<>();
+        responses.add(alunoService.criar(aluno1Request));
+        responses.add(alunoService.criar(aluno2Request));
+        responses.add(alunoService.criar(aluno3Request));
 
-        for(int i = 1; i <= 3; i++) {
-            AlunoResponseDTO alunoAtual = alunoService.buscarPorId(i);
-            AlunoResponseDTO alunoListaAtual = requests.get(i - 1);
-            assertEquals(alunoAtual, alunoListaAtual);
-        }
+         for(int i = 1; i <= 3; i++) {
+             AlunoResponseDTO alunoAtual = alunoService.buscarPorId(i);
+             AlunoResponseDTO alunoListaAtual = responses.get(i - 1);
+             assertEquals(alunoAtual, alunoListaAtual);
+         }
+    }
+
+    @Test
+    void update() {
+        alunoService.criar(aluno1Request);
+        List<AlunoResponseDTO> edicoesAlunos = new LinkedList<>();
+        AlunoRequestDTO alunoEditado = new AlunoRequestDTO(
+                aluno1Request.nome(),
+                "",
+                "",
+                aluno1Request.endereco(),
+                aluno1Request.instituicao(),
+                "Física"
+        );
+        edicoesAlunos.add(alunoService.criar(alunoEditado));
+        alunoService.atualizar(1, alunoEditado);
+        assertEquals(alunoService.buscarPorId(1).curso(), edicoesAlunos.getFirst().curso());
     }
 }

@@ -43,6 +43,20 @@ public class AlunoService {
     public AlunoResponseDTO buscarPorId(int id) {
         AlunoEntity aluno = alunoRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Aluno não encontrado."));
+
+        return toResponseDTO(aluno);
+    }
+
+    // UPDATE
+    @Transactional
+    public AlunoResponseDTO atualizar(int id, AlunoRequestDTO request) {
+        AlunoEntity aluno = alunoRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Aluno não encontrado."));
+
+        aluno.setNome(request.nome());
+        aluno.setEndereco(request.endereco());
+        aluno.setCurso(request.curso());
+
         return toResponseDTO(aluno);
     }
 
