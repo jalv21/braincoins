@@ -1,5 +1,6 @@
 package com.lab3.moeda.service;
 
+import com.lab3.moeda.dto.request.AlunoRequestDTO;
 import com.lab3.moeda.dto.request.EmpresaRequestDTO;
 import com.lab3.moeda.dto.response.AlunoResponseDTO;
 import com.lab3.moeda.dto.response.EmpresaResponseDTO;
@@ -43,6 +44,19 @@ public class EmpresaService {
     public EmpresaResponseDTO buscarPorId(int id) {
         EmpresaEntity empresa = empresaRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Empresa não encontrada."));
+
+        return toResponseDTO(empresa);
+    }
+
+    // UPDATE
+    @Transactional
+    public EmpresaResponseDTO atualizar(int id, EmpresaRequestDTO request) {
+        EmpresaEntity empresa = empresaRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Empresa não encontrada."));
+
+        empresa.setNome(request.nome());
+        empresa.setEndereco(request.endereco());
+        empresa.setEmail(request.email());
 
         return toResponseDTO(empresa);
     }

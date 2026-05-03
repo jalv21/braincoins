@@ -1,5 +1,6 @@
 package com.lab3.moeda;
 
+import com.lab3.moeda.dto.request.AlunoRequestDTO;
 import com.lab3.moeda.dto.request.EmpresaRequestDTO;
 import com.lab3.moeda.dto.response.AlunoResponseDTO;
 import com.lab3.moeda.dto.response.EmpresaResponseDTO;
@@ -94,4 +95,19 @@ public class EmpresaCrudTest {
         }
     }
 
+    @Test
+    void update() {
+        empresaService.criar(cafeRequest);
+        List<EmpresaResponseDTO> edicoesEmpresas = new LinkedList<>();
+        EmpresaRequestDTO empresaEditado = new EmpresaRequestDTO(
+                cafeRequest.nome(),
+                "",
+                "",
+                "novoemail@gmail.com",
+                cafeRequest.senha()
+        );
+        edicoesEmpresas.add(empresaService.criar(empresaEditado));
+        empresaService.atualizar(1, empresaEditado);
+        assertEquals(empresaService.buscarPorId(1).email(), edicoesEmpresas.getFirst().email());
+    }
 }
