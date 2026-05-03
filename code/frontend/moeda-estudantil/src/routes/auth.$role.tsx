@@ -4,6 +4,7 @@ import { BrainLogo } from "@/components/brand";
 import { useStore, type Role } from "@/lib/mock-data";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
+import { criarAluno, api } from "../api/alunosApi.ts";
 
 export const Route = createFileRoute("/auth/$role")({
   component: AuthPage,
@@ -25,17 +26,28 @@ function AuthPage() {
 
   const canRegister = role === "aluno" || role === "empresa";
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Demo: log in as first user of role
-    const id =
-      role === "aluno" ? store.alunos[0].id :
-      role === "professor" ? store.professores[0].id :
-      role === "empresa" ? store.empresas[0].id :
-      store.instituicoes[0].id;
-    store.setCurrentUser(role, id);
-    toast.success(`Bem-vindo de volta!`);
-    navigate({ to: `/${role}` });
+    const form = e.target as HTMLFormElement;
+    const email = (form.elements.namedItem("email") as HTMLInputElement).value;
+    const senha = (form.elements.namedItem("password") as HTMLInputElement).value;
+
+    try {
+      const response = await api.post("/login", { email, senha });
+      const usuario = response.data;
+
+      store.setCurrentUser(role, usuario.id);
+      toast.success("Bem-vindo de volta!");
+      navigate({ to: `/${role}` });
+    } catch (error: any) {
+      if (error.response?.status === 404) {
+        toast.error("Usuário não encontrado.");
+      } else if (error.response?.status === 401) {
+        toast.error("Senha incorreta.");
+      } else {
+        toast.error("Erro ao fazer login. Tente novamente.");
+      }
+    }
   };
 
   return (
@@ -106,10 +118,10 @@ function LoginForm({ onSubmit }: { onSubmit: (e: React.FormEvent) => void }) {
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       <Field label="E-mail">
-        <input type="email" required defaultValue="demo@braincoins.app" className={inputCls} />
+        <input name="email" type="email" required className={inputCls} />
       </Field>
       <Field label="Senha">
-        <input type="password" required defaultValue="demo1234" className={inputCls} />
+        <input name="password" type="password" required className={inputCls} />
       </Field>
       <button className="w-full py-2.5 rounded-xl bg-mint text-mint-foreground font-semibold hover:opacity-90">
         Entrar
@@ -127,14 +139,35 @@ function RegisterAluno({ onDone }: { onDone: () => void }) {
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setForm({ ...form, [k]: e.target.value });
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!/^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/.test(form.cpf.replace(/\s/g, ""))) {
-      toast.error("CPF inválido"); return;
+      toast.error("CPF inválido");
+      return;
     }
-    store.addAluno({ nome: form.nome, curso: form.curso, instituicao: form.instituicao, email: form.email });
-    toast.success("Cadastro realizado! Faça login para continuar.");
-    onDone();
+
+    try {
+      await criarAluno({
+        nome: form.nome,
+        cpf: form.cpf.replace(/\D/g, ""),       // envia só os dígitos: "12345678910"
+        rg: form.rg.replace(/\D/g, ""),          // idem
+        endereco: form.endereco,
+        instituicao: form.instituicao,
+        curso: form.curso,
+        email: form.email,
+        senha: form.senha,
+      });
+
+      toast.success("Cadastro realizado! Faça login para continuar.");
+      onDone();
+    } catch (error: any) {
+      if (error.response?.status === 409) {
+        toast.error("CPF, RG ou e-mail já cadastrado.");
+      } else {
+        toast.error("Erro ao cadastrar. Tente novamente.");
+      }
+    }
   };
 
   return (
