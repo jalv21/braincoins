@@ -1,7 +1,7 @@
 package com.lab3.moeda;
 
-import com.lab3.moeda.dto.AlunoRequestDTO;
-import com.lab3.moeda.dto.AlunoResponseDTO;
+import com.lab3.moeda.dto.request.AlunoRequestDTO;
+import com.lab3.moeda.dto.response.AlunoResponseDTO;
 import com.lab3.moeda.model.AlunoEntity;
 import com.lab3.moeda.repository.AlunoRepository;
 import com.lab3.moeda.service.AlunoService;

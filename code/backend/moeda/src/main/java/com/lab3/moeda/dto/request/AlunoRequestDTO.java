@@ -1,14 +1,11 @@
-package com.lab3.moeda.dto;
+package com.lab3.moeda.dto.request;
 
-public record AlunoResponseDTO(
-        int id,
+public record AlunoRequestDTO(
         String nome,
         String cpf,
         String rg,
         String endereco,
         String instituicao,
         String curso,
-        short saldo,
-        String email,
-        String senha
+        String email
 ) {}
