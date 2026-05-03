@@ -1,6 +1,8 @@
 package com.lab3.moeda;
 
 import com.lab3.moeda.dto.request.EmpresaRequestDTO;
+import com.lab3.moeda.dto.response.AlunoResponseDTO;
+import com.lab3.moeda.dto.response.EmpresaResponseDTO;
 import com.lab3.moeda.model.EmpresaEntity;
 import com.lab3.moeda.repository.EmpresaRepository;
 import com.lab3.moeda.service.EmpresaService;
@@ -8,6 +10,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 public class EmpresaCrudTest {
@@ -63,4 +70,28 @@ public class EmpresaCrudTest {
         empresaService.criar(papelariaRequest);
         empresaService.criar(farmaciaRequest);
     }
+
+    @Test
+    void readAll() {
+        List<EmpresaResponseDTO> listaEmpresas = new LinkedList<>();
+        listaEmpresas.add(empresaService.criar(cafeRequest));
+        listaEmpresas.add(empresaService.criar(papelariaRequest));
+        listaEmpresas.add(empresaService.criar(farmaciaRequest));
+        assertEquals(empresaService.listarTodos(), listaEmpresas);
+    }
+
+    @Test
+    void searchById() {
+        List<EmpresaResponseDTO> responses = new LinkedList<>();
+        responses.add(empresaService.criar(cafeRequest));
+        responses.add(empresaService.criar(papelariaRequest));
+        responses.add(empresaService.criar(farmaciaRequest));
+
+        for(int i = 1; i <= 3; i++) {
+            EmpresaResponseDTO empresaAtual = empresaService.buscarPorId(i);
+            EmpresaResponseDTO empresaListaAtual = responses.get(i - 1);
+            assertEquals(empresaAtual, empresaListaAtual);
+        }
+    }
+
 }
