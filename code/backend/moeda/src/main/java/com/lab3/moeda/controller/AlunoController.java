@@ -2,6 +2,7 @@ package com.lab3.moeda.controller;
 
 import com.lab3.moeda.dto.AlunoRequestDTO;
 import com.lab3.moeda.dto.AlunoResponseDTO;
+import com.lab3.moeda.dto.LoginRequestDTO;
 import com.lab3.moeda.service.AlunoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

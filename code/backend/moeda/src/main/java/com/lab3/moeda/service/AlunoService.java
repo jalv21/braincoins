@@ -5,6 +5,8 @@ import com.lab3.moeda.dto.AlunoResponseDTO;
 import com.lab3.moeda.model.AlunoEntity;
 import com.lab3.moeda.repository.AlunoRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,9 +15,11 @@ import java.util.NoSuchElementException;
 @Service
 public class AlunoService {
     private final AlunoRepository alunoRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public AlunoService(AlunoRepository alunoRepository) {
+    public AlunoService(AlunoRepository alunoRepository, BCryptPasswordEncoder passwordEncoder) {
         this.alunoRepository = alunoRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // CREATE
@@ -23,8 +27,10 @@ public class AlunoService {
     public AlunoResponseDTO criar(AlunoRequestDTO request) {
         AlunoEntity novoAluno = new AlunoEntity(
                 request.nome(), request.cpf(), request.rg(),
-                request.endereco(), request.instituicao(), request.curso(), request.email()
+                request.endereco(), request.instituicao(), request.curso(), request.email(),
+                request.senha()
         );
+        novoAluno.setSenha(passwordEncoder.encode(request.senha()));
         AlunoEntity alunoSalvo = alunoRepository.save(novoAluno);
         return toResponseDTO(alunoSalvo);
     }
@@ -56,6 +62,8 @@ public class AlunoService {
         aluno.setNome(request.nome());
         aluno.setEndereco(request.endereco());
         aluno.setCurso(request.curso());
+        aluno.setEmail(request.email());
+        aluno.setSenha(passwordEncoder.encode(request.senha()));
 
         return toResponseDTO(aluno);
     }
@@ -67,6 +75,16 @@ public class AlunoService {
             throw new NoSuchElementException("Aluno não encontrado.");
 
         alunoRepository.deleteById(id);
+    }
+
+    public AlunoResponseDTO login(String email, String senha) {
+        AlunoEntity aluno = alunoRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+
+        if (!passwordEncoder.matches(senha, aluno.getSenha()))
+            throw new RuntimeException("Senha incorreta.");
+
+        return toResponseDTO(aluno);
     }
 
     // Conversão entidade → DTO de resposta

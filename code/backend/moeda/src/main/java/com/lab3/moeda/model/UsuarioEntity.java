@@ -12,10 +12,10 @@ public abstract class UsuarioEntity {
 
     protected UsuarioEntity() {}
 
-    protected UsuarioEntity(String nome) {
+    protected UsuarioEntity(String nome, String email, String senha) {
         this.nome = nome;
-        this.email = "";
-        this.senha = "";
+        this.email = email;
+        this.senha = senha;
     }
 
     public String getNome() { return nome; }

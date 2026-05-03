@@ -25,8 +25,8 @@ public abstract class UsuarioAcademicoEntity extends UsuarioEntity {
         init();
     }
 
-    protected UsuarioAcademicoEntity(String nome) {
-        super(nome);
+    protected UsuarioAcademicoEntity(String nome, String email, String senha) {
+        super(nome, email, senha);
         init();
     }
 
