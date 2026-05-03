@@ -25,11 +25,9 @@ public class EmpresaEntity extends UsuarioEntity {
     }
 
     public EmpresaEntity(String nome, String cnpj, String endereco, String email, String senha) {
-        super(nome);
+        super(nome, email, senha);
         this.cnpj = cnpj;
         this.endereco = endereco;
-        this.email = email;
-        this.senha = senha;
     }
 
     public int getId() { return id; }

@@ -1,8 +1,6 @@
 package com.lab3.moeda;
 
-import com.lab3.moeda.dto.request.AlunoRequestDTO;
 import com.lab3.moeda.dto.request.EmpresaRequestDTO;
-import com.lab3.moeda.dto.response.AlunoResponseDTO;
 import com.lab3.moeda.dto.response.EmpresaResponseDTO;
 import com.lab3.moeda.model.EmpresaEntity;
 import com.lab3.moeda.repository.EmpresaRepository;

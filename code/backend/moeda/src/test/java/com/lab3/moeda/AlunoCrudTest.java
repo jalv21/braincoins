@@ -26,9 +26,9 @@ public class AlunoCrudTest {
 
     @BeforeEach
     void setUp() {
-        alice = new AlunoEntity("Alice", "12345678910", "123456789", "Rua 1", "UFMG", "Biologia", "alice123@gmail.com");
-        beatriz = new AlunoEntity("Beatriz", "23456789101", "234567890", "Rua 2", "UFMG", "Letras", "beatriz123@gmail.com");
-        carol = new AlunoEntity("Carol", "34567891011", "345678910", "Rua 3", "USP", "Direito", "carol123@gmail.com");
+        alice = new AlunoEntity("Alice", "12345678910", "123456789", "Rua 1", "UFMG", "Biologia", "alice123@gmail.com", "123456");
+        beatriz = new AlunoEntity("Beatriz", "23456789101", "234567890", "Rua 2", "UFMG", "Letras", "beatriz123@gmail.com", "123456");
+        carol = new AlunoEntity("Carol", "34567891011", "345678910", "Rua 3", "USP", "Direito", "carol123@gmail.com", "123456");
 
         alunoService = new AlunoService(alunoRepository);
 
@@ -39,7 +39,8 @@ public class AlunoCrudTest {
                 alice.getEndereco(),
                 alice.getInstituicao(),
                 alice.getCurso(),
-                alice.getEmail()
+                alice.getEmail(),
+                alice.getSenha()
         );
 
         aluno2Request = new AlunoRequestDTO(
@@ -49,7 +50,8 @@ public class AlunoCrudTest {
                 beatriz.getEndereco(),
                 beatriz.getInstituicao(),
                 beatriz.getCurso(),
-                beatriz.getEmail()
+                beatriz.getEmail(),
+                beatriz.getSenha()
         );
 
         aluno3Request = new AlunoRequestDTO(
@@ -59,7 +61,8 @@ public class AlunoCrudTest {
                 carol.getEndereco(),
                 carol.getInstituicao(),
                 carol.getCurso(),
-                carol.getEmail()
+                carol.getEmail(),
+                carol.getSenha()
         );
     }
 
@@ -111,6 +114,7 @@ public class AlunoCrudTest {
                 aluno1Request.endereco(),
                 aluno1Request.instituicao(),
                 aluno1Request.email(),
+                aluno1Request.senha(),
                 "Física"
         );
         edicoesAlunos.add(alunoService.criar(alunoEditado));

@@ -23,7 +23,8 @@ public class AlunoService {
     public AlunoResponseDTO criar(AlunoRequestDTO request) {
         AlunoEntity novoAluno = new AlunoEntity(
                 request.nome(), request.cpf(), request.rg(),
-                request.endereco(), request.instituicao(), request.curso(), request.email()
+                request.endereco(), request.instituicao(), request.curso(), request.email(),
+                request.senha()
         );
         AlunoEntity alunoSalvo = alunoRepository.save(novoAluno);
         return toResponseDTO(alunoSalvo);
@@ -56,6 +57,8 @@ public class AlunoService {
         aluno.setNome(request.nome());
         aluno.setEndereco(request.endereco());
         aluno.setCurso(request.curso());
+        aluno.setEmail(request.email());
+        aluno.setSenha(request.senha());
 
         return toResponseDTO(aluno);
     }
