@@ -7,7 +7,7 @@ export const Route = createFileRoute("/professor")({
     <DashboardLayout
       role="professor"
       items={[
-        { to: "/professor", label: "Dashboard", icon: LayoutDashboard },
+        { to: "/professor", label: "Conta", icon: LayoutDashboard },
         { to: "/professor/distribuir", label: "Distribuir Moedas", icon: Send },
         { to: "/professor/extrato", label: "Extrato", icon: Receipt },
         { to: "/professor/perfil", label: "Perfil", icon: User },
