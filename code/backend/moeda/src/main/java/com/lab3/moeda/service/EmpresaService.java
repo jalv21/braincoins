@@ -61,6 +61,15 @@ public class EmpresaService {
         return toResponseDTO(empresa);
     }
 
+    // DELETE
+    @Transactional
+    public void deletar(int id) {
+        if(!empresaRepository.existsById(id))
+            throw new NoSuchElementException("Empresa não encontrada.");
+
+        empresaRepository.deleteById(id);
+    }
+
     // Conversão entidade → DTO de resposta
     private EmpresaResponseDTO toResponseDTO(EmpresaEntity empresa) {
         return new EmpresaResponseDTO(
