@@ -2,6 +2,8 @@ package com.lab3.moeda.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "empresas")
 public class EmpresaEntity extends UsuarioEntity {
@@ -17,6 +19,9 @@ public class EmpresaEntity extends UsuarioEntity {
 
     @Column(nullable = false, length = 200)
     private String endereco;
+
+    @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<VantagemEntity> vantagensCadastradas;
 
     public EmpresaEntity() {
         super();
