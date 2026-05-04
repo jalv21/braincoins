@@ -4,7 +4,7 @@ import { BrainLogo } from "@/components/brand";
 import { useStore, type Role } from "@/lib/mock-data";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
-import { criarAluno, api } from "../api/alunosApi.ts";
+import { criarAluno, api, criarEmpresa } from "../api/alunosApi.ts";
 
 export const Route = createFileRoute("/auth/$role")({
   component: AuthPage,
@@ -33,7 +33,7 @@ function AuthPage() {
     const senha = (form.elements.namedItem("password") as HTMLInputElement).value;
 
     try {
-      const response = await api.post("/login", { email, senha });
+      const response = await api.post(`/login/${role}`, { email, senha });
       const usuario = response.data;
 
       store.setCurrentUser(role, usuario.id);
@@ -197,18 +197,40 @@ function RegisterEmpresa({ onDone }: { onDone: () => void }) {
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm({ ...form, [k]: e.target.value });
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (form.cnpj.replace(/\D/g, "").length !== 14) { toast.error("CNPJ inválido"); return; }
-    store.addEmpresa({ nome: form.nome, cnpj: form.cnpj });
-    toast.success("Empresa cadastrada! Faça login para continuar.");
-    onDone();
+
+    if (form.cnpj.replace(/\D/g, "").length !== 14) {
+      toast.error("CNPJ inválido");
+      return;
+    }
+
+    try {
+      await criarEmpresa({
+        nome: form.nome,
+        cnpj: form.cnpj.replace(/\D/g, ""),       // envia só os dígitos: "12345678910"
+        endereco: form.endereco,
+        email: form.email,
+        senha: form.senha,
+      });
+
+      toast.success("Cadastro realizado! Faça login para continuar.");
+      onDone();
+    } catch (error: any) {
+      if (error.response?.status === 409) {
+        toast.error("CNPJ ou e-mail já cadastrado.");
+      } else {
+        toast.error("Erro ao cadastrar. Tente novamente.");
+      }
+    }
   };
 
   return (
     <form onSubmit={submit} className="space-y-3">
       <Field label="Nome da empresa"><input required value={form.nome} onChange={set("nome")} className={inputCls} /></Field>
-      <Field label="CNPJ"><input required placeholder="00.000.000/0000-00" value={form.cnpj} onChange={set("cnpj")} className={inputCls} /></Field>
+      <div className="grid grid-cols-2 gap-3">
+        <Field label="CNPJ"><input required placeholder="00.000.000/0000-00" value={form.cnpj} onChange={set("cnpj")} className={inputCls} /></Field>
+      </div>
       <Field label="Endereço"><input required value={form.endereco} onChange={set("endereco")} className={inputCls} /></Field>
       <Field label="E-mail"><input type="email" required value={form.email} onChange={set("email")} className={inputCls} /></Field>
       <Field label="Senha"><input type="password" required minLength={6} value={form.senha} onChange={set("senha")} className={inputCls} /></Field>
