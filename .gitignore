@@ -1,1 +1,36 @@
-node_modules
+# --- Node / Frontend ---
+node_modules/
+dist/
+dist-ssr
+*.local
+.eslintcache
+
+# --- Java / Maven / Backend ---
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/resources/archetype-resources/**
+!**/src/test/resources/archetype-resources/**
+*.class
+*.marshalled
+# Arquivos do VS Code para Java
+.project
+.classpath
+.settings/
+.factorypath
+
+# --- Banco de Dados / Prisma ---
+.env
+prisma.config.ts.local
+# Caso use SQLite futuramente
+*.db
+*.db-journal
+
+# --- Sistema e IDE ---
+.DS_Store
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
