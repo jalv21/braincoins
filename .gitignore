@@ -45,7 +45,8 @@ prisma.config.ts.local
 
 # --- Sistema e IDE (VS Code / IntelliJ) ---
 .DS_Store
-.vscode/
+.vscode/*
+!.vscode/extensions.json
 .idea/
 *.suo
 *.ntvs*
@@ -57,6 +58,10 @@ prisma.config.ts.local
 .classpath
 .settings/
 .factorypath
+
+# --- Cloudflare / Wrangler ---
+.wrangler/
+.dev.vars
 
 # --- Logs e Temporários ---
 logs/
