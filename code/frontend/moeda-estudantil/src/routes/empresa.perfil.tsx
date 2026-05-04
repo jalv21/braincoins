@@ -20,7 +20,8 @@ interface EmpresaData {
 }
 
 function Perfil() {
-  const { currentUserId } = useStore();
+  const store = useStore();
+  const { currentUserId, currentUser } = store;
   const navigate = useNavigate();
   const [empresa, setEmpresa] = useState<EmpresaData | null>(null);
   const [erro, setErro] = useState(false);
@@ -29,22 +30,72 @@ function Perfil() {
 
   useEffect(() => {
     if (!currentUserId) return;
+    
+    // Se é modo demo (começa com 'e'), usar currentUser (que tem dados atualizados)
+    if (typeof currentUserId === 'string' && currentUserId.startsWith('e')) {
+      if (currentUser) {
+        const user = currentUser as any;
+        setEmpresa({
+          id: typeof user.id === 'string' ? parseInt(user.id.substring(1)) : user.id,
+          nome: user.nome,
+          cnpj: user.cnpj,
+          endereco: user.endereco || '',
+          email: user.email || '',
+          senha: '', // não temos no mock-data
+        });
+      }
+      return;
+    }
+    
+    // Caso contrário, buscar da API
     buscarEmpresa(Number(currentUserId))
       .then((res : any) => setEmpresa(res.data))
       .catch(() => setErro(true));
-  }, [currentUserId]);
+  }, [currentUserId, currentUser]);
 
   const handleSave = async (updatedData: any) => {
     if (!empresa) return;
-    try {
-      const response = await atualizarEmpresa(empresa.id, {
+    
+    // Se é modo demo (ID começa com 'e'), apenas atualizar em localStorage
+    if (typeof currentUserId === 'string' && currentUserId.startsWith('e')) {
+      // Construir objeto com dados atualizados para manter ID como string "e1"
+      const empresaAtualizada: any = {
+        id: currentUserId,
         nome: updatedData.nome,
-        cnpj: empresa.cnpj,       // CNPJ não deve ser editável
+        cnpj: empresa.cnpj,
+      };
+      
+      setEmpresa({
+        id: parseInt(currentUserId.substring(1)),
+        nome: updatedData.nome,
+        cnpj: empresa.cnpj,
         endereco: empresa.endereco,
         email: empresa.email,
-        senha: empresa.senha,
+        senha: '',
       });
+      
+      // Atualizar currentUser na store e localStorage (fonte de verdade para demo)
+      store.setCurrentUser(store.currentRole!, currentUserId, empresaAtualizada);
+      setIsEditOpen(false);
+      return;
+    }
+    
+    // Caso contrário, fazer requisição à API
+    try {
+      const payload: any = {
+        nome: updatedData.nome,
+        cnpj: empresa.cnpj,
+        endereco: empresa.endereco,
+        email: empresa.email,
+      };
+      // Só enviar senha se não estiver vazia
+      if (empresa.senha && empresa.senha.trim().length > 0) {
+        payload.senha = empresa.senha;
+      }
+      const response = await atualizarEmpresa(empresa.id, payload);
       setEmpresa(response.data);
+      // Atualizar currentUser na store e localStorage
+      store.setCurrentUser(store.currentRole!, currentUserId, response.data);
       setIsEditOpen(false);
     } catch {
       alert("Erro ao atualizar perfil. Tente novamente.");

@@ -16,16 +16,30 @@ interface EmpresaData {
 }
 
 function EmpresaDash() {
-  const { currentUserId } = useStore();
+  const store = useStore();
+  const { currentUserId, currentUser } = store;
   const [empresa, setEmpresa] = useState<EmpresaData | null>(null);
   const [erro, setErro] = useState(false);
 
   useEffect(() => {
     if (!currentUserId) return;
+    
+    // Se há currentUser (vindo da sessão restaurada ou login), usar dele
+    if (currentUser && 'cnpj' in currentUser) {
+      const user = currentUser as any;
+      setEmpresa({
+        id: typeof user.id === 'string' ? parseInt(user.id.substring(1)) : user.id,
+        nome: user.nome,
+        cnpj: user.cnpj,
+      });
+      return;
+    }
+    
+    // Caso contrário, buscar da API
     buscarEmpresa(Number(currentUserId))
       .then((res : any) => setEmpresa(res.data))
       .catch(() => setErro(true));
-  }, [currentUserId]);
+  }, [currentUserId, currentUser]);
 
   if (erro) return <p className="text-white p-8">Erro ao carregar dados.</p>;
   if (!empresa) return <p className="text-white p-8">Carregando...</p>;

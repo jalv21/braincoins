@@ -63,7 +63,11 @@ public class AlunoService {
         aluno.setEndereco(request.endereco());
         aluno.setCurso(request.curso());
         aluno.setEmail(request.email());
-        aluno.setSenha(passwordEncoder.encode(request.senha()));
+        
+        // Só atualizar senha se foi enviada e não está vazia
+        if (request.senha() != null && !request.senha().trim().isEmpty()) {
+            aluno.setSenha(passwordEncoder.encode(request.senha()));
+        }
 
         return toResponseDTO(aluno);
     }
