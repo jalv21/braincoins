@@ -1,31 +1,93 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { useStore } from "@/lib/mock-data";
 import { GlassCard, PageHeader } from "@/components/ui-bits";
 import { EditModal } from "@/components/edit-modal";
 import { Edit2 } from "lucide-react";
+import { buscarEmpresa, atualizarEmpresa, deletarEmpresa } from "@/api/alunosApi";
 
 export const Route = createFileRoute("/empresa/perfil")({
   component: Perfil,
 });
 
-function Perfil() {
-  const { empresas, currentUserId, setEmpresaData } = useStore();
-  const e = empresas.find((x) => x.id === currentUserId) ?? empresas[0];
-  const [isEditOpen, setIsEditOpen] = useState(false);
+interface EmpresaData {
+  id: number;
+  nome: string;
+  cnpj: string;
+  endereco: string;
+  email: string;
+  senha: string;
+}
 
-  const handleSave = (updatedData: any) => {
-    setEmpresaData(e.id, updatedData);
+function Perfil() {
+  const { currentUserId } = useStore();
+  const navigate = useNavigate();
+  const [empresa, setEmpresa] = useState<EmpresaData | null>(null);
+  const [erro, setErro] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [deletando, setDeletando] = useState(false);
+
+  useEffect(() => {
+    if (!currentUserId) return;
+    buscarEmpresa(Number(currentUserId))
+      .then((res : any) => setEmpresa(res.data))
+      .catch(() => setErro(true));
+  }, [currentUserId]);
+
+  const handleSave = async (updatedData: any) => {
+    if (!empresa) return;
+    try {
+      const response = await atualizarEmpresa(empresa.id, {
+        nome: updatedData.nome,
+        cnpj: empresa.cnpj,       // CNPJ não deve ser editável
+        endereco: empresa.endereco,
+        email: empresa.email,
+        senha: empresa.senha,
+      });
+      setEmpresa(response.data);
+      setIsEditOpen(false);
+    } catch {
+      alert("Erro ao atualizar perfil. Tente novamente.");
+    }
   };
+
+  const handleDeletar = async () => {
+    if (!empresa) return;
+    const confirmado = window.confirm(
+      "Tem certeza que deseja remover a conta da empresa? Essa ação não pode ser desfeita."
+    );
+    if (!confirmado) return;
+
+    setDeletando(true);
+    try {
+      await deletarEmpresa(empresa.id);
+      navigate({ to: "/" });
+    } catch {
+      alert("Erro ao remover conta. Tente novamente.");
+      setDeletando(false);
+    }
+  };
+
+  if (erro) return <p className="text-white p-8">Erro ao carregar perfil.</p>;
+  if (!empresa) return <p className="text-white p-8">Carregando...</p>;
 
   return (
     <div>
       <PageHeader title="Perfil da Empresa" />
       <GlassCard className="max-w-2xl">
-        <div className="flex items-start justify-between">
+        <div className="flex items-start justify-between mb-6">
           <div className="space-y-3 text-white flex-1">
-            <div className="flex justify-between border-b border-white/10 pb-2"><span className="text-white/70">Nome</span><span className="font-semibold">{e.nome}</span></div>
-            <div className="flex justify-between border-b border-white/10 pb-2"><span className="text-white/70">CNPJ</span><span className="font-semibold">{e.cnpj}</span></div>
+            {[
+              ["Nome", empresa.nome],
+              ["CNPJ", empresa.cnpj],
+              ["Endereço", empresa.endereco],
+              ["E-mail", empresa.email],
+            ].map(([k, v]) => (
+              <div key={k} className="flex justify-between border-b border-white/10 pb-2">
+                <span className="text-white/70">{k}</span>
+                <span className="font-semibold">{v}</span>
+              </div>
+            ))}
           </div>
           <button
             onClick={() => setIsEditOpen(true)}
@@ -36,14 +98,25 @@ function Perfil() {
         </div>
       </GlassCard>
 
+      <div className="max-w-2xl mt-4">
+        <button
+          onClick={handleDeletar}
+          disabled={deletando}
+          className="w-full py-2.5 rounded-xl border-red-400/40 text-white hover:bg-red-400 transition text-sm font-semibold disabled:opacity-50"
+        >
+          {deletando ? "Removendo conta..." : "Remover conta da empresa"}
+        </button>
+      </div>
+
       <EditModal
         isOpen={isEditOpen}
         title="Editar Perfil"
         fields={[
           { key: "nome", label: "Nome", type: "text" },
-          { key: "cnpj", label: "CNPJ", type: "text" },
+          { key: "endereco", label: "Endereço", type: "text" },
+          { key: "email", label: "E-mail", type: "email" },
         ]}
-        data={{ nome: e.nome, cnpj: e.cnpj }}
+        data={{ nome: empresa.nome, endereco: empresa.endereco, email: empresa.email }}
         onSave={handleSave}
         onClose={() => setIsEditOpen(false)}
       />
