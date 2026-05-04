@@ -60,7 +60,11 @@ public class EmpresaService {
         empresa.setNome(request.nome());
         empresa.setEndereco(request.endereco());
         empresa.setEmail(request.email());
-        empresa.setSenha(passwordEncoder.encode(request.senha()));
+        
+        // Só atualizar senha se foi enviada e não está vazia
+        if (request.senha() != null && !request.senha().trim().isEmpty()) {
+            empresa.setSenha(passwordEncoder.encode(request.senha()));
+        }
 
         return toResponseDTO(empresa);
     }

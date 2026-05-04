@@ -36,7 +36,8 @@ function AuthPage() {
       const response = await api.post(`/login/${role}`, { email, senha });
       const usuario = response.data;
 
-      store.setCurrentUser(role, usuario.id);
+      // Passar os dados do usuário da API diretamente
+      store.setCurrentUser(role, usuario.id, usuario);
       toast.success("Bem-vindo de volta!");
       navigate({ to: `/${role}` });
     } catch (error: any) {

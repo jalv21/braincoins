@@ -17,18 +17,34 @@ export function DashboardLayout({
 
   let userName = "Convidado";
   let saldo: number | null = null;
-  if (role === "aluno") {
-    const a = store.alunos.find((x) => x.id === store.currentUserId) ?? store.alunos[0];
-    userName = a.nome; saldo = a.saldo;
-  } else if (role === "professor") {
-    const p = store.professores.find((x) => x.id === store.currentUserId) ?? store.professores[0];
-    userName = `Prof. ${p.nome}`; saldo = p.saldo;
-  } else if (role === "empresa") {
-    const e = store.empresas.find((x) => x.id === store.currentUserId) ?? store.empresas[0];
-    userName = e.nome;
-  } else if (role === "instituicao") {
-    const i = store.instituicoes.find((x) => x.id === store.currentUserId) ?? store.instituicoes[0];
-    userName = i.nome;
+
+  // Se houver currentUser (vindo da API ou do mock-data), usar dele
+  if (store.currentUser) {
+    const user = store.currentUser as any;
+    if (role === "aluno" || role === "professor") {
+      saldo = user.saldo ?? null;
+    }
+    
+    if (role === "professor") {
+      userName = `Prof. ${user.nome}`;
+    } else {
+      userName = user.nome;
+    }
+  } else {
+    // Fallback para mock-data (quando usando demo)
+    if (role === "aluno") {
+      const a = store.alunos.find((x) => x.id === store.currentUserId) ?? store.alunos[0];
+      userName = a.nome; saldo = a.saldo;
+    } else if (role === "professor") {
+      const p = store.professores.find((x) => x.id === store.currentUserId) ?? store.professores[0];
+      userName = `Prof. ${p.nome}`; saldo = p.saldo;
+    } else if (role === "empresa") {
+      const e = store.empresas.find((x) => x.id === store.currentUserId) ?? store.empresas[0];
+      userName = e.nome;
+    } else if (role === "instituicao") {
+      const i = store.instituicoes.find((x) => x.id === store.currentUserId) ?? store.instituicoes[0];
+      userName = i.nome;
+    }
   }
 
   const roleLabel: Record<Role, string> = {
@@ -80,7 +96,10 @@ export function DashboardLayout({
             </div>
           )}
           <button
-            onClick={() => navigate({ to: "/" })}
+            onClick={() => {
+              store.logout();
+              navigate({ to: "/" });
+            }}
             className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-colors"
           >
             <LogOut className="h-4 w-4" /> Sair

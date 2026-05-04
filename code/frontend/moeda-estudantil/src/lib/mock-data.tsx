@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 
 export type Role = "aluno" | "professor" | "empresa" | "instituicao";
 
@@ -88,8 +88,10 @@ const initialResgates: Resgate[] = [
 ];
 
 type Store = {
+  isInitialized: boolean;
   currentRole: Role | null;
   currentUserId: string;
+  currentUser: Aluno | Professor | Empresa | Instituicao | null;
   alunos: Aluno[];
   professores: Professor[];
   empresas: Empresa[];
@@ -97,7 +99,8 @@ type Store = {
   vantagens: Vantagem[];
   transacoes: Transacao[];
   resgates: Resgate[];
-  setCurrentUser: (role: Role, userId: string) => void;
+  setCurrentUser: (role: Role, userId: string | number, userData?: any) => void;
+  logout: () => void;
   distribuirMoedas: (profId: string, alunoId: string, amount: number, reason: string) => boolean;
   resgatarVantagem: (alunoId: string, vantagemId: string) => Resgate | null;
   addVantagem: (v: Omit<Vantagem, "id">) => void;
@@ -116,8 +119,10 @@ type Store = {
 const Ctx = createContext<Store | null>(null);
 
 export function MockDataProvider({ children }: { children: ReactNode }) {
+  const [isInitialized, setIsInitialized] = useState(false);
   const [currentRole, setCurrentRole] = useState<Role | null>(null);
   const [currentUserId, setCurrentUserId] = useState<string>("");
+  const [currentUser, setCurrentUserState] = useState<Aluno | Professor | Empresa | Instituicao | null>(null);
   const [alunos, setAlunos] = useState(initialAlunos);
   const [professores, setProfessores] = useState(initialProfessores);
   const [empresas, setEmpresas] = useState(initialEmpresas);
@@ -126,9 +131,66 @@ export function MockDataProvider({ children }: { children: ReactNode }) {
   const [transacoes, setTransacoes] = useState(initialTransacoes);
   const [resgates, setResgates] = useState(initialResgates);
 
-  const setCurrentUser = (role: Role, userId: string) => {
+  // Restaurar sessão do localStorage ao montar
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("braincoins_session");
+      if (stored) {
+        const session = JSON.parse(stored);
+        if (session.role && session.user) {
+          setCurrentRole(session.role);
+          setCurrentUserId(session.user.id);
+          setCurrentUserState(session.user);
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao restaurar sessão:", error);
+      localStorage.removeItem("braincoins_session");
+    } finally {
+      setIsInitialized(true);
+    }
+  }, []);
+
+  const setCurrentUser = (role: Role, userId: string | number, userData?: any) => {
     setCurrentRole(role);
-    setCurrentUserId(userId);
+    setCurrentUserId(String(userId));
+    
+    // Se userData for fornecido (vindo da API), usar ele diretamente
+    if (userData) {
+      setCurrentUserState(userData);
+      // Salvar no localStorage
+      localStorage.setItem("braincoins_session", JSON.stringify({
+        role,
+        user: userData,
+      }));
+    } else {
+      // Caso contrário, procurar no mock-data
+      let user = null;
+      if (role === "aluno") {
+        user = alunos.find((x) => x.id === String(userId)) ?? null;
+      } else if (role === "professor") {
+        user = professores.find((x) => x.id === String(userId)) ?? null;
+      } else if (role === "empresa") {
+        user = empresas.find((x) => x.id === String(userId)) ?? null;
+      } else if (role === "instituicao") {
+        user = instituicoes.find((x) => x.id === String(userId)) ?? null;
+      }
+      setCurrentUserState(user);
+      // Salvar no localStorage
+      if (user) {
+        localStorage.setItem("braincoins_session", JSON.stringify({
+          role,
+          user,
+        }));
+      }
+    }
+  };
+
+  const logout = () => {
+    setCurrentRole(null);
+    setCurrentUserId("");
+    setCurrentUserState(null);
+    localStorage.removeItem("braincoins_session");
   };
 
   const distribuirMoedas = (profId: string, alunoId: string, amount: number, reason: string) => {
@@ -204,8 +266,8 @@ export function MockDataProvider({ children }: { children: ReactNode }) {
 
   return (
     <Ctx.Provider value={{
-      currentRole, currentUserId, alunos, professores, empresas, instituicoes,
-      vantagens, transacoes, resgates, setCurrentUser, distribuirMoedas,
+      isInitialized, currentRole, currentUserId, currentUser, alunos, professores, empresas, instituicoes,
+      vantagens, transacoes, resgates, setCurrentUser, logout, distribuirMoedas,
       resgatarVantagem, addVantagem, toggleVantagem, deleteVantagem,
       confirmarRetirada, addProfessores, addAluno, addEmpresa,
       setAlunoData, setProfessorData, setEmpresaData, setInstituicaoData,

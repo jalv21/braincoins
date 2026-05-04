@@ -24,33 +24,94 @@ interface AlunoData {
 }
 
 function Perfil() {
-  const { currentUserId } = useStore();
+  const store = useStore();
+  const { currentUserId, currentUser } = store;
   const [aluno, setAluno] = useState<AlunoData | null>(null);
   const [erro, setErro] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
 
   useEffect(() => {
     if (!currentUserId) return;
+    
+    // Se é modo demo (começa com 'a'), usar currentUser (que tem dados atualizados)
+    if (typeof currentUserId === 'string' && currentUserId.startsWith('a')) {
+      if (currentUser) {
+        const user = currentUser as any;
+        setAluno({
+          id: typeof user.id === 'string' ? parseInt(user.id.substring(1)) : user.id,
+          nome: user.nome,
+          email: user.email,
+          curso: user.curso,
+          instituicao: user.instituicao,
+          saldo: user.saldo,
+          cpf: user.cpf || '',
+          rg: user.rg || '',
+          endereco: user.endereco || '',
+          senha: '', // não temos no mock-data
+        });
+      }
+      return;
+    }
+    
+    // Caso contrário, buscar da API
     buscarAluno(Number(currentUserId))
       .then((res : any) => setAluno(res.data))
       .catch(() => setErro(true));
-  }, [currentUserId]);
+  }, [currentUserId, currentUser]);
 
   const handleSave = async (updatedData: any) => {
     if (!aluno) return;
-    try {
-      const response = await atualizarAluno(aluno.id, {
+    
+    // Se é modo demo (ID começa com 'a'), apenas atualizar em localStorage
+    if (typeof currentUserId === 'string' && currentUserId.startsWith('a')) {
+      // Construir objeto com dados atualizados para manter ID como string "a1"
+      const alunoAtualizado: any = {
+        id: currentUserId,
         nome: updatedData.nome,
         email: updatedData.email,
         curso: updatedData.curso,
         instituicao: updatedData.instituicao,
-        // campos obrigatórios no DTO que não mudam pelo perfil:
+        saldo: aluno.saldo,
+      };
+      
+      setAluno({
+        id: parseInt(currentUserId.substring(1)),
+        nome: updatedData.nome,
+        email: updatedData.email,
+        curso: updatedData.curso,
+        instituicao: updatedData.instituicao,
+        saldo: aluno.saldo,
         cpf: aluno.cpf,
         rg: aluno.rg,
         endereco: aluno.endereco,
-        senha: aluno.senha, // mantém a senha atual. 
+        senha: '',
       });
+      
+      // Atualizar currentUser na store e localStorage (fonte de verdade para demo)
+      store.setCurrentUser(store.currentRole!, currentUserId, alunoAtualizado);
+      setIsEditOpen(false);
+      return;
+    }
+    
+    // Caso contrário, fazer requisição à API
+    try {
+      const payload: any = {
+        nome: updatedData.nome,
+        email: updatedData.email,
+        curso: updatedData.curso,
+        instituicao: updatedData.instituicao,
+        cpf: aluno.cpf,
+        rg: aluno.rg,
+        endereco: aluno.endereco,
+      };
+      // Só enviar senha se não estiver vazia
+      if (aluno.senha && aluno.senha.trim().length > 0) {
+        payload.senha = aluno.senha;
+      }
+      const response = await atualizarAluno(aluno.id, payload);
       setAluno(response.data);
+      // Atualizar currentUser na store e localStorage
+      store.setCurrentUser(store.currentRole!, currentUserId, response.data);
       setIsEditOpen(false);
     } catch {
       alert("Erro ao atualizar perfil. Tente novamente.");
