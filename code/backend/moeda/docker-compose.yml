@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - braincoins_data:/var/lib/postgresql/data
+      - braincoins_data:/var/lib/postgresql
 
 volumes:
   braincoins_data:

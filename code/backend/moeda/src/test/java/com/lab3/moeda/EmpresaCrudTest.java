@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -31,7 +32,8 @@ public class EmpresaCrudTest {
         papelaria = new EmpresaEntity("Papelaria Maria", "12345678941002", "Rua 2", "contato@papelariamaria.com", "123456");
         farmacia = new EmpresaEntity("Farmácia Droga Rara", "12345678941003", "Rua 3", "contato@drogarara.com", "123456");
 
-        empresaService = new EmpresaService(empresaRepository);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        empresaService = new EmpresaService(empresaRepository, passwordEncoder);
 
         cafeRequest = new EmpresaRequestDTO(
               cafe.getNome(),

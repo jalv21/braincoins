@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,7 +31,8 @@ public class AlunoCrudTest {
         beatriz = new AlunoEntity("Beatriz", "23456789101", "234567890", "Rua 2", "UFMG", "Letras", "beatriz123@gmail.com", "123456");
         carol = new AlunoEntity("Carol", "34567891011", "345678910", "Rua 3", "USP", "Direito", "carol123@gmail.com", "123456");
 
-        alunoService = new AlunoService(alunoRepository);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        alunoService = new AlunoService(alunoRepository, passwordEncoder);
 
         aluno1Request = new AlunoRequestDTO(
                 alice.getNome(),
