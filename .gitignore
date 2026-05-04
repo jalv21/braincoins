@@ -1,31 +1,49 @@
-# --- Node / Frontend ---
+# --- Estrutura de Pastas (BrainCoins) ---
+
+# --- Node / Frontend (React/Vite) ---
 node_modules/
 dist/
 dist-ssr
 *.local
 .eslintcache
+.npm
+.pnpm-store
 
 # --- Java / Maven / Backend ---
 target/
+bin/
+*.class
+*.marshalled
+# Wrapper do Maven
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/resources/archetype-resources/**
 !**/src/test/resources/archetype-resources/**
-*.class
-*.marshalled
-# Arquivos do VS Code para Java
-.project
-.classpath
-.settings/
-.factorypath
+
+# --- Docker ---
+# Ignora arquivos temporários do Docker Desktop
+.docker/
+# Ignora logs de containers
+*.log
+# Ignora overrides locais que você não queira subir para o GitHub
+docker-compose.override.yml
 
 # --- Banco de Dados / Prisma ---
+# Segurança: Nunca suba o arquivo de variáveis de ambiente
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Configurações locais do Prisma
 prisma.config.ts.local
-# Caso use SQLite futuramente
+/prisma/migrations-backup/
+
+# Caso use SQLite em algum teste rápido futuramente
 *.db
 *.db-journal
 
-# --- Sistema e IDE ---
+# --- Sistema e IDE (VS Code / IntelliJ) ---
 .DS_Store
 .vscode/
 .idea/
@@ -34,3 +52,15 @@ prisma.config.ts.local
 *.njsproj
 *.sln
 *.sw?
+# Arquivos específicos do eclipse/projeto java no VS Code
+.project
+.classpath
+.settings/
+.factorypath
+
+# --- Logs e Temporários ---
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

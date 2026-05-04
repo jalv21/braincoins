@@ -1,0 +1,23 @@
+services:
+  postgres:
+    # Versão 17-alpine é mais leve e estável que a 18
+    image: postgres:17-alpine
+    container_name: braincoins-db
+    # Força a leitura do .env que está na mesma pasta (raiz)
+    env_file:
+      - .env
+    environment:
+      # Nome do banco de dados
+      POSTGRES_DB: braincoins
+      # Pega as variáveis do seu .env; se estiverem vazias, usa 'postgres' e 'admin' como fallback
+      POSTGRES_USER: ${DB_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-admin}
+    ports:
+      - "5432:5432"
+    volumes:
+      # Mantém seus dados salvos mesmo se o container for deletado
+      - braincoins_data:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  braincoins_data:
