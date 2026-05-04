@@ -5,6 +5,7 @@ import com.lab3.moeda.dto.response.EmpresaResponseDTO;
 import com.lab3.moeda.model.EmpresaEntity;
 import com.lab3.moeda.repository.EmpresaRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,8 +14,12 @@ import java.util.NoSuchElementException;
 @Service
 public class EmpresaService {
     private final EmpresaRepository empresaRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    public EmpresaService(EmpresaRepository empresaRepository) { this.empresaRepository = empresaRepository; }
+    public EmpresaService(EmpresaRepository empresaRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.empresaRepository = empresaRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     // CREATE
     @Transactional
@@ -23,6 +28,7 @@ public class EmpresaService {
                 request.nome(), request.cnpj(), request.endereco(),
                 request.email(), request.senha()
         );
+        novaEmpresa.setSenha(passwordEncoder.encode(request.senha()));
         EmpresaEntity empresaSalva = empresaRepository.save(novaEmpresa);
         return toResponseDTO(empresaSalva);
     }
@@ -54,6 +60,7 @@ public class EmpresaService {
         empresa.setNome(request.nome());
         empresa.setEndereco(request.endereco());
         empresa.setEmail(request.email());
+        empresa.setSenha(passwordEncoder.encode(request.senha()));
 
         return toResponseDTO(empresa);
     }
@@ -65,6 +72,16 @@ public class EmpresaService {
             throw new NoSuchElementException("Empresa não encontrada.");
 
         empresaRepository.deleteById(id);
+    }
+
+    public EmpresaResponseDTO login(String email, String senha) {
+        EmpresaEntity empresa = empresaRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("Empresa não encontrada."));
+
+        if (!passwordEncoder.matches(senha, empresa.getSenha()))
+            throw new RuntimeException("Senha incorreta.");
+
+        return toResponseDTO(empresa);
     }
 
     // Conversão entidade → DTO de resposta

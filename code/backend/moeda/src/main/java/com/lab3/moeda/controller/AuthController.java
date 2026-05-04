@@ -1,8 +1,10 @@
 package com.lab3.moeda.controller;
 
-import com.lab3.moeda.dto.AlunoResponseDTO;
-import com.lab3.moeda.dto.LoginRequestDTO;
+import com.lab3.moeda.dto.response.AlunoResponseDTO;
+import com.lab3.moeda.dto.request.LoginRequestDTO;
+import com.lab3.moeda.dto.response.EmpresaResponseDTO;
 import com.lab3.moeda.service.AlunoService;
+import com.lab3.moeda.service.EmpresaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,15 +12,22 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/login")
 public class AuthController {
+    private final EmpresaService empresaService;
     private AlunoService alunoService;
 
-    public AuthController(AlunoService alunoService) {
+    public AuthController(AlunoService alunoService, EmpresaService empresaService) {
         this.alunoService = alunoService;
+        this.empresaService = empresaService;
     }
 
-    @PostMapping
-    public ResponseEntity<AlunoResponseDTO> login(@RequestBody LoginRequestDTO dto) {
+    @PostMapping("/aluno")
+    public ResponseEntity<AlunoResponseDTO> loginAluno(@RequestBody LoginRequestDTO dto) {
         return ResponseEntity.ok(alunoService.login(dto.email(), dto.senha()));
+    }
+
+    @PostMapping("/empresa")
+    public ResponseEntity<EmpresaResponseDTO> loginEmpresa(@RequestBody LoginRequestDTO dto) {
+        return ResponseEntity.ok(empresaService.login(dto.email(), dto.senha()));
     }
 
     @ExceptionHandler(RuntimeException.class)
