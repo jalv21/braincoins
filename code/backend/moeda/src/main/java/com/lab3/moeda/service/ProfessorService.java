@@ -76,6 +76,14 @@ public class ProfessorService {
         return toResponseDTO(professor);
     }
 
+    // DELETE
+    public void deletar(int id) {
+        ProfessorEntity professor = professorRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Professor não encontrado."));
+
+        professorRepository.deleteById(id);
+    }
+
     public ProfessorResponseDTO toResponseDTO(ProfessorEntity professor) {
         return new ProfessorResponseDTO(
             professor.getId(),
