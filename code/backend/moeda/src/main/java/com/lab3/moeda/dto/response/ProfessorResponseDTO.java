@@ -4,7 +4,6 @@ public record ProfessorResponseDTO(
         int id,
         String nome,
         String cpf,
-        String rg,
         String instituicaoNome,
         short saldo,
         String email,
