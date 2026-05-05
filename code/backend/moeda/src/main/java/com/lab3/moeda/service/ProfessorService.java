@@ -1,6 +1,5 @@
 package com.lab3.moeda.service;
 
-import com.lab3.moeda.dto.request.AlunoRequestDTO;
 import com.lab3.moeda.dto.request.ProfessorRequestDTO;
 import com.lab3.moeda.dto.response.ProfessorResponseDTO;
 import com.lab3.moeda.model.InstituicaoEntity;
@@ -82,6 +81,16 @@ public class ProfessorService {
                 .orElseThrow(() -> new NoSuchElementException("Professor não encontrado."));
 
         professorRepository.deleteById(id);
+    }
+
+    public ProfessorResponseDTO login(String email, String senha) {
+        ProfessorEntity professor = professorRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("Professor não encontrado"));
+
+        if(!criptografia.matches(senha, professor.getSenha()))
+            throw new IllegalStateException("Senha incorreta.");
+
+        return toResponseDTO(professor);
     }
 
     public ProfessorResponseDTO toResponseDTO(ProfessorEntity professor) {
