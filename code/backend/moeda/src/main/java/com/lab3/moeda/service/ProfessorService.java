@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -37,6 +38,23 @@ public class ProfessorService {
         novoProfessor.setSenha(criptografia.encode(request.senha()));
         ProfessorEntity professorSalvo = professorRepository.save(novoProfessor);
         return toResponseDTO(professorSalvo);
+    }
+
+    // READ - todos
+    public List<ProfessorResponseDTO> listarTodos() {
+        return professorRepository.findAll()
+                .stream()
+                .map(this::toResponseDTO)
+                .toList();
+    }
+
+    // READ - por ID
+    @Transactional
+    public ProfessorResponseDTO buscarPorId(int id) {
+        ProfessorEntity professor = professorRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Professor não encontrado."));
+
+        return toResponseDTO(professor);
     }
 
     public ProfessorResponseDTO toResponseDTO(ProfessorEntity professor) {
