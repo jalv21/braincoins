@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "instituicoes")
-public class InstituicaoEntity {
+public class InstituicaoEntity extends UsuarioEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -20,10 +20,18 @@ public class InstituicaoEntity {
     @OneToMany(mappedBy = "instituicao", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DepartamentoEntity> departamentos;
 
-    public InstituicaoEntity() { }
+    public InstituicaoEntity() { super(); }
 
-    public InstituicaoEntity(String nome, String cnpj) {
-        this.nome = nome;
+    public InstituicaoEntity(String nome, String email, String senha, String cnpj) {
+        super(nome, email, senha);
         this.cnpj = cnpj;
     }
+
+    public int getId() { return id; }
+
+    public String getCnpj() { return cnpj; }
+
+    public String getNome() { return nome; }
+
+    public void setNome(String nome) { this.nome = nome; }
 }
