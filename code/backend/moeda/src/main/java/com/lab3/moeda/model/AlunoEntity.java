@@ -31,8 +31,7 @@ public class AlunoEntity extends UsuarioAcademicoEntity {
     }
 
     public AlunoEntity(String nome, String cpf, String rg, String endereco, String instituicao, String curso, String email, String senha) {
-        super(nome, email, senha);
-        this.cpf = cpf;
+        super(nome, email, senha, cpf);
         this.rg = rg;
         this.endereco = endereco;
         this.instituicao = instituicao;
@@ -40,8 +39,6 @@ public class AlunoEntity extends UsuarioAcademicoEntity {
     }
 
     public int getId() { return id; }
-
-    public String getCpf() { return cpf; }
 
     public String getRg() { return rg; }
 
