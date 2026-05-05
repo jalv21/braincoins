@@ -24,6 +24,10 @@ public class ProfessorEntity extends UsuarioAcademicoEntity {
 
     public InstituicaoEntity getInstituicao() { return instituicao; }
 
+    public void setInstituicao(InstituicaoEntity instituicao) {
+        this.instituicao = instituicao;
+    }
+
     public int getId() { return id; }
 
     @Override

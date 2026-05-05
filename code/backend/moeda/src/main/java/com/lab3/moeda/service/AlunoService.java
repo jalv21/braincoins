@@ -64,12 +64,10 @@ public class AlunoService {
         aluno.setCurso(request.curso());
         aluno.setEmail(request.email());
 
-       // Só criptografa e salva a senha da requisição caso ela tenha sido alterada.
-       // Evita corromper a senha criptografando de novo
        if(!passwordEncoder.matches(request.senha(), aluno.getSenha()))
            aluno.setSenha(passwordEncoder.encode(request.senha()));
 
-        return toResponseDTO(aluno);
+       return toResponseDTO(aluno);
     }
 
     // DELETE
