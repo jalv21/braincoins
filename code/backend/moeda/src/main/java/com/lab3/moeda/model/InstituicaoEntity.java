@@ -11,9 +11,6 @@ public class InstituicaoEntity extends UsuarioEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
-    private String nome;
-
     @Column(unique = true, nullable = false)
     private String cnpj;
 
@@ -22,7 +19,7 @@ public class InstituicaoEntity extends UsuarioEntity {
 
     public InstituicaoEntity() { super(); }
 
-    public InstituicaoEntity(String nome, String email, String senha, String cnpj) {
+    public InstituicaoEntity(String nome, String cnpj, String email, String senha) {
         super(nome, email, senha);
         this.cnpj = cnpj;
     }
@@ -30,8 +27,4 @@ public class InstituicaoEntity extends UsuarioEntity {
     public int getId() { return id; }
 
     public String getCnpj() { return cnpj; }
-
-    public String getNome() { return nome; }
-
-    public void setNome(String nome) { this.nome = nome; }
 }
