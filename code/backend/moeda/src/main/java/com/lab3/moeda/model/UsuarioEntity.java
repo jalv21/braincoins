@@ -5,7 +5,7 @@ import jakarta.persistence.MappedSuperclass;
 import java.util.List;
 
 @MappedSuperclass
-public abstract class UsuarioEntity {
+public class UsuarioEntity {
     protected String nome;
     protected String email;
     protected String senha;
