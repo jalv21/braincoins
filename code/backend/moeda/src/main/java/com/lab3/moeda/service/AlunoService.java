@@ -63,11 +63,11 @@ public class AlunoService {
         aluno.setEndereco(request.endereco());
         aluno.setCurso(request.curso());
         aluno.setEmail(request.email());
-        
-        // Só atualizar senha se foi enviada e não está vazia
-        if (request.senha() != null && !request.senha().trim().isEmpty()) {
-            aluno.setSenha(passwordEncoder.encode(request.senha()));
-        }
+
+       // Só criptografa e salva a senha da requisição caso ela tenha sido alterada.
+       // Evita corromper a senha criptografando de novo
+       if(!passwordEncoder.matches(request.senha(), aluno.getSenha()))
+           aluno.setSenha(passwordEncoder.encode(request.senha()));
 
         return toResponseDTO(aluno);
     }
