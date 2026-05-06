@@ -39,16 +39,24 @@ public class ProfessorEntity extends UsuarioAcademicoEntity {
 
     @Override
     public void creditarMoedas(int valor) {
+        if((saldo + valor) > LIMITE_MOEDAS)
+            throw new IllegalStateException("Não foi possível creditar." +
+                    " Saldo do professor excedeu o limite de moedas.");
 
+        saldo += (short) valor;
     }
 
     @Override
     public void debitarMoedas(int valor) {
+        if((saldo - valor) < 0)
+            throw new IllegalStateException("Não foi possível debitar." +
+                    " Saldo do professor insuficiente.");
 
+        saldo -= (short) valor;
     }
 
     @Override
     public List<TransacaoEntity> consultarHistoricoTransacoes() {
-        return List.of();
+        return transacoes;
     }
 }
