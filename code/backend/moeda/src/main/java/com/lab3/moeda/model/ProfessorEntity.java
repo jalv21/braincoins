@@ -2,6 +2,8 @@ package com.lab3.moeda.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -14,6 +16,9 @@ public class ProfessorEntity extends UsuarioAcademicoEntity {
     @ManyToOne
     @JoinColumn(name = "id_instituicao")
     private InstituicaoEntity instituicao;
+
+    @OneToMany(mappedBy = "professor")
+    private List<TransacaoEntity> transacoes = new ArrayList<>();;
 
     public ProfessorEntity() { super(); }
 
@@ -29,6 +34,8 @@ public class ProfessorEntity extends UsuarioAcademicoEntity {
     }
 
     public int getId() { return id; }
+
+    public List<TransacaoEntity> getTransacoes() { return transacoes; }
 
     @Override
     public void creditarMoedas(int valor) {

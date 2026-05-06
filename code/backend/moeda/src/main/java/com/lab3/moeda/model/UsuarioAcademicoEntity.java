@@ -13,24 +13,15 @@ public abstract class UsuarioAcademicoEntity extends UsuarioEntity {
     private String cpf;
 
     @Column(nullable = false)
-    protected short saldo;
-
-    @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<TransacaoEntity> historicoTransacoes;
-
-    protected void init() {
-        historicoTransacoes = new LinkedList<>();
-        saldo = 0;
-    }
+    protected short saldo = 0;
 
     protected UsuarioAcademicoEntity() {
         super();
-        init();
     }
 
     protected UsuarioAcademicoEntity(String nome, String email, String senha, String cpf) {
         super(nome, email, senha);
-        init();
+        this.cpf = cpf;
     }
 
     public String getCpf() { return cpf; }

@@ -58,6 +58,7 @@ public class ProfessorService {
     }
 
     // UPDATE
+    @Transactional
     public ProfessorResponseDTO atualizar(int id, ProfessorRequestDTO request) {
         ProfessorEntity professor = professorRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Professor não encontrado."));
@@ -77,10 +78,10 @@ public class ProfessorService {
 
     // DELETE
     public void deletar(int id) {
-        ProfessorEntity professor = professorRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Professor não encontrado."));
+       if(!professorRepository.existsById(id))
+           throw new NoSuchElementException("Professor não encontrado.");
 
-        professorRepository.deleteById(id);
+       professorRepository.deleteById(id);
     }
 
     public ProfessorResponseDTO login(String email, String senha) {
@@ -98,9 +99,9 @@ public class ProfessorService {
             professor.getId(),
             professor.getNome(),
             professor.getCpf(),
-            professor.getEmail(),
-            professor.getSaldoMoedas(),
             professor.getInstituicao().getNome(),
+            professor.getSaldoMoedas(),
+            professor.getEmail(),
             professor.getSenha()
         );
     }

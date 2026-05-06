@@ -14,7 +14,7 @@ public class TransacaoEntity {
     private AlunoEntity aluno;
 
     @ManyToOne
-    @JoinColumn(name = "professor_id", nullable = false)
+    @JoinColumn(name = "professor_id")
     private ProfessorEntity professor;
 
     @Column(nullable = false)
