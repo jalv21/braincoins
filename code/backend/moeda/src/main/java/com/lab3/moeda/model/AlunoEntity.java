@@ -2,6 +2,8 @@ package com.lab3.moeda.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -10,9 +12,6 @@ public class AlunoEntity extends UsuarioAcademicoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @Column(unique = true, nullable = false)
-    private String cpf;
 
     @Column(unique = true, nullable = false)
     private String rg;
@@ -26,13 +25,15 @@ public class AlunoEntity extends UsuarioAcademicoEntity {
     @Column(nullable = false, length = 100)
     private String curso;
 
+    @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TransacaoEntity> transacoes = new ArrayList<>();
+
     public AlunoEntity() {
         super();
     }
 
     public AlunoEntity(String nome, String cpf, String rg, String endereco, String instituicao, String curso, String email, String senha) {
-        super(nome, email, senha);
-        this.cpf = cpf;
+        super(nome, email, senha, cpf);
         this.rg = rg;
         this.endereco = endereco;
         this.instituicao = instituicao;
@@ -40,8 +41,6 @@ public class AlunoEntity extends UsuarioAcademicoEntity {
     }
 
     public int getId() { return id; }
-
-    public String getCpf() { return cpf; }
 
     public String getRg() { return rg; }
 
@@ -58,6 +57,8 @@ public class AlunoEntity extends UsuarioAcademicoEntity {
     public void setCurso(String curso) {
         this.curso = curso;
     }
+
+    public List<TransacaoEntity> getTransacoes() { return transacoes; }
 
     @Override
     public void creditarMoedas(int valor) {

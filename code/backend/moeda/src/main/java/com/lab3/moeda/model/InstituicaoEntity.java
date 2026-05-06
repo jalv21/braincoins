@@ -17,6 +17,9 @@ public class InstituicaoEntity extends UsuarioEntity {
     @OneToMany(mappedBy = "instituicao", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DepartamentoEntity> departamentos;
 
+    @OneToMany(mappedBy = "instituicao", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProfessorEntity> professores;
+
     public InstituicaoEntity() { super(); }
 
     public InstituicaoEntity(String nome, String cnpj, String email, String senha) {

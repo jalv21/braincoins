@@ -10,25 +10,21 @@ public abstract class UsuarioAcademicoEntity extends UsuarioEntity {
     public static final int LIMITE_MOEDAS = 99999;
 
     @Column(nullable = false)
-    protected short saldo;
+    private String cpf;
 
-    @OneToMany(mappedBy = "aluno", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<TransacaoEntity> historicoTransacoes;
-
-    protected void init() {
-        historicoTransacoes = new LinkedList<>();
-        saldo = 0;
-    }
+    @Column(nullable = false)
+    protected short saldo = 0;
 
     protected UsuarioAcademicoEntity() {
         super();
-        init();
     }
 
-    protected UsuarioAcademicoEntity(String nome, String email, String senha) {
+    protected UsuarioAcademicoEntity(String nome, String email, String senha, String cpf) {
         super(nome, email, senha);
-        init();
+        this.cpf = cpf;
     }
+
+    public String getCpf() { return cpf; }
 
     public short getSaldoMoedas() { return saldo; }
 
