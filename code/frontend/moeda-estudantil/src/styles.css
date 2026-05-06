@@ -51,21 +51,21 @@
   --radius: 1rem;
 
   /* Brand gradient backdrop */
-  --bg-gradient: linear-gradient(135deg, oklch(0.72 0.07 270) 0%, oklch(0.66 0.08 285) 100%);
+  --bg-gradient: linear-gradient(135deg, oklch(0.55 0.18 290) 0%, oklch(0.50 0.20 295) 100%);
   --gradient-mint: linear-gradient(135deg, oklch(0.82 0.13 155) 0%, oklch(0.74 0.15 160) 100%);
   --gradient-glass: linear-gradient(135deg, oklch(1 0 0 / 0.18) 0%, oklch(1 0 0 / 0.08) 100%);
 
-  --shadow-glass: 0 8px 32px 0 oklch(0.3 0.05 270 / 0.25);
+  --shadow-glass: 0 8px 32px 0 oklch(0.3 0.05 290 / 0.25);
   --shadow-mint: 0 8px 24px -4px oklch(0.74 0.15 160 / 0.5);
 
   /* Surfaces — translucent for glassmorphism */
-  --background: oklch(0.72 0.07 270);
+  --background: oklch(0.55 0.18 290);
   --foreground: oklch(0.99 0.005 250);
 
   --card: oklch(1 0 0 / 0.14);
   --card-foreground: oklch(0.99 0.005 250);
 
-  --popover: oklch(0.28 0.04 270);
+  --popover: oklch(0.28 0.08 290);
   --popover-foreground: oklch(0.99 0.005 250);
 
   /* Primary = mint green */
@@ -119,7 +119,7 @@
 
   body {
     color: var(--color-foreground);
-    background: linear-gradient(135deg, oklch(0.72 0.07 270) 0%, oklch(0.66 0.08 285) 100%);
+    background: linear-gradient(135deg, oklch(0.55 0.18 290) 0%, oklch(0.50 0.20 295) 100%);
     background-attachment: fixed;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
@@ -147,7 +147,7 @@
     box-shadow: var(--shadow-glass);
   }
   .text-shadow-soft {
-    text-shadow: 0 2px 12px oklch(0.3 0.05 270 / 0.25);
+    text-shadow: 0 2px 12px oklch(0.3 0.05 290 / 0.25);
   }
 }
 
