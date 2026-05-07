@@ -1,40 +1,104 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useStore } from "@/lib/mock-data";
 import { GlassCard, PageHeader, CoinBadge } from "@/components/ui-bits";
 import { Search, Send, AlertCircle, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
+import { buscarProfessor, listarAlunos, criarTransacao } from "@/api/instituicoesApi";
+
+type AlunoAPI = {
+  id: number;
+  nome: string;
+  curso: string;
+  saldo: number;
+  cpf?: string;
+  email?: string;
+  instituicaoNome?: string;
+};
+
+type ProfessorAPI = {
+  id: number;
+  nome: string;
+  cpf: string;
+  saldo: number;
+  email: string;
+  instituicaoNome: string;
+};
 
 export const Route = createFileRoute("/professor/distribuir")({
   component: Distribuir,
 });
 
 function Distribuir() {
-  const store = useStore();
-  const prof = store.professores.find((p) => p.id === store.currentUserId) ?? store.professores[0];
+  const { currentUserId, currentUser, currentRole, setCurrentUser } = useStore();
+  const [prof, setProf] = useState<ProfessorAPI | null>(
+    currentUser ? {
+      id: Number((currentUser as any).id),
+      nome: (currentUser as any).nome,
+      cpf: (currentUser as any).cpf,
+      saldo: (currentUser as any).saldo,
+      email: (currentUser as any).email,
+      instituicaoNome: (currentUser as any).instituicaoNome,
+    } : null
+  );
+  const [alunos, setAlunos] = useState<AlunoAPI[]>([]);
   const [query, setQuery] = useState("");
-  const [alunoId, setAlunoId] = useState<string | null>(null);
+  const [alunoId, setAlunoId] = useState<number | null>(null);
   const [amount, setAmount] = useState<number>(50);
   const [reason, setReason] = useState("");
   const [showConfetti, setShowConfetti] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    const id = Number(currentUserId || (currentUser as any)?.id);
+    if (!id) return;
+
+    Promise.all([buscarProfessor(id), listarAlunos()])
+      .then(([profResp, alunosResp]) => {
+        setProf(profResp.data);
+        setAlunos(alunosResp.data ?? []);
+      })
+      .catch(() => {});
+  }, [currentUserId, currentUser]);
 
   const matches = useMemo(
-    () => query ? store.alunos.filter((a) => a.nome.toLowerCase().includes(query.toLowerCase())).slice(0, 6) : [],
-    [query, store.alunos]
+    () => query ? alunos.filter((a) => a.nome.toLowerCase().includes(query.toLowerCase())).slice(0, 6) : [],
+    [query, alunos]
   );
-  const aluno = store.alunos.find((a) => a.id === alunoId);
+  const aluno = alunos.find((a) => a.id === alunoId);
+  const insufficient = prof ? amount > prof.saldo : false;
 
-  const insufficient = amount > prof.saldo;
-
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!aluno || !reason.trim()) { toast.error("Selecione um aluno e justifique."); return; }
     if (amount <= 0) { toast.error("Quantidade deve ser positiva."); return; }
-    const ok = store.distribuirMoedas(prof.id, aluno.id, amount, reason);
-    if (!ok) { toast.error("Saldo insuficiente para realizar esta operação."); return; }
-    toast.success(`🪙 ${amount} moedas enviadas para ${aluno.nome}!`);
-    setShowConfetti(true); setTimeout(() => setShowConfetti(false), 1500);
-    setAlunoId(null); setQuery(""); setReason(""); setAmount(50);
+    if (!prof) return;
+
+    setSubmitting(true);
+    try {
+      await criarTransacao({
+        professorId: prof.id,
+        alunoId: aluno.id,
+        valor: amount,
+        motivo: reason,
+      });
+
+      const profResp = await buscarProfessor(prof.id);
+      setProf(profResp.data);
+      setCurrentUser(currentRole ?? "professor", prof.id, profResp.data);
+
+      toast.success(`🪙 ${amount} moedas enviadas para ${aluno.nome}!`);
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 1500);
+      setAlunoId(null); setQuery(""); setReason(""); setAmount(50);
+    } catch (error: any) {
+      const msg = error?.response?.data?.message ?? "Erro ao distribuir moedas.";
+      toast.error(msg);
+    } finally {
+      setSubmitting(false);
+    }
   };
+
+  if (!prof) return null;
 
   return (
     <div>
@@ -116,11 +180,11 @@ function Distribuir() {
                 </p>
               </div>
               <button
-                disabled={!aluno || insufficient || !reason.trim() || amount <= 0}
+                disabled={!aluno || insufficient || !reason.trim() || amount <= 0 || submitting}
                 onClick={handleSubmit}
                 className="w-full py-2.5 rounded-xl bg-mint text-mint-foreground font-semibold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                <Send className="h-4 w-4" /> Confirmar Envio
+                <Send className="h-4 w-4" /> {submitting ? "Enviando..." : "Confirmar Envio"}
               </button>
             </div>
           </GlassCard>

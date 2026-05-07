@@ -33,7 +33,7 @@ export function StatCard({
       </div>
       <div>
         <p className="text-xs uppercase tracking-wider text-white/70">{label}</p>
-        <p className="text-2xl font-bold text-white">{value}</p>
+        <p className="text-xl md:text-2xl font-bold text-white break-words max-w-[14rem]">{value}</p>
       </div>
     </div>
   );
