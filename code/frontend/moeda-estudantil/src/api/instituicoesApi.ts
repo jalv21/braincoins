@@ -24,5 +24,15 @@ export const criarTransacao = (dados: any) => api.post('/transacoes', dados);
 
 export const listarAlunos = () => api.get('/alunos');
 
-export const adicionarSaldoProfessor = (professorId: number, valor: number) => 
+export const adicionarSaldoProfessor = (professorId: number, valor: number) =>
   api.post(`/admin/professor/${professorId}/saldo/${valor}`);
+
+export const importarProfessoresCSV = (instituicaoId: number, arquivo: File) => {
+  const form = new FormData();
+  form.append('arquivo', arquivo);
+  return api.post<{ importados: number; erros: string[] }>(
+    `/instituicoes/${instituicaoId}/importar-professores`,
+    form,
+    { headers: { 'Content-Type': 'multipart/form-data' } }
+  );
+};

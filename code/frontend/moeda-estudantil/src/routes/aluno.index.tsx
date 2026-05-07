@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useStore, formatDate } from "@/lib/mock-data";
-import { GlassCard, PageHeader, CoinBadge, EmptyState } from "@/components/ui-bits";
-import { Coins, Gift, ArrowDownLeft, ArrowUpRight } from "lucide-react";
+import { useStore } from "@/lib/mock-data";
+import { GlassCard, PageHeader, EmptyState } from "@/components/ui-bits";
+import { Coins, Gift, Ticket } from "lucide-react";
 import { useEffect, useState } from "react";
 import { buscarAluno } from "@/api/alunosApi";
+import { buscarResgatesAluno } from "@/api/vantagensApi";
 
 export const Route = createFileRoute("/aluno/")({
   component: AlunoDash,
@@ -21,6 +22,7 @@ function AlunoDash() {
   const store = useStore();
   const { currentUserId, currentUser } = store;
   const [aluno, setAluno] = useState<AlunoData | null>(null);
+  const [resgatesAtivos, setResgatesAtivos] = useState<number | null>(null);
   const [erro, setErro] = useState(false);
 
   useEffect(() => {
@@ -43,6 +45,17 @@ function AlunoDash() {
     buscarAluno(currentUserId)
       .then((res) => setAluno(res.data))
       .catch(() => setErro(true));
+  }, [currentUserId, currentUser]);
+
+  useEffect(() => {
+    const id = Number(currentUserId || (currentUser as any)?.id);
+    if (!id) return;
+    buscarResgatesAluno(id)
+      .then((res) => {
+        const ativos = (res.data ?? []).filter((r: any) => r.status === "ativo").length;
+        setResgatesAtivos(ativos);
+      })
+      .catch(() => setResgatesAtivos(0));
   }, [currentUserId, currentUser]);
 
   if (erro) return <p className="text-white p-8">Erro ao carregar dados.</p>;
@@ -73,20 +86,26 @@ function AlunoDash() {
           </Link>
         </div>
 
-        {/* Card de resgates — aguardando endpoint */}
-        <GlassCard>
-          <p className="text-xs uppercase text-white/70">Resgates ativos</p>
-          <p className="text-3xl font-bold text-white mt-1">—</p>
-          <p className="text-xs text-white/65 mt-2">Disponível em breve</p>
-        </GlassCard>
+        <Link to="/aluno/resgates">
+          <GlassCard className="hover:bg-white/10 transition-colors cursor-pointer">
+            <div className="flex items-center gap-2 mb-1">
+              <Ticket className="h-4 w-4 text-white/60" />
+              <p className="text-xs uppercase text-white/70">Resgates ativos</p>
+            </div>
+            <p className="text-3xl font-bold text-white mt-1">
+              {resgatesAtivos === null ? "..." : resgatesAtivos}
+            </p>
+            <p className="text-xs text-white/65 mt-2">cupons aguardando retirada</p>
+          </GlassCard>
+        </Link>
       </div>
 
-      {/* Atividade recente — aguardando endpoint */}
       <GlassCard>
         <h2 className="text-lg font-bold text-white mb-4">Atividade recente</h2>
         <EmptyState
           icon={<Coins className="h-7 w-7 text-white/60" />}
-          title="Sem atividade"
+          title="Sem atividade recente"
+          description="Acesse 'Extrato' para ver todas as movimentações."
         />
       </GlassCard>
     </div>

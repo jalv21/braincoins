@@ -1,26 +1,31 @@
 package com.lab3.moeda.service;
 
-import com.lab3.moeda.dto.request.EmpresaRequestDTO;
 import com.lab3.moeda.dto.request.InstituicaoRequestDTO;
-import com.lab3.moeda.dto.response.EmpresaResponseDTO;
 import com.lab3.moeda.dto.response.InstituicaoResponseDTO;
-import com.lab3.moeda.model.EmpresaEntity;
 import com.lab3.moeda.model.InstituicaoEntity;
+import com.lab3.moeda.model.ProfessorEntity;
 import com.lab3.moeda.repository.InstituicaoRepository;
+import com.lab3.moeda.repository.ProfessorRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Service
 public class InstituicaoService {
     private final InstituicaoRepository repository;
+    private final ProfessorRepository professorRepository;
     private final BCryptPasswordEncoder criptografia;
 
-    public InstituicaoService(InstituicaoRepository repository, BCryptPasswordEncoder criptografia) {
+    public InstituicaoService(InstituicaoRepository repository,
+                              ProfessorRepository professorRepository,
+                              BCryptPasswordEncoder criptografia) {
         this.repository = repository;
+        this.professorRepository = professorRepository;
         this.criptografia = criptografia;
     }
 
@@ -86,6 +91,41 @@ public class InstituicaoService {
             throw new RuntimeException("Senha incorreta.");
 
         return toResponseDTO(instituicao);
+    }
+
+    // Importação em lote de professores via CSV
+    @Transactional
+    public Map<String, Object> importarProfessores(int instituicaoId, List<Map<String, String>> linhas) {
+        InstituicaoEntity instituicao = repository.findById(instituicaoId)
+                .orElseThrow(() -> new NoSuchElementException("Instituição não encontrada."));
+
+        List<String> erros = new ArrayList<>();
+        int importados = 0;
+
+        for (Map<String, String> linha : linhas) {
+            String nome = linha.getOrDefault("nome", "").trim();
+            String cpf  = linha.getOrDefault("cpf",  "").trim();
+            if (nome.isEmpty() || cpf.isEmpty()) {
+                erros.add("Linha ignorada (nome ou CPF vazio): " + linha);
+                continue;
+            }
+
+            String cpfDigitos = cpf.replaceAll("[^0-9]", "");
+            String email = cpfDigitos + "@prof.braincoins.edu";
+            String senhaHash = criptografia.encode(cpfDigitos);
+
+            if (professorRepository.findByEmail(email).isPresent()) {
+                erros.add("Professor já existe com e-mail " + email + " — ignorado.");
+                continue;
+            }
+
+            ProfessorEntity prof = new ProfessorEntity(nome, cpf, email, senhaHash, instituicao);
+            prof.setSenha(senhaHash);
+            professorRepository.save(prof);
+            importados++;
+        }
+
+        return Map.of("importados", importados, "erros", erros);
     }
 
     // Conversão entidade → DTO de resposta

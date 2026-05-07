@@ -1,10 +1,83 @@
 {
   "info": {
     "name": "BrainCoins API",
-    "description": "API BrainCoins - Sistema de Moeda Estudantil | Endpoints implementados e testados",
+    "description": "API BrainCoins - Sistema de Moeda Estudantil\n\nBase URL: {{base_url}} (padrão: http://localhost:8080)\n\nEntidades: Alunos, Professores, Empresas, Instituições, Transações, Vantagens, Resgates.\n\nFluxo básico:\n1. Criar Instituição → importar Professores via CSV\n2. Criar Aluno e Empresa\n3. Fazer login (obtém dados do usuário)\n4. Professor distribui moedas → Aluno resgata vantagem da Empresa",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
+    {
+      "name": "🔐 Autenticação",
+      "item": [
+        {
+          "name": "Login - Aluno",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"joao.silva@aluno.edu\",\n  \"senha\": \"SenhaAluno123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/login/aluno",
+              "host": ["{{base_url}}"],
+              "path": ["login", "aluno"]
+            },
+            "description": "Autentica um aluno. Retorna os dados completos (id, nome, saldo, curso, etc.)."
+          }
+        },
+        {
+          "name": "Login - Empresa",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"contato@empresa.com\",\n  \"senha\": \"SenhaEmpresa123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/login/empresa",
+              "host": ["{{base_url}}"],
+              "path": ["login", "empresa"]
+            },
+            "description": "Autentica uma empresa parceira. Retorna os dados completos (id, nome, cnpj, etc.)."
+          }
+        },
+        {
+          "name": "Login - Professor",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"professor@universidade.edu\",\n  \"senha\": \"SenhaProf123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/login/professor",
+              "host": ["{{base_url}}"],
+              "path": ["login", "professor"]
+            },
+            "description": "Autentica um professor. Retorna os dados completos (id, nome, saldo, instituicaoNome, etc.)."
+          }
+        },
+        {
+          "name": "Login - Instituição",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"contato@ufmg.br\",\n  \"senha\": \"SenhaInst123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/login/instituicao",
+              "host": ["{{base_url}}"],
+              "path": ["login", "instituicao"]
+            },
+            "description": "Autentica uma instituição de ensino. Retorna os dados completos (id, nome, cnpj, etc.)."
+          }
+        }
+      ]
+    },
     {
       "name": "👨‍🎓 Alunos",
       "item": [
@@ -18,7 +91,7 @@
               "host": ["{{base_url}}"],
               "path": ["alunos"]
             },
-            "description": "✅ Retorna a lista de todos os alunos cadastrados"
+            "description": "Retorna a lista de todos os alunos cadastrados."
           }
         },
         {
@@ -31,51 +104,41 @@
               "host": ["{{base_url}}"],
               "path": ["alunos", "{{alunoId}}"]
             },
-            "description": "✅ Retorna os dados de um aluno específico (ex: ID {{alunoId}})"
+            "description": "Retorna os dados completos de um aluno, incluindo saldo de moedas."
           }
         },
         {
           "name": "Criar novo aluno",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"cpf\": \"12345678901\",\n  \"rg\": \"1234567\",\n  \"endereco\": \"Rua das Flores, 123\",\n  \"instituicaoId\": {{instituicaoId}},\n  \"curso\": \"Engenharia de Software\",\n  \"email\": \"maria.silva@university.edu\",\n  \"senha\": \"SenhaAluno123!\"\n}"
+              "raw": "{\n  \"nome\": \"João da Silva\",\n  \"cpf\": \"123.456.789-01\",\n  \"rg\": \"1234567\",\n  \"endereco\": \"Rua das Flores, 123, Belo Horizonte - MG\",\n  \"instituicao\": \"UFMG\",\n  \"curso\": \"Engenharia de Software\",\n  \"email\": \"joao.silva@aluno.edu\",\n  \"senha\": \"SenhaAluno123!\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/alunos",
               "host": ["{{base_url}}"],
               "path": ["alunos"]
             },
-            "description": "✅ Cria um novo aluno no sistema (requer instituicaoId válido)"
+            "description": "Cria um novo aluno. O campo `instituicao` é o nome (String) da instituição. Saldo inicial = 0. Retorna 201 Created."
           }
         },
         {
           "name": "Atualizar aluno",
           "request": {
             "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Maria Silva Santos\",\n  \"cpf\": \"12345678901\",\n  \"rg\": \"1234567\",\n  \"endereco\": \"Rua das Flores, 200\",\n  \"instituicaoId\": {{instituicaoId}},\n  \"curso\": \"Engenharia de Software\",\n  \"email\": \"maria.silva@university.edu\",\n  \"senha\": \"NovaSenhaAluno456!\"\n}"
+              "raw": "{\n  \"nome\": \"João da Silva Santos\",\n  \"cpf\": \"123.456.789-01\",\n  \"rg\": \"1234567\",\n  \"endereco\": \"Rua das Flores, 200, Belo Horizonte - MG\",\n  \"instituicao\": \"UFMG\",\n  \"curso\": \"Ciência da Computação\",\n  \"email\": \"joao.silva@aluno.edu\",\n  \"senha\": \"NovaSenha456!\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/alunos/{{alunoId}}",
               "host": ["{{base_url}}"],
               "path": ["alunos", "{{alunoId}}"]
             },
-            "description": "✅ Atualiza os dados de um aluno existente"
+            "description": "Atualiza os dados cadastrais de um aluno. O saldo de moedas não é alterado por este endpoint."
           }
         },
         {
@@ -88,109 +151,7 @@
               "host": ["{{base_url}}"],
               "path": ["alunos", "{{alunoId}}"]
             },
-            "description": "✅ Deleta um aluno do sistema"
-          }
-        }
-      ]
-    },
-    {
-      "name": "🏢 Empresas",
-      "item": [
-        {
-          "name": "❌ Empresas - Em desenvolvimento",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/empresas",
-              "host": ["{{base_url}}"],
-              "path": ["empresas"]
-            },
-            "description": "⏳ Endpoints de Empresas ainda não foram implementados. Disponível em futuras versões."
-          }
-        }
-      ]
-    },
-    {
-      "name": "🎁 Vantagens",
-      "item": [
-        {
-          "name": "❌ Vantagens - Em desenvolvimento",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/vantagens",
-              "host": ["{{base_url}}"],
-              "path": ["vantagens"]
-            },
-            "description": "⏳ Endpoints de Vantagens ainda não foram implementados. Disponível em futuras versões."
-          }
-        }
-      ]
-    },
-    {
-      "name": "💳 Transações",
-      "item": [
-        {
-          "name": "Criar transação (Professor → Aluno)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"professorId\": {{professorId}},\n  \"alunoId\": {{alunoId}},\n  \"valor\": {{transacaoValor}},\n  \"motivo\": \"Desempenho excepcional na atividade de pesquisa\"\n}"
-            },
-            "url": {
-              "raw": "{{base_url}}/transacoes",
-              "host": ["{{base_url}}"],
-              "path": ["transacoes"]
-            },
-            "description": "✅ Cria uma transação atômica de moedas do professor para o aluno | Returns 201 Created"
-          }
-        },
-        {
-          "name": "Listar todas as transações de um aluno",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/transacoes/aluno/{{alunoId}}",
-              "host": ["{{base_url}}"],
-              "path": ["transacoes", "aluno", "{{alunoId}}"]
-            },
-            "description": "✅ Retorna todas as transações de um aluno (enviadas e recebidas)"
-          }
-        },
-        {
-          "name": "Listar transações recebidas pelo aluno",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/transacoes/aluno/{{alunoId}}/recebidas",
-              "host": ["{{base_url}}"],
-              "path": ["transacoes", "aluno", "{{alunoId}}", "recebidas"]
-            },
-            "description": "✅ Retorna apenas as transações recebidas pelo aluno (envios de professores)"
-          }
-        },
-        {
-          "name": "Listar transações enviadas pelo professor",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/transacoes/professor/{{professorId}}",
-              "host": ["{{base_url}}"],
-              "path": ["transacoes", "professor", "{{professorId}}"]
-            },
-            "description": "✅ Retorna todas as transações enviadas por um professor"
+            "description": "Remove um aluno do sistema. Retorna 204 No Content."
           }
         }
       ]
@@ -208,7 +169,7 @@
               "host": ["{{base_url}}"],
               "path": ["professores"]
             },
-            "description": "✅ Retorna a lista de todos os professores cadastrados"
+            "description": "Retorna a lista de todos os professores cadastrados."
           }
         },
         {
@@ -221,51 +182,41 @@
               "host": ["{{base_url}}"],
               "path": ["professores", "{{professorId}}"]
             },
-            "description": "✅ Retorna os dados de um professor específico (inclui saldo de moedas)"
+            "description": "Retorna os dados de um professor, incluindo saldo de moedas e nome da instituição."
           }
         },
         {
           "name": "Criar novo professor",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Dr. Carlos Silva Neves\",\n  \"cpf\": \"111.222.333-55\",\n  \"instituicaoId\": {{instituicaoId}},\n  \"email\": \"carlos.neves@university.edu\",\n  \"senha\": \"SenhaProf123!\"\n}"
+              "raw": "{\n  \"nome\": \"Dr. Carlos Silva\",\n  \"cpf\": \"111.222.333-44\",\n  \"instituicaoId\": {{instituicaoId}},\n  \"email\": \"carlos.silva@universidade.edu\",\n  \"senha\": \"SenhaProf123!\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/professores",
               "host": ["{{base_url}}"],
               "path": ["professores"]
             },
-            "description": "✅ Cria um novo professor no sistema (saldo inicial = 0)"
+            "description": "Cria um professor individualmente. Para importação em lote, use o endpoint CSV em Instituições. Saldo inicial = 0. Retorna 201 Created."
           }
         },
         {
           "name": "Atualizar professor",
           "request": {
             "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Dr. Carlos Silva Neves Atualizado\",\n  \"cpf\": \"111.222.333-55\",\n  \"instituicaoId\": {{instituicaoId}},\n  \"email\": \"carlos.neves@university.edu\",\n  \"senha\": \"NovaSenhaProf456!\"\n}"
+              "raw": "{\n  \"nome\": \"Dr. Carlos Silva Atualizado\",\n  \"cpf\": \"111.222.333-44\",\n  \"instituicaoId\": {{instituicaoId}},\n  \"email\": \"carlos.silva@universidade.edu\",\n  \"senha\": \"NovaSenhaProf456!\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/professores/{{professorId}}",
               "host": ["{{base_url}}"],
               "path": ["professores", "{{professorId}}"]
             },
-            "description": "✅ Atualiza os dados de um professor existente (saldo não é modificado via PUT)"
+            "description": "Atualiza os dados de um professor. O saldo não é alterado por este endpoint."
           }
         },
         {
@@ -278,7 +229,85 @@
               "host": ["{{base_url}}"],
               "path": ["professores", "{{professorId}}"]
             },
-            "description": "✅ Deleta um professor do sistema"
+            "description": "Remove um professor do sistema. Retorna 204 No Content."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏢 Empresas",
+      "item": [
+        {
+          "name": "Listar todas as empresas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/empresas",
+              "host": ["{{base_url}}"],
+              "path": ["empresas"]
+            },
+            "description": "Retorna a lista de todas as empresas parceiras cadastradas."
+          }
+        },
+        {
+          "name": "Buscar empresa por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/empresas/{{empresaId}}",
+              "host": ["{{base_url}}"],
+              "path": ["empresas", "{{empresaId}}"]
+            },
+            "description": "Retorna os dados de uma empresa parceira específica."
+          }
+        },
+        {
+          "name": "Criar nova empresa",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Tech Soluções Ltda\",\n  \"cnpj\": \"12.345.678/0001-90\",\n  \"endereco\": \"Av. do Contorno, 1000, Belo Horizonte - MG\",\n  \"email\": \"contato@techsolucoes.com\",\n  \"senha\": \"SenhaEmpresa123!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/empresas",
+              "host": ["{{base_url}}"],
+              "path": ["empresas"]
+            },
+            "description": "Cadastra uma nova empresa parceira no sistema. Retorna 201 Created."
+          }
+        },
+        {
+          "name": "Atualizar empresa",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Tech Soluções LTDA\",\n  \"cnpj\": \"12.345.678/0001-90\",\n  \"endereco\": \"Av. do Contorno, 2000, Belo Horizonte - MG\",\n  \"email\": \"contato@techsolucoes.com\",\n  \"senha\": \"NovaSenhaEmpresa456!\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/empresas/{{empresaId}}",
+              "host": ["{{base_url}}"],
+              "path": ["empresas", "{{empresaId}}"]
+            },
+            "description": "Atualiza os dados cadastrais de uma empresa."
+          }
+        },
+        {
+          "name": "Deletar empresa",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/empresas/{{empresaId}}",
+              "host": ["{{base_url}}"],
+              "path": ["empresas", "{{empresaId}}"]
+            },
+            "description": "Remove uma empresa do sistema. Retorna 204 No Content."
           }
         }
       ]
@@ -296,7 +325,7 @@
               "host": ["{{base_url}}"],
               "path": ["instituicoes"]
             },
-            "description": "✅ Retorna a lista de todas as instituições cadastradas"
+            "description": "Retorna a lista de todas as instituições de ensino cadastradas."
           }
         },
         {
@@ -309,51 +338,41 @@
               "host": ["{{base_url}}"],
               "path": ["instituicoes", "{{instituicaoId}}"]
             },
-            "description": "✅ Retorna os dados de uma instituição específica"
+            "description": "Retorna os dados de uma instituição específica."
           }
         },
         {
           "name": "Criar nova instituição",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Universidade Federal de Minas Gerais\",\n  \"cnpj\": \"17.191.585/0001-19\",\n  \"endereco\": \"Av. Antônio Carlos, 6627\",\n  \"email\": \"contato@ufmg.br\",\n  \"telefone\": \"(31) 3409-5000\"\n}"
+              "raw": "{\n  \"nome\": \"Universidade Federal de Minas Gerais\",\n  \"cnpj\": \"17.191.585/0001-19\",\n  \"email\": \"contato@ufmg.br\",\n  \"senha\": \"SenhaInst123!\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/instituicoes",
               "host": ["{{base_url}}"],
               "path": ["instituicoes"]
             },
-            "description": "✅ Cria uma nova instituição no sistema"
+            "description": "Cadastra uma nova instituição de ensino. Retorna 201 Created."
           }
         },
         {
           "name": "Atualizar instituição",
           "request": {
             "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"UFMG - Universidade Federal de Minas Gerais\",\n  \"cnpj\": \"17.191.585/0001-19\",\n  \"endereco\": \"Av. Antônio Carlos, 6627 - Campus Pampulha\",\n  \"email\": \"contato@ufmg.br\",\n  \"telefone\": \"(31) 3409-5000\"\n}"
+              "raw": "{\n  \"nome\": \"UFMG - Universidade Federal de Minas Gerais\",\n  \"cnpj\": \"17.191.585/0001-19\",\n  \"email\": \"contato@ufmg.br\",\n  \"senha\": \"NovaSenhaInst456!\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/instituicoes/{{instituicaoId}}",
               "host": ["{{base_url}}"],
               "path": ["instituicoes", "{{instituicaoId}}"]
             },
-            "description": "✅ Atualiza os dados de uma instituição existente"
+            "description": "Atualiza os dados de uma instituição."
           }
         },
         {
@@ -366,13 +385,303 @@
               "host": ["{{base_url}}"],
               "path": ["instituicoes", "{{instituicaoId}}"]
             },
-            "description": "✅ Deleta uma instituição do sistema"
+            "description": "Remove uma instituição do sistema. Retorna 204 No Content."
+          }
+        },
+        {
+          "name": "Importar professores via CSV",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "arquivo",
+                  "type": "file",
+                  "description": "Arquivo CSV com cabeçalho: nome,cpf,departamento,curso"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/instituicoes/{{instituicaoId}}/importar-professores",
+              "host": ["{{base_url}}"],
+              "path": ["instituicoes", "{{instituicaoId}}", "importar-professores"]
+            },
+            "description": "Importa professores em lote via arquivo CSV.\n\nFormato do CSV (com ou sem cabeçalho):\n```\nnome,cpf,departamento,curso\nDr. Lucas Andrade,111.222.333-44,DCC,Engenharia de Software\nDra. Mariana Reis,222.333.444-55,DEE,Engenharia Elétrica\n```\n\nO sistema gera automaticamente:\n- email: {cpf_apenas_digitos}@prof.braincoins.edu\n- senha: {cpf_apenas_digitos} (deve ser trocada no primeiro acesso)\n\nRetorna: { \"importados\": N, \"erros\": [...] }"
           }
         }
       ]
     },
     {
-      "name": "⚙️ Admin (Testes & Desenvolvimento)",
+      "name": "🎁 Vantagens",
+      "item": [
+        {
+          "name": "Listar vantagens ativas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/vantagens",
+              "host": ["{{base_url}}"],
+              "path": ["vantagens"]
+            },
+            "description": "Retorna apenas as vantagens ativas (ativo=true) e com estoque. Usado pela tela de alunos."
+          }
+        },
+        {
+          "name": "Listar todas as vantagens (inclusive inativas)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/vantagens/todas",
+              "host": ["{{base_url}}"],
+              "path": ["vantagens", "todas"]
+            },
+            "description": "Retorna todas as vantagens independente de status. Usado por administradores."
+          }
+        },
+        {
+          "name": "Buscar vantagem por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/vantagens/{{vantagemId}}",
+              "host": ["{{base_url}}"],
+              "path": ["vantagens", "{{vantagemId}}"]
+            },
+            "description": "Retorna os detalhes de uma vantagem específica."
+          }
+        },
+        {
+          "name": "Listar vantagens de uma empresa",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/vantagens/empresa/{{empresaId}}",
+              "host": ["{{base_url}}"],
+              "path": ["vantagens", "empresa", "{{empresaId}}"]
+            },
+            "description": "Retorna todas as vantagens cadastradas por uma empresa específica (ativas e inativas)."
+          }
+        },
+        {
+          "name": "Criar vantagem (JSON)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"empresaId\": {{empresaId}},\n  \"nome\": \"Desconto de 30% no Restaurante\",\n  \"descricao\": \"Apresente o cupom para obter 30% de desconto em qualquer item do cardápio.\",\n  \"foto\": null,\n  \"custo\": 150,\n  \"estoque\": 20\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/vantagens",
+              "host": ["{{base_url}}"],
+              "path": ["vantagens"]
+            },
+            "description": "Cria uma nova vantagem sem foto. Para cadastrar com foto de arquivo, use o fluxo: 1) POST /uploads → obter URL, 2) informar a URL no campo `foto`. Retorna 201 Created."
+          }
+        },
+        {
+          "name": "Atualizar vantagem",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"empresaId\": {{empresaId}},\n  \"nome\": \"Desconto de 40% no Restaurante\",\n  \"descricao\": \"Apresente o cupom para obter 40% de desconto em qualquer item do cardápio.\",\n  \"foto\": null,\n  \"custo\": 200,\n  \"estoque\": 15\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/vantagens/{{vantagemId}}",
+              "host": ["{{base_url}}"],
+              "path": ["vantagens", "{{vantagemId}}"]
+            },
+            "description": "Atualiza os dados de uma vantagem existente."
+          }
+        },
+        {
+          "name": "Deletar vantagem",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/vantagens/{{vantagemId}}",
+              "host": ["{{base_url}}"],
+              "path": ["vantagens", "{{vantagemId}}"]
+            },
+            "description": "Remove uma vantagem do catálogo. Retorna 204 No Content."
+          }
+        },
+        {
+          "name": "Ativar / Desativar vantagem (toggle)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/vantagens/{{vantagemId}}/toggle",
+              "host": ["{{base_url}}"],
+              "path": ["vantagens", "{{vantagemId}}", "toggle"]
+            },
+            "description": "Alterna o campo `ativo` da vantagem (true → false ou false → true). Vantagens inativas não aparecem no catálogo do aluno."
+          }
+        }
+      ]
+    },
+    {
+      "name": "🎫 Resgates",
+      "item": [
+        {
+          "name": "Resgatar vantagem (Aluno)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"alunoId\": {{alunoId}},\n  \"vantagemId\": {{vantagemId}}\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/vantagens/resgatar",
+              "host": ["{{base_url}}"],
+              "path": ["vantagens", "resgatar"]
+            },
+            "description": "Aluno resgata uma vantagem usando suas moedas.\n\nRegras de negócio:\n- Saldo do aluno é debitado atomicamente\n- Estoque da vantagem é decrementado\n- Cupom único é gerado (8 caracteres alfanuméricos)\n- E-mail é enviado ao aluno e à empresa (async)\n- Resgate expira automaticamente após 15 dias\n\nErros possíveis:\n- 400 SALDO_INSUFICIENTE\n- 400 ESTOQUE_ESGOTADO\n- 404 Aluno/Vantagem não encontrado\n\nRetorna 201 Created com dados do resgate (cupom, expiraEm, etc.)."
+          }
+        },
+        {
+          "name": "Listar resgates de um aluno",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/resgates/aluno/{{alunoId}}",
+              "host": ["{{base_url}}"],
+              "path": ["resgates", "aluno", "{{alunoId}}"]
+            },
+            "description": "Retorna todos os resgates de um aluno, ordenados do mais recente para o mais antigo.\n\nStatus possíveis: `ativo`, `expirado`, `retirado`."
+          }
+        },
+        {
+          "name": "Listar resgates de uma empresa",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/resgates/empresa/{{empresaId}}",
+              "host": ["{{base_url}}"],
+              "path": ["resgates", "empresa", "{{empresaId}}"]
+            },
+            "description": "Retorna todos os resgates de vantagens pertencentes à empresa, ordenados do mais recente. Inclui nome do aluno e cupom para validação na retirada."
+          }
+        },
+        {
+          "name": "Confirmar retirada (Empresa)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/resgates/{{resgateId}}/confirmar",
+              "host": ["{{base_url}}"],
+              "path": ["resgates", "{{resgateId}}", "confirmar"]
+            },
+            "description": "Empresa confirma que o aluno retirou o benefício. Status do resgate muda de `ativo` → `retirado`.\n\nErro: 400 se o resgate não estiver com status `ativo`."
+          }
+        }
+      ]
+    },
+    {
+      "name": "💳 Transações",
+      "item": [
+        {
+          "name": "Enviar moedas (Professor → Aluno)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"professorId\": {{professorId}},\n  \"alunoId\": {{alunoId}},\n  \"valor\": {{transacaoValor}},\n  \"motivo\": \"Excelente desempenho na atividade de pesquisa\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/transacoes",
+              "host": ["{{base_url}}"],
+              "path": ["transacoes"]
+            },
+            "description": "Professor envia moedas a um aluno como reconhecimento.\n\nRegras de negócio:\n- Operação atômica (@Transactional)\n- Saldo do professor é debitado\n- Saldo do aluno é creditado\n- E-mail de notificação é enviado ao aluno (async)\n\nErros: 400 SALDO_INSUFICIENTE, 404 Professor/Aluno não encontrado.\n\nRetorna 201 Created."
+          }
+        },
+        {
+          "name": "Listar todas as transações de um aluno",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/transacoes/aluno/{{alunoId}}",
+              "host": ["{{base_url}}"],
+              "path": ["transacoes", "aluno", "{{alunoId}}"]
+            },
+            "description": "Retorna o histórico completo de transações de um aluno (enviadas e recebidas)."
+          }
+        },
+        {
+          "name": "Listar transações recebidas pelo aluno",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/transacoes/aluno/{{alunoId}}/recebidas",
+              "host": ["{{base_url}}"],
+              "path": ["transacoes", "aluno", "{{alunoId}}", "recebidas"]
+            },
+            "description": "Retorna apenas as transações em que o aluno foi o destinatário (recebeu moedas de professores)."
+          }
+        },
+        {
+          "name": "Listar transações enviadas pelo professor",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/transacoes/professor/{{professorId}}",
+              "host": ["{{base_url}}"],
+              "path": ["transacoes", "professor", "{{professorId}}"]
+            },
+            "description": "Retorna o extrato de todas as distribuições realizadas por um professor."
+          }
+        }
+      ]
+    },
+    {
+      "name": "📎 Upload de Arquivos",
+      "item": [
+        {
+          "name": "Fazer upload de imagem",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "arquivo",
+                  "type": "file",
+                  "description": "Arquivo de imagem (JPG, PNG, GIF, WEBP). Tamanho máximo: 5MB."
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/uploads",
+              "host": ["{{base_url}}"],
+              "path": ["uploads"]
+            },
+            "description": "Faz upload de um arquivo de imagem e retorna a URL pública relativa ao servidor.\n\nResposta: { \"url\": \"/uploads/uuid.jpg\" }\n\nA imagem fica acessível em: {{base_url}}/uploads/uuid.jpg\n\nUso típico: upload da foto de uma Vantagem antes de criá-la (POST /vantagens)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "⚙️ Admin (Desenvolvimento & Testes)",
       "item": [
         {
           "name": "Adicionar saldo ao Professor",
@@ -384,7 +693,7 @@
               "host": ["{{base_url}}"],
               "path": ["admin", "professor", "{{professorId}}", "saldo", "{{adminValor}}"]
             },
-            "description": "✅ Adiciona moedas a um professor para fins de teste/inicialização (ex: {{adminValor}} moedas ao Professor ID {{professorId}})"
+            "description": "Adiciona moedas diretamente ao saldo de um professor. Útil para testes ou correção manual de saldo.\n\nNota: O SemestreScheduler faz isso automaticamente em 1º de março e 1º de agosto (1000 moedas por professor)."
           }
         }
       ]
@@ -398,7 +707,7 @@
     },
     {
       "key": "alunoId",
-      "value": "10",
+      "value": "1",
       "type": "string"
     },
     {
@@ -408,6 +717,21 @@
     },
     {
       "key": "instituicaoId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "empresaId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "vantagemId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "resgateId",
       "value": "1",
       "type": "string"
     },
