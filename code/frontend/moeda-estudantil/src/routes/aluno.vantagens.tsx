@@ -35,6 +35,10 @@ export const Route = createFileRoute("/aluno/vantagens")({
   component: Vantagens,
 });
 
+const API_BASE = "http://localhost:8080";
+const fotoSrc = (foto: string | null) =>
+  foto ? (foto.startsWith("/uploads/") ? API_BASE + foto : foto) : null;
+
 function Vantagens() {
   const { currentUserId, currentUser, currentRole, setCurrentUser } = useStore();
   const [saldo, setSaldo] = useState<number>((currentUser as any)?.saldo ?? 0);
@@ -101,9 +105,11 @@ function Vantagens() {
           const semSaldo = saldo < v.custo;
           return (
             <div key={v.id} className="glass rounded-2xl p-5 flex flex-col gap-3 hover:scale-[1.02] transition-transform">
-              <div className="h-32 rounded-xl flex items-center justify-center text-4xl"
+              <div className="h-32 rounded-xl flex items-center justify-center text-4xl overflow-hidden"
                 style={{ background: "linear-gradient(135deg, oklch(0.86 0.1 155 / 0.4), oklch(0.78 0.14 158 / 0.3))" }}>
-                <Gift className="h-12 w-12 text-white/90" />
+                {fotoSrc(v.foto)
+                  ? <img src={fotoSrc(v.foto)!} alt={v.nome} className="h-full w-full object-cover" />
+                  : <Gift className="h-12 w-12 text-white/90" />}
               </div>
               <div className="flex-1">
                 <div className="flex items-start justify-between gap-2">

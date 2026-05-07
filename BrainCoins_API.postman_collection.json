@@ -348,14 +348,14 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Universidade Federal de Minas Gerais\",\n  \"cnpj\": \"17.191.585/0001-19\",\n  \"email\": \"contato@ufmg.br\",\n  \"senha\": \"SenhaInst123!\"\n}"
+              "raw": "{\n  \"nome\": \"Universidade Federal de Minas Gerais\",\n  \"cnpj\": \"17.191.585/0001-19\",\n  \"email\": \"contato@ufmg.br\",\n  \"senha\": \"SenhaInst123!\",\n  \"endereco\": \"Av. Antônio Carlos, 6627, Pampulha, Belo Horizonte - MG\",\n  \"telefone\": \"(31) 34094000\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/instituicoes",
               "host": ["{{base_url}}"],
               "path": ["instituicoes"]
             },
-            "description": "Cadastra uma nova instituição de ensino. Retorna 201 Created."
+            "description": "Cadastra uma nova instituição de ensino. Campos aceitos: nome, cnpj, email, senha, endereco (opcional), telefone (opcional). Retorna 201 Created."
           }
         },
         {
@@ -365,14 +365,14 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"UFMG - Universidade Federal de Minas Gerais\",\n  \"cnpj\": \"17.191.585/0001-19\",\n  \"email\": \"contato@ufmg.br\",\n  \"senha\": \"NovaSenhaInst456!\"\n}"
+              "raw": "{\n  \"nome\": \"UFMG - Universidade Federal de Minas Gerais\",\n  \"cnpj\": \"17.191.585/0001-19\",\n  \"email\": \"contato@ufmg.br\",\n  \"senha\": \"NovaSenhaInst456!\",\n  \"endereco\": \"Av. Antônio Carlos, 6627, Pampulha, Belo Horizonte - MG\",\n  \"telefone\": \"(31) 34094000\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/instituicoes/{{instituicaoId}}",
               "host": ["{{base_url}}"],
               "path": ["instituicoes", "{{instituicaoId}}"]
             },
-            "description": "Atualiza os dados de uma instituição."
+            "description": "Atualiza os dados de uma instituição. Campos atualizáveis: nome, email, senha, endereco, telefone. O CNPJ não é alterado."
           }
         },
         {

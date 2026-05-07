@@ -10,5 +10,6 @@ public record ResgateResponseDTO(
         String cupom,
         String data,
         String expiraEm,
-        String status
+        String status,
+        int valorMoedas
 ) {}

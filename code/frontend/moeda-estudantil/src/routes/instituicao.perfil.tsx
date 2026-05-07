@@ -4,22 +4,27 @@ import { GlassCard, PageHeader } from "@/components/ui-bits";
 import { EditModal } from "@/components/edit-modal";
 import { Edit2, Loader } from "lucide-react";
 import { buscarInstituicao, atualizarInstituicao } from "@/api/instituicoesApi";
+import { useStore } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/instituicao/perfil")({
   component: Perfil,
 });
 
 function Perfil() {
+  const store = useStore();
   const [instituicao, setInstituicao] = useState<any>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const id = Number((store.currentUser as any)?.id ?? 1);
     const carregarInstituicao = async () => {
       try {
         setLoading(true);
-        const res = await buscarInstituicao(1);
+        const res = await buscarInstituicao(id);
         setInstituicao(res.data);
+        // Sincroniza sidebar com dados frescos do backend (cobre PUT feito externamente)
+        store.setCurrentUser("instituicao", id, res.data);
       } catch (error) {
         console.error("Erro ao carregar instituição:", error);
       } finally {
@@ -30,15 +35,18 @@ function Perfil() {
   }, []);
 
   const handleSave = async (updatedData: any) => {
-    try {
-      await atualizarInstituicao(1, updatedData);
-      setInstituicao(updatedData);
-      setIsEditOpen(false);
-      alert("Instituição atualizada com sucesso!");
-    } catch (error) {
-      console.error("Erro ao atualizar:", error);
-      alert("Erro ao atualizar instituição");
+    const id = Number((store.currentUser as any)?.id ?? instituicao?.id ?? 1);
+    const res = await atualizarInstituicao(id, updatedData);
+    // Merge: prefere dados do backend; para campos que o backend retorne null (versão antiga),
+    // mantém o valor digitado no formulário
+    const backendData: Record<string, any> = res.data ?? {};
+    const merged = { ...updatedData };
+    for (const [k, v] of Object.entries(backendData)) {
+      if (v !== null && v !== undefined) merged[k] = v;
     }
+    setInstituicao(merged);
+    store.setCurrentUser("instituicao", id, merged);
+    setIsEditOpen(false);
   };
 
   if (loading) {
@@ -69,7 +77,7 @@ function Perfil() {
               <span className="text-white/70">Email</span><span className="font-semibold">{instituicao.email}</span>
             </div>
             <div className="flex justify-between border-b border-white/10 pb-2">
-              <span className="text-white/70">Endereço</span><span className="font-semibold">{instituicao.endereco}</span>
+              <span className="text-white/70">Endereço</span><span className="font-semibold">{instituicao.endereco || "N/A"}</span>
             </div>
             <div className="flex justify-between border-b border-white/10 pb-2">
               <span className="text-white/70">Telefone</span><span className="font-semibold">{instituicao.telefone || "N/A"}</span>
@@ -89,10 +97,9 @@ function Perfil() {
         title="Editar Instituição"
         fields={[
           { key: "nome", label: "Nome da Instituição", type: "text" },
-          { key: "cnpj", label: "CNPJ", type: "text" },
           { key: "email", label: "Email", type: "email" },
           { key: "endereco", label: "Endereço", type: "text" },
-          { key: "telefone", label: "Telefone", type: "text" },
+          { key: "telefone", label: "Telefone", type: "text", mask: "phone" },
         ]}
         data={instituicao}
         onSave={handleSave}

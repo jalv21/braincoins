@@ -5,7 +5,6 @@ import com.lab3.moeda.dto.response.ResgateResponseDTO;
 import com.lab3.moeda.exception.EstoqueEsgotadoException;
 import com.lab3.moeda.exception.SaldoInsuficienteException;
 import com.lab3.moeda.model.AlunoEntity;
-import com.lab3.moeda.model.EmpresaEntity;
 import com.lab3.moeda.model.ResgateEntity;
 import com.lab3.moeda.model.StatusResgate;
 import com.lab3.moeda.model.VantagemEntity;
@@ -216,6 +215,7 @@ public class ResgateService {
 
     ResgateResponseDTO toResponseDTO(ResgateEntity r) {
         LocalDateTime expira = r.getDataResgate().plusDays(DIAS_VALIDADE);
+        int valor = r.getValorMoedas() > 0 ? r.getValorMoedas() : r.getVantagem().getCusto();
         return new ResgateResponseDTO(
                 r.getId(),
                 r.getAluno().getId(),
@@ -226,7 +226,8 @@ public class ResgateService {
                 r.getCodigoCupom(),
                 r.getDataResgate().toString(),
                 expira.toString(),
-                r.getStatus().getValor()
+                r.getStatus().getValor(),
+                valor
         );
     }
 }

@@ -4,8 +4,8 @@ import com.lab3.moeda.dto.request.AlunoRequestDTO;
 import com.lab3.moeda.dto.response.AlunoResponseDTO;
 import com.lab3.moeda.model.AlunoEntity;
 import com.lab3.moeda.repository.AlunoRepository;
+import com.lab3.moeda.repository.InstituicaoRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,16 +15,23 @@ import java.util.NoSuchElementException;
 @Service
 public class AlunoService {
     private final AlunoRepository alunoRepository;
+    private final InstituicaoRepository instituicaoRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    public AlunoService(AlunoRepository alunoRepository, BCryptPasswordEncoder passwordEncoder) {
+    public AlunoService(AlunoRepository alunoRepository,
+                        InstituicaoRepository instituicaoRepository,
+                        BCryptPasswordEncoder passwordEncoder) {
         this.alunoRepository = alunoRepository;
+        this.instituicaoRepository = instituicaoRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
     // CREATE
     @Transactional
     public AlunoResponseDTO criar(AlunoRequestDTO request) {
+        if (!instituicaoRepository.existsByNome(request.instituicao()))
+            throw new NoSuchElementException("Instituição não encontrada: " + request.instituicao());
+
         AlunoEntity novoAluno = new AlunoEntity(
                 request.nome(), request.cpf(), request.rg(),
                 request.endereco(), request.instituicao(), request.curso(), request.email(),

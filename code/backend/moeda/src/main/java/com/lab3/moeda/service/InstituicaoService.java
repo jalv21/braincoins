@@ -2,10 +2,13 @@ package com.lab3.moeda.service;
 
 import com.lab3.moeda.dto.request.InstituicaoRequestDTO;
 import com.lab3.moeda.dto.response.InstituicaoResponseDTO;
+import com.lab3.moeda.model.AlunoEntity;
 import com.lab3.moeda.model.InstituicaoEntity;
 import com.lab3.moeda.model.ProfessorEntity;
+import com.lab3.moeda.repository.AlunoRepository;
 import com.lab3.moeda.repository.InstituicaoRepository;
 import com.lab3.moeda.repository.ProfessorRepository;
+import com.lab3.moeda.repository.TransacaoRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,13 +22,19 @@ import java.util.NoSuchElementException;
 public class InstituicaoService {
     private final InstituicaoRepository repository;
     private final ProfessorRepository professorRepository;
+    private final AlunoRepository alunoRepository;
+    private final TransacaoRepository transacaoRepository;
     private final BCryptPasswordEncoder criptografia;
 
     public InstituicaoService(InstituicaoRepository repository,
                               ProfessorRepository professorRepository,
+                              AlunoRepository alunoRepository,
+                              TransacaoRepository transacaoRepository,
                               BCryptPasswordEncoder criptografia) {
         this.repository = repository;
         this.professorRepository = professorRepository;
+        this.alunoRepository = alunoRepository;
+        this.transacaoRepository = transacaoRepository;
         this.criptografia = criptografia;
     }
 
@@ -37,6 +46,8 @@ public class InstituicaoService {
                 request.email(), request.senha()
         );
         novaInstituicao.setSenha(criptografia.encode(request.senha()));
+        novaInstituicao.setEndereco(request.endereco());
+        novaInstituicao.setTelefone(request.telefone());
         InstituicaoEntity instituicaoSalva = repository.save(novaInstituicao);
         return toResponseDTO(instituicaoSalva);
     }
@@ -65,20 +76,38 @@ public class InstituicaoService {
         InstituicaoEntity instituicao = repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Instituicao não encontrada."));
 
+        String nomeAntigo = instituicao.getNome();
         instituicao.setNome(request.nome());
         instituicao.setEmail(request.email());
+        instituicao.setEndereco(request.endereco());
+        instituicao.setTelefone(request.telefone());
 
         if (request.senha() != null && !request.senha().isBlank())
             instituicao.setSenha(criptografia.encode(request.senha()));
 
-        return toResponseDTO(instituicao);
+        InstituicaoEntity salva = repository.save(instituicao);
+
+        if (!nomeAntigo.equals(request.nome())) {
+            List<AlunoEntity> alunos = alunoRepository.findByInstituicao(nomeAntigo);
+            alunos.forEach(a -> a.setInstituicao(request.nome()));
+            alunoRepository.saveAll(alunos);
+        }
+
+        return toResponseDTO(salva);
     }
 
     // DELETE
     @Transactional
     public void deletar(int id) {
-        if(!repository.existsById(id))
-            throw new NoSuchElementException("Instituicao não encontrada.");
+        InstituicaoEntity instituicao = repository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Instituicao não encontrada."));
+
+        // Nulifica professor_id nas transações antes de remover os professores (evita FK violation)
+        transacaoRepository.nulificarProfessoresDaInstituicao(id);
+
+        List<AlunoEntity> alunos = alunoRepository.findByInstituicao(instituicao.getNome());
+        alunos.forEach(a -> a.setInstituicao("Sem instituição"));
+        alunoRepository.saveAll(alunos);
 
         repository.deleteById(id);
     }
@@ -135,7 +164,9 @@ public class InstituicaoService {
                 instituicao.getNome(),
                 instituicao.getCnpj(),
                 instituicao.getEmail(),
-                null
+                null,
+                instituicao.getEndereco(),
+                instituicao.getTelefone()
         );
     }
 }

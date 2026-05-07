@@ -2,6 +2,7 @@ package com.lab3.moeda.repository;
 
 import com.lab3.moeda.model.TransacaoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -34,4 +35,9 @@ public interface TransacaoRepository extends JpaRepository<TransacaoEntity, Inte
     @Query("SELECT t FROM TransacaoEntity t WHERE t.aluno.id = :alunoId " +
            "ORDER BY t.data DESC")
     List<TransacaoEntity> findRecebidas(@Param("alunoId") int alunoId);
+
+    @Modifying
+    @Query("UPDATE TransacaoEntity t SET t.professor = null WHERE t.professor.id IN " +
+           "(SELECT p.id FROM ProfessorEntity p WHERE p.instituicao.id = :instituicaoId)")
+    void nulificarProfessoresDaInstituicao(@Param("instituicaoId") int instituicaoId);
 }

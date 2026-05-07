@@ -4,5 +4,7 @@ public record InstituicaoRequestDTO (
         String nome,
         String cnpj,
         String email,
-        String senha
+        String senha,
+        String endereco,
+        String telefone
 ) {}

@@ -5,6 +5,7 @@ export const api = axios.create({
 });
 
 export const listarVantagens = () => api.get('/vantagens');
+export const listarTodasVantagens = () => api.get('/vantagens/todas');
 export const buscarVantagem = (id: number) => api.get(`/vantagens/${id}`);
 export const listarVantagensPorEmpresa = (empresaId: number) => api.get(`/vantagens/empresa/${empresaId}`);
 export const criarVantagem = (dados: any) => api.post('/vantagens', dados);

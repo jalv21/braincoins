@@ -2,15 +2,16 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useStore, formatDate } from "@/lib/mock-data";
 import { GlassCard, PageHeader, CoinBadge, EmptyState } from "@/components/ui-bits";
-import { ArrowDownLeft, Coins } from "lucide-react";
+import { ArrowDownLeft, Gift, Coins } from "lucide-react";
 import { buscarTransacoesAluno } from "@/api/instituicoesApi";
+import { buscarResgatesAluno, listarTodasVantagens } from "@/api/vantagensApi";
 
-type TransacaoAPI = {
-  id: number;
-  nomeProfessor: string;
-  nomeAluno: string;
+type Movimentacao = {
+  key: string;
+  tipo: "credito" | "debito";
+  titulo: string;
+  subtitulo: string;
   valor: number;
-  motivo: string;
   data: string;
 };
 
@@ -21,7 +22,7 @@ export const Route = createFileRoute("/aluno/extrato")({
 function Extrato() {
   const { currentUserId, currentUser } = useStore();
   const saldo = (currentUser as any)?.saldo ?? 0;
-  const [transacoes, setTransacoes] = useState<TransacaoAPI[]>([]);
+  const [movimentacoes, setMovimentacoes] = useState<Movimentacao[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,16 +32,41 @@ function Extrato() {
     let mounted = true;
     setLoading(true);
 
-    buscarTransacoesAluno(id)
-      .then((res) => {
-        if (mounted) setTransacoes(res.data ?? []);
-      })
-      .catch(() => {
-        if (mounted) setTransacoes([]);
-      })
-      .finally(() => {
-        if (mounted) setLoading(false);
-      });
+    Promise.all([
+      buscarTransacoesAluno(id).then((r) => r.data ?? []).catch(() => []),
+      buscarResgatesAluno(id).then((r) => r.data ?? []).catch(() => []),
+      listarTodasVantagens().then((r) => r.data ?? []).catch(() => []),
+    ]).then(([transacoes, resgates, vantagens]) => {
+      if (!mounted) return;
+
+      const custoPorVantagem: Record<number, number> = {};
+      for (const v of vantagens) custoPorVantagem[v.id] = v.custo;
+
+      const creditos: Movimentacao[] = transacoes.map((t: any) => ({
+        key: `t-${t.id}`,
+        tipo: "credito",
+        titulo: t.nomeProfessor ?? "Professor",
+        subtitulo: t.motivo ?? "",
+        valor: t.valor,
+        data: t.data,
+      }));
+
+      const debitos: Movimentacao[] = resgates.map((r: any) => ({
+        key: `r-${r.id}`,
+        tipo: "debito",
+        titulo: r.vantagemNome ?? "Vantagem",
+        subtitulo: r.empresaNome ?? "",
+        valor: r.valorMoedas > 0 ? r.valorMoedas : (custoPorVantagem[r.vantagemId] ?? 0),
+        data: r.data,
+      }));
+
+      const todas = [...creditos, ...debitos].sort(
+        (a, b) => new Date(b.data).getTime() - new Date(a.data).getTime()
+      );
+      setMovimentacoes(todas);
+    }).finally(() => {
+      if (mounted) setLoading(false);
+    });
 
     return () => { mounted = false; };
   }, [currentUserId, currentUser]);
@@ -56,22 +82,26 @@ function Extrato() {
         <GlassCard><p className="text-white/70 text-sm">Carregando extrato...</p></GlassCard>
       ) : (
         <GlassCard>
-          {transacoes.length === 0 ? (
+          {movimentacoes.length === 0 ? (
             <EmptyState icon={<Coins className="h-7 w-7 text-white/60" />} title="Sem movimentações" />
           ) : (
             <div className="divide-y divide-white/10">
-              {transacoes.map((t) => (
-                <div key={t.id} className="py-3 flex items-center gap-4">
-                  <div className="h-10 w-10 rounded-xl flex items-center justify-center bg-mint/30">
-                    <ArrowDownLeft className="h-5 w-5 text-mint" />
+              {movimentacoes.map((m) => (
+                <div key={m.key} className="py-3 flex items-center gap-4">
+                  <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${m.tipo === "credito" ? "bg-mint/30" : "bg-coral/20"}`}>
+                    {m.tipo === "credito"
+                      ? <ArrowDownLeft className="h-5 w-5 text-mint" />
+                      : <Gift className="h-5 w-5 text-coral" />}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-white truncate">{t.nomeProfessor}</p>
-                    <p className="text-xs text-white/65 truncate">{t.motivo}</p>
+                    <p className="font-semibold text-white truncate">{m.titulo}</p>
+                    <p className="text-xs text-white/65 truncate">{m.subtitulo}</p>
                   </div>
                   <div className="text-right">
-                    <p className="font-bold text-mint">+{t.valor} 🪙</p>
-                    <p className="text-xs text-white/60">{formatDate(t.data)}</p>
+                    <p className={`font-bold ${m.tipo === "credito" ? "text-mint" : "text-coral"}`}>
+                      {m.tipo === "credito" ? "+" : "-"}{m.valor} 🪙
+                    </p>
+                    <p className="text-xs text-white/60">{formatDate(m.data)}</p>
                   </div>
                 </div>
               ))}

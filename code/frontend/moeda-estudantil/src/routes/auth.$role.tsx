@@ -1,10 +1,11 @@
 import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BrainLogo } from "@/components/brand";
 import { useStore, type Role } from "@/lib/mock-data";
 import { toast } from "sonner";
 import { ArrowLeft } from "lucide-react";
 import { criarAluno, api, criarEmpresa } from "../api/alunosApi.ts";
+import { listarInstituicoes } from "../api/instituicoesApi.ts";
 
 export const Route = createFileRoute("/auth/$role")({
   component: AuthPage,
@@ -135,10 +136,18 @@ function LoginForm({ onSubmit }: { onSubmit: (e: React.FormEvent) => void }) {
 }
 
 function RegisterAluno({ onDone }: { onDone: () => void }) {
-  const store = useStore();
-  const [form, setForm] = useState({ nome: "", cpf: "", rg: "", endereco: "", instituicao: store.instituicoes[0].nome, curso: "", email: "", senha: "" });
+  const [instituicoes, setInstituicoes] = useState<{ id: number; nome: string }[]>([]);
+  const [form, setForm] = useState({ nome: "", cpf: "", rg: "", endereco: "", instituicao: "", curso: "", email: "", senha: "" });
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
     setForm({ ...form, [k]: e.target.value });
+
+  useEffect(() => {
+    listarInstituicoes().then((res) => {
+      const lista = res.data;
+      setInstituicoes(lista);
+      if (lista.length > 0) setForm((f) => ({ ...f, instituicao: lista[0].nome }));
+    }).catch(() => toast.error("Erro ao carregar instituições."));
+  }, []);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -181,7 +190,7 @@ function RegisterAluno({ onDone }: { onDone: () => void }) {
       <Field label="Endereço"><input required value={form.endereco} onChange={set("endereco")} className={inputCls} /></Field>
       <Field label="Instituição">
         <select required value={form.instituicao} onChange={set("instituicao")} className={inputCls}>
-          {store.instituicoes.map((i) => <option key={i.id} className="text-black">{i.nome}</option>)}
+          {instituicoes.map((i) => <option key={i.id} className="text-black">{i.nome}</option>)}
         </select>
       </Field>
       <Field label="Curso"><input required value={form.curso} onChange={set("curso")} className={inputCls} /></Field>
