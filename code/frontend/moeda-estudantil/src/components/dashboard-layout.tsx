@@ -19,6 +19,8 @@ export function DashboardLayout({
   let saldo: number | null = null;
 
   // Se houver currentUser (vindo da API ou do mock-data), usar dele
+  const formatProfessorName = (name: string) => (name.toLowerCase().startsWith("prof.") ? name : `Prof. ${name}`);
+
   if (store.currentUser) {
     const user = store.currentUser as any;
     if (role === "aluno" || role === "professor") {
@@ -26,7 +28,7 @@ export function DashboardLayout({
     }
     
     if (role === "professor") {
-      userName = `Prof. ${user.nome}`;
+      userName = formatProfessorName(user.nome);
     } else {
       userName = user.nome;
     }
@@ -37,7 +39,7 @@ export function DashboardLayout({
       userName = a.nome; saldo = a.saldo;
     } else if (role === "professor") {
       const p = store.professores.find((x) => x.id === store.currentUserId) ?? store.professores[0];
-      userName = `Prof. ${p.nome}`; saldo = p.saldo;
+      userName = formatProfessorName(p.nome); saldo = p.saldo;
     } else if (role === "empresa") {
       const e = store.empresas.find((x) => x.id === store.currentUserId) ?? store.empresas[0];
       userName = e.nome;

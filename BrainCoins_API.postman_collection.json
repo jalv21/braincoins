@@ -27,11 +27,11 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/alunos/10",
+              "raw": "{{base_url}}/alunos/{{alunoId}}",
               "host": ["{{base_url}}"],
-              "path": ["alunos", "10"]
+              "path": ["alunos", "{{alunoId}}"]
             },
-            "description": "✅ Retorna os dados de um aluno específico (ex: ID 10)"
+            "description": "✅ Retorna os dados de um aluno específico (ex: ID {{alunoId}})"
           }
         },
         {
@@ -46,7 +46,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"cpf\": \"12345678901\",\n  \"rg\": \"1234567\",\n  \"endereco\": \"Rua das Flores, 123\",\n  \"instituicaoId\": 1,\n  \"curso\": \"Engenharia de Software\",\n  \"email\": \"maria.silva@university.edu\",\n  \"senha\": \"SenhaAluno123!\"\n}"
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"cpf\": \"12345678901\",\n  \"rg\": \"1234567\",\n  \"endereco\": \"Rua das Flores, 123\",\n  \"instituicaoId\": {{instituicaoId}},\n  \"curso\": \"Engenharia de Software\",\n  \"email\": \"maria.silva@university.edu\",\n  \"senha\": \"SenhaAluno123!\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/alunos",
@@ -68,12 +68,12 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Maria Silva Santos\",\n  \"cpf\": \"12345678901\",\n  \"rg\": \"1234567\",\n  \"endereco\": \"Rua das Flores, 200\",\n  \"instituicaoId\": 1,\n  \"curso\": \"Engenharia de Software\",\n  \"email\": \"maria.silva@university.edu\",\n  \"senha\": \"NovaSenhaAluno456!\"\n}"
+              "raw": "{\n  \"nome\": \"Maria Silva Santos\",\n  \"cpf\": \"12345678901\",\n  \"rg\": \"1234567\",\n  \"endereco\": \"Rua das Flores, 200\",\n  \"instituicaoId\": {{instituicaoId}},\n  \"curso\": \"Engenharia de Software\",\n  \"email\": \"maria.silva@university.edu\",\n  \"senha\": \"NovaSenhaAluno456!\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/alunos/10",
+              "raw": "{{base_url}}/alunos/{{alunoId}}",
               "host": ["{{base_url}}"],
-              "path": ["alunos", "10"]
+              "path": ["alunos", "{{alunoId}}"]
             },
             "description": "✅ Atualiza os dados de um aluno existente"
           }
@@ -84,9 +84,9 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/alunos/10",
+              "raw": "{{base_url}}/alunos/{{alunoId}}",
               "host": ["{{base_url}}"],
-              "path": ["alunos", "10"]
+              "path": ["alunos", "{{alunoId}}"]
             },
             "description": "✅ Deleta um aluno do sistema"
           }
@@ -144,7 +144,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"professorId\": 1,\n  \"alunoId\": 10,\n  \"valor\": 250,\n  \"motivo\": \"Desempenho excepcional na atividade de pesquisa\"\n}"
+              "raw": "{\n  \"professorId\": {{professorId}},\n  \"alunoId\": {{alunoId}},\n  \"valor\": {{transacaoValor}},\n  \"motivo\": \"Desempenho excepcional na atividade de pesquisa\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/transacoes",
@@ -160,9 +160,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/transacoes/aluno/10",
+              "raw": "{{base_url}}/transacoes/aluno/{{alunoId}}",
               "host": ["{{base_url}}"],
-              "path": ["transacoes", "aluno", "10"]
+              "path": ["transacoes", "aluno", "{{alunoId}}"]
             },
             "description": "✅ Retorna todas as transações de um aluno (enviadas e recebidas)"
           }
@@ -173,9 +173,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/transacoes/aluno/10/recebidas",
+              "raw": "{{base_url}}/transacoes/aluno/{{alunoId}}/recebidas",
               "host": ["{{base_url}}"],
-              "path": ["transacoes", "aluno", "10", "recebidas"]
+              "path": ["transacoes", "aluno", "{{alunoId}}", "recebidas"]
             },
             "description": "✅ Retorna apenas as transações recebidas pelo aluno (envios de professores)"
           }
@@ -186,9 +186,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/transacoes/professor/1",
+              "raw": "{{base_url}}/transacoes/professor/{{professorId}}",
               "host": ["{{base_url}}"],
-              "path": ["transacoes", "professor", "1"]
+              "path": ["transacoes", "professor", "{{professorId}}"]
             },
             "description": "✅ Retorna todas as transações enviadas por um professor"
           }
@@ -217,9 +217,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/professores/1",
+              "raw": "{{base_url}}/professores/{{professorId}}",
               "host": ["{{base_url}}"],
-              "path": ["professores", "1"]
+              "path": ["professores", "{{professorId}}"]
             },
             "description": "✅ Retorna os dados de um professor específico (inclui saldo de moedas)"
           }
@@ -236,7 +236,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Dr. Carlos Silva Neves\",\n  \"cpf\": \"111.222.333-55\",\n  \"instituicaoId\": 1,\n  \"email\": \"carlos.neves@university.edu\",\n  \"senha\": \"SenhaProf123!\"\n}"
+              "raw": "{\n  \"nome\": \"Dr. Carlos Silva Neves\",\n  \"cpf\": \"111.222.333-55\",\n  \"instituicaoId\": {{instituicaoId}},\n  \"email\": \"carlos.neves@university.edu\",\n  \"senha\": \"SenhaProf123!\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/professores",
@@ -258,12 +258,12 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Dr. Carlos Silva Neves Atualizado\",\n  \"cpf\": \"111.222.333-55\",\n  \"instituicaoId\": 1,\n  \"email\": \"carlos.neves@university.edu\",\n  \"senha\": \"NovaSenhaProf456!\"\n}"
+              "raw": "{\n  \"nome\": \"Dr. Carlos Silva Neves Atualizado\",\n  \"cpf\": \"111.222.333-55\",\n  \"instituicaoId\": {{instituicaoId}},\n  \"email\": \"carlos.neves@university.edu\",\n  \"senha\": \"NovaSenhaProf456!\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/professores/1",
+              "raw": "{{base_url}}/professores/{{professorId}}",
               "host": ["{{base_url}}"],
-              "path": ["professores", "1"]
+              "path": ["professores", "{{professorId}}"]
             },
             "description": "✅ Atualiza os dados de um professor existente (saldo não é modificado via PUT)"
           }
@@ -274,9 +274,9 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/professores/1",
+              "raw": "{{base_url}}/professores/{{professorId}}",
               "host": ["{{base_url}}"],
-              "path": ["professores", "1"]
+              "path": ["professores", "{{professorId}}"]
             },
             "description": "✅ Deleta um professor do sistema"
           }
@@ -305,9 +305,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/instituicoes/1",
+              "raw": "{{base_url}}/instituicoes/{{instituicaoId}}",
               "host": ["{{base_url}}"],
-              "path": ["instituicoes", "1"]
+              "path": ["instituicoes", "{{instituicaoId}}"]
             },
             "description": "✅ Retorna os dados de uma instituição específica"
           }
@@ -349,9 +349,9 @@
               "raw": "{\n  \"nome\": \"UFMG - Universidade Federal de Minas Gerais\",\n  \"cnpj\": \"17.191.585/0001-19\",\n  \"endereco\": \"Av. Antônio Carlos, 6627 - Campus Pampulha\",\n  \"email\": \"contato@ufmg.br\",\n  \"telefone\": \"(31) 3409-5000\"\n}"
             },
             "url": {
-              "raw": "{{base_url}}/instituicoes/1",
+              "raw": "{{base_url}}/instituicoes/{{instituicaoId}}",
               "host": ["{{base_url}}"],
-              "path": ["instituicoes", "1"]
+              "path": ["instituicoes", "{{instituicaoId}}"]
             },
             "description": "✅ Atualiza os dados de uma instituição existente"
           }
@@ -362,9 +362,9 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/instituicoes/1",
+              "raw": "{{base_url}}/instituicoes/{{instituicaoId}}",
               "host": ["{{base_url}}"],
-              "path": ["instituicoes", "1"]
+              "path": ["instituicoes", "{{instituicaoId}}"]
             },
             "description": "✅ Deleta uma instituição do sistema"
           }
@@ -380,11 +380,11 @@
             "method": "POST",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/admin/professor/1/saldo/1000",
+              "raw": "{{base_url}}/admin/professor/{{professorId}}/saldo/{{adminValor}}",
               "host": ["{{base_url}}"],
-              "path": ["admin", "professor", "1", "saldo", "1000"]
+              "path": ["admin", "professor", "{{professorId}}", "saldo", "{{adminValor}}"]
             },
-            "description": "✅ Adiciona moedas a um professor para fins de teste/inicialização (ex: 1000 moedas ao Professor ID 1)"
+            "description": "✅ Adiciona moedas a um professor para fins de teste/inicialização (ex: {{adminValor}} moedas ao Professor ID {{professorId}})"
           }
         }
       ]
@@ -394,6 +394,31 @@
     {
       "key": "base_url",
       "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "alunoId",
+      "value": "10",
+      "type": "string"
+    },
+    {
+      "key": "professorId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "instituicaoId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "transacaoValor",
+      "value": "250",
+      "type": "string"
+    },
+    {
+      "key": "adminValor",
+      "value": "1000",
       "type": "string"
     }
   ]

@@ -85,8 +85,14 @@ public class ProfessorService {
     }
 
     public ProfessorResponseDTO login(String email, String senha) {
-        ProfessorEntity professor = professorRepository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("Professor não encontrado"));
+        java.util.List<ProfessorEntity> matches = professorRepository.findAllByEmail(email);
+        if (matches == null || matches.isEmpty())
+            throw new NoSuchElementException("Professor não encontrado.");
+
+        if (matches.size() > 1)
+            throw new IllegalStateException("Múltiplos usuários com mesmo e-mail. Contate o administrador.");
+
+        ProfessorEntity professor = matches.get(0);
 
         if(!criptografia.matches(senha, professor.getSenha()))
             throw new IllegalStateException("Senha incorreta.");

@@ -1,12 +1,14 @@
 package com.lab3.moeda.model;
 
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Column;
 
 import java.util.List;
 
 @MappedSuperclass
 public class UsuarioEntity {
     protected String nome;
+    @Column(nullable = false, unique = true)
     protected String email;
     protected String senha;
 

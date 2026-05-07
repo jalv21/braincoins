@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.NoSuchElementException;
+
 @RestController
 @RequestMapping("/login")
 public class AuthController {
@@ -50,10 +52,15 @@ public class AuthController {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleLoginError(RuntimeException ex) {
-        if (ex.getMessage().equals("Usuário não encontrado."))
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        if (ex.getMessage().equals("Senha incorreta."))
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+        if (ex instanceof NoSuchElementException)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+
+        if (ex instanceof IllegalStateException && ex.getMessage() != null && ex.getMessage().toLowerCase().contains("senha"))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Senha incorreta.");
+
+        if (ex.getMessage() != null && ex.getMessage().toLowerCase().contains("múltiplos"))
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }
 }

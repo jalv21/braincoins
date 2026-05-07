@@ -1,55 +1,58 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useStore } from "@/lib/mock-data";
 import { GlassCard, PageHeader } from "@/components/ui-bits";
-import { EditModal } from "@/components/edit-modal";
-import { Edit2 } from "lucide-react";
+import { buscarProfessor } from "@/api/instituicoesApi";
+
+type ProfessorAPI = {
+  id: number;
+  nome: string;
+  cpf: string;
+  instituicaoNome: string;
+  saldo: number;
+  email: string;
+};
 
 export const Route = createFileRoute("/professor/perfil")({
   component: Perfil,
 });
 
 function Perfil() {
-  const { professores, currentUserId, setProfessorData } = useStore();
-  const prof = professores.find((p) => p.id === currentUserId) ?? professores[0];
-  const [isEditOpen, setIsEditOpen] = useState(false);
+  const { currentUserId, currentUser } = useStore();
+  const [prof, setProf] = useState<ProfessorAPI | null>(
+    currentUser ? {
+      id: Number((currentUser as any).id),
+      nome: (currentUser as any).nome,
+      cpf: (currentUser as any).cpf,
+      instituicaoNome: (currentUser as any).instituicaoNome,
+      saldo: (currentUser as any).saldo,
+      email: (currentUser as any).email,
+    } : null
+  );
 
-  const handleSave = (updatedData: any) => {
-    setProfessorData(prof.id, updatedData);
-  };
+  useEffect(() => {
+    const id = Number(currentUserId || (currentUser as any)?.id);
+    if (!id) return;
+
+    buscarProfessor(id)
+      .then((res) => setProf(res.data))
+      .catch(() => {});
+  }, [currentUserId, currentUser]);
+
+  if (!prof) return null;
 
   return (
     <div>
       <PageHeader title="Perfil" subtitle="Informações cadastrais." />
       <GlassCard className="max-w-2xl">
-        <div className="flex items-start justify-between">
-          <div className="space-y-3 text-white flex-1">
-            <Row label="Nome" value={prof.nome} />
-            <Row label="Departamento" value={prof.departamento} />
-            <Row label="Instituição" value={prof.instituicao} />
-            <Row label="Cota semestral" value="1.000 moedas" />
-          </div>
-          <button
-            onClick={() => setIsEditOpen(true)}
-            className="ml-4 p-3 rounded-lg bg-mint text-mint-foreground hover:bg-mint/90 transition flex items-center gap-2 whitespace-nowrap"
-          >
-            <Edit2 className="h-4 w-4" /> Editar
-          </button>
+        <div className="space-y-3 text-white">
+          <Row label="Nome" value={prof.nome} />
+          <Row label="E-mail" value={prof.email} />
+          <Row label="CPF" value={prof.cpf} />
+          <Row label="Instituição" value={prof.instituicaoNome} />
+          <Row label="Cota semestral" value="1.000 moedas" />
         </div>
       </GlassCard>
-
-      <EditModal
-        isOpen={isEditOpen}
-        title="Editar Perfil"
-        fields={[
-          { key: "nome", label: "Nome", type: "text" },
-          { key: "departamento", label: "Departamento", type: "text" },
-          { key: "instituicao", label: "Instituição", type: "text" },
-        ]}
-        data={{ nome: prof.nome, departamento: prof.departamento, instituicao: prof.instituicao }}
-        onSave={handleSave}
-        onClose={() => setIsEditOpen(false)}
-      />
     </div>
   );
 }
