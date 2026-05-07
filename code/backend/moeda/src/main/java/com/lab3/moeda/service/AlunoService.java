@@ -64,10 +64,10 @@ public class AlunoService {
         aluno.setCurso(request.curso());
         aluno.setEmail(request.email());
 
-       if(!passwordEncoder.matches(request.senha(), aluno.getSenha()))
-           aluno.setSenha(passwordEncoder.encode(request.senha()));
+        if (request.senha() != null && !request.senha().isBlank())
+            aluno.setSenha(passwordEncoder.encode(request.senha()));
 
-       return toResponseDTO(aluno);
+        return toResponseDTO(aluno);
     }
 
     // DELETE
@@ -101,7 +101,7 @@ public class AlunoService {
                 aluno.getCurso(),
                 aluno.getSaldoMoedas(),
                 aluno.getEmail(),
-                aluno.getSenha()
+                null
         );
     }
 }

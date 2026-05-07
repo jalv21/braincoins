@@ -70,8 +70,8 @@ public class ProfessorService {
         professor.setEmail(request.email());
         professor.setInstituicao(instituicao);
 
-        if(!criptografia.matches(request.senha(), professor.getSenha()))
-            professor.setSenha(request.senha());
+        if (request.senha() != null && !request.senha().isBlank())
+            professor.setSenha(criptografia.encode(request.senha()));
 
         return toResponseDTO(professor);
     }
@@ -108,7 +108,7 @@ public class ProfessorService {
             professor.getInstituicao().getNome(),
             professor.getSaldoMoedas(),
             professor.getEmail(),
-            professor.getSenha()
+            null
         );
     }
 

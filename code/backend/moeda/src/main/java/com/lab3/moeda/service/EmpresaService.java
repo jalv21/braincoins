@@ -61,9 +61,7 @@ public class EmpresaService {
         empresa.setEndereco(request.endereco());
         empresa.setEmail(request.email());
 
-        // Só criptografa e salva a senha da requisição caso ela tenha sido alterada.
-        // Evita corromper a senha criptografando de novo
-        if(!passwordEncoder.matches(request.senha(), empresa.getSenha()))
+        if (request.senha() != null && !request.senha().isBlank())
             empresa.setSenha(passwordEncoder.encode(request.senha()));
 
         return toResponseDTO(empresa);
@@ -96,7 +94,7 @@ public class EmpresaService {
                 empresa.getCnpj(),
                 empresa.getEndereco(),
                 empresa.getEmail(),
-                empresa.getSenha()
+                null
         );
     }
 }

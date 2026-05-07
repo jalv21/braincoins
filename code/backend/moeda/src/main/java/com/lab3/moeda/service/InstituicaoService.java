@@ -68,7 +68,7 @@ public class InstituicaoService {
         instituicao.setNome(request.nome());
         instituicao.setEmail(request.email());
 
-        if(!criptografia.matches(request.senha(), instituicao.getSenha()))
+        if (request.senha() != null && !request.senha().isBlank())
             instituicao.setSenha(criptografia.encode(request.senha()));
 
         return toResponseDTO(instituicao);
@@ -135,7 +135,7 @@ public class InstituicaoService {
                 instituicao.getNome(),
                 instituicao.getCnpj(),
                 instituicao.getEmail(),
-                instituicao.getSenha()
+                null
         );
     }
 }
