@@ -4,6 +4,7 @@ import com.lab3.moeda.dto.request.AlunoRequestDTO;
 import com.lab3.moeda.dto.response.AlunoResponseDTO;
 import com.lab3.moeda.model.AlunoEntity;
 import com.lab3.moeda.repository.AlunoRepository;
+import com.lab3.moeda.repository.InstituicaoRepository;
 import com.lab3.moeda.service.AlunoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AlunoCrudTest {
     @Autowired
     private AlunoRepository alunoRepository;
+    @Autowired
+    private InstituicaoRepository instituicaoRepository;
     private AlunoService alunoService;
     private AlunoEntity alice, beatriz, carol;
     private AlunoRequestDTO aluno1Request, aluno2Request, aluno3Request;
@@ -32,7 +35,7 @@ public class AlunoCrudTest {
         carol = new AlunoEntity("Carol", "34567891011", "345678910", "Rua 3", "USP", "Direito", "carol123@gmail.com", "123456");
 
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        alunoService = new AlunoService(alunoRepository, passwordEncoder);
+        alunoService = new AlunoService(alunoRepository, instituicaoRepository, passwordEncoder);
 
         aluno1Request = new AlunoRequestDTO(
                 alice.getNome(),
