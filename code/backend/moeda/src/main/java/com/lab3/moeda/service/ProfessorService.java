@@ -31,10 +31,15 @@ public class ProfessorService {
         InstituicaoEntity instituicao = instituicaoRepository.findById(request.instituicaoId())
                 .orElseThrow(() -> new NoSuchElementException("ID de Instituição inválido para Professor."));
 
+        // Verificação nessa parte do código elimina necessidade das outras no método login.
+        if(professorRepository.findByEmail(request.email()).isPresent())
+            throw new IllegalStateException("Email inserido já está em uso. Escolha outro email.");
+
         ProfessorEntity novoProfessor = new ProfessorEntity(
                 request.nome(), request.cpf(), request.email(),
                 request.senha(), instituicao
         );
+
         novoProfessor.setSenha(criptografia.encode(request.senha()));
         ProfessorEntity professorSalvo = professorRepository.save(novoProfessor);
         return toResponseDTO(professorSalvo);
@@ -85,14 +90,10 @@ public class ProfessorService {
     }
 
     public ProfessorResponseDTO login(String email, String senha) {
-        java.util.List<ProfessorEntity> matches = professorRepository.findAllByEmail(email);
-        if (matches == null || matches.isEmpty())
-            throw new NoSuchElementException("Professor não encontrado.");
-
-        if (matches.size() > 1)
-            throw new IllegalStateException("Múltiplos usuários com mesmo e-mail. Contate o administrador.");
-
-        ProfessorEntity professor = matches.get(0);
+        // Não precisa de validação do professor a procura de emails iguais em professores já cadastrados
+        // porque o método criar já faz isso antes do próprio cadastro.
+        ProfessorEntity professor = professorRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("Professor não encontrado."));
 
         if(!criptografia.matches(senha, professor.getSenha()))
             throw new IllegalStateException("Senha incorreta.");
@@ -108,7 +109,8 @@ public class ProfessorService {
             professor.getInstituicao().getNome(),
             professor.getSaldoMoedas(),
             professor.getEmail(),
-            null
+            // Senha estava sendo nulificada.
+            professor.getSenha()
         );
     }
 
