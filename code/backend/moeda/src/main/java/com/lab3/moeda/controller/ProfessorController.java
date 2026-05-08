@@ -44,6 +44,7 @@ public class ProfessorController {
     }
 
     // DELETE /professores/{id}
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable int id) {
         service.deletar(id);
         return ResponseEntity.noContent().build();

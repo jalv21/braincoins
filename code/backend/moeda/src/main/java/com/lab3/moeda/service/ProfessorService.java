@@ -31,9 +31,11 @@ public class ProfessorService {
         InstituicaoEntity instituicao = instituicaoRepository.findById(request.instituicaoId())
                 .orElseThrow(() -> new NoSuchElementException("ID de Instituição inválido para Professor."));
 
-        // Verificação nessa parte do código elimina necessidade das outras no método login.
-        if(professorRepository.findByEmail(request.email()).isPresent())
-            throw new IllegalStateException("Email inserido já está em uso. Escolha outro email.");
+        ProfessorEntity duplicata = professorRepository.findByEmail(request.email())
+                .orElse(null);
+
+        if(duplicata != null)
+            throw new IllegalStateException("Email inserido já está em uso.");
 
         ProfessorEntity novoProfessor = new ProfessorEntity(
                 request.nome(), request.cpf(), request.email(),
