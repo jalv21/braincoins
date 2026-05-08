@@ -39,6 +39,7 @@ public class ProfessorService {
                 request.senha(), instituicao
         );
 
+        novoProfessor.creditarMoedas(1000);
         novoProfessor.setSenha(criptografia.encode(request.senha()));
         ProfessorEntity professorSalvo = professorRepository.save(novoProfessor);
         return toResponseDTO(professorSalvo);
