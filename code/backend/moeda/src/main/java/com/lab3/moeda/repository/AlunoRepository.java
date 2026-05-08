@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface AlunoRepository extends JpaRepository<AlunoEntity, Integer> {
     Optional<AlunoEntity> findByEmail(String email);
     List<AlunoEntity> findByInstituicao(String instituicao);
+    boolean existsByEmail(String email);
 }

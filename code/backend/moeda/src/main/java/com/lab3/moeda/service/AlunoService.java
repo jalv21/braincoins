@@ -32,6 +32,9 @@ public class AlunoService {
         if (!instituicaoRepository.existsByNome(request.instituicao()))
             throw new NoSuchElementException("Instituição não encontrada: " + request.instituicao());
 
+        if(alunoRepository.existsByEmail(request.email()))
+            throw new IllegalStateException("Email inserido já está em uso.");
+
         AlunoEntity novoAluno = new AlunoEntity(
                 request.nome(), request.cpf(), request.rg(),
                 request.endereco(), request.instituicao(), request.curso(), request.email(),
