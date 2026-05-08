@@ -23,8 +23,8 @@ public class VantagemEntity {
     @Column(length = 500)
     private String foto;
 
-    @Column(nullable = false)
-    private int custo;
+    @Column(name = "valor", nullable = false)
+    private short custo;
 
     @Column // O atributo é nullable porque nem todas as vantagens tem quantidade em estoque
     private int estoque;
@@ -34,7 +34,7 @@ public class VantagemEntity {
 
     public VantagemEntity() {}
 
-    public VantagemEntity(EmpresaEntity empresa, String nome, String descricao, String foto, int custo, int estoque) {
+    public VantagemEntity(EmpresaEntity empresa, String nome, String descricao, String foto, short custo, int estoque) {
         this.empresa = empresa;
         this.nome = nome;
         this.descricao = descricao;
@@ -73,9 +73,9 @@ public class VantagemEntity {
 
     public void setFoto(String foto) { this.foto = foto; }
 
-    public int getCusto() { return custo; }
+    public short getCusto() { return custo; }
 
-    public void setCusto(int custo) { this.custo = custo; }
+    public void setCusto(short custo) { this.custo = custo; }
 
     public int getEstoque() { return estoque; }
 
