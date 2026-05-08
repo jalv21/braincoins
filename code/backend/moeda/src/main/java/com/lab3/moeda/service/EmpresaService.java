@@ -14,21 +14,23 @@ import java.util.NoSuchElementException;
 @Service
 public class EmpresaService {
     private final EmpresaRepository empresaRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder criptografia;
 
-    public EmpresaService(EmpresaRepository empresaRepository, BCryptPasswordEncoder passwordEncoder) {
+    public EmpresaService(EmpresaRepository empresaRepository, BCryptPasswordEncoder criptografia) {
         this.empresaRepository = empresaRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.criptografia = criptografia;
     }
 
     // CREATE
     @Transactional
     public EmpresaResponseDTO criar(EmpresaRequestDTO request) {
+        if(empresaRepository.existsByEmail(request.email()))
+            throw new IllegalStateException("Email inserido já está em uso.");
+
         EmpresaEntity novaEmpresa = new EmpresaEntity(
                 request.nome(), request.cnpj(), request.endereco(),
-                request.email(), request.senha()
+                request.email(), criptografia.encode(request.senha())
         );
-        novaEmpresa.setSenha(passwordEncoder.encode(request.senha()));
         EmpresaEntity empresaSalva = empresaRepository.save(novaEmpresa);
         return toResponseDTO(empresaSalva);
     }
@@ -62,7 +64,7 @@ public class EmpresaService {
         empresa.setEmail(request.email());
 
         if (request.senha() != null && !request.senha().isBlank())
-            empresa.setSenha(passwordEncoder.encode(request.senha()));
+            empresa.setSenha(criptografia.encode(request.senha()));
 
         return toResponseDTO(empresa);
     }
@@ -80,7 +82,7 @@ public class EmpresaService {
         EmpresaEntity empresa = empresaRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("Empresa não encontrada."));
 
-        if (!passwordEncoder.matches(senha, empresa.getSenha()))
+        if (!criptografia.matches(senha, empresa.getSenha()))
             throw new RuntimeException("Senha incorreta.");
 
         return toResponseDTO(empresa);
@@ -94,7 +96,7 @@ public class EmpresaService {
                 empresa.getCnpj(),
                 empresa.getEndereco(),
                 empresa.getEmail(),
-                null
+                empresa.getSenha()
         );
     }
 }
