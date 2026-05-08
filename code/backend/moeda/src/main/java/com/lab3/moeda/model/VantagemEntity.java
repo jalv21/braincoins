@@ -26,7 +26,7 @@ public class VantagemEntity {
     @Column(nullable = false)
     private int custo;
 
-    @Column(nullable = false)
+    @Column // O atributo é nullable porque nem todas as vantagens tem quantidade em estoque
     private int estoque;
 
     @Column(nullable = false)
@@ -41,11 +41,11 @@ public class VantagemEntity {
         this.foto = foto;
         this.custo = custo;
         this.estoque = estoque;
-        this.ativo = true;
+        // Já declarou ativo como true antes, por isso tinha warning de redundância
     }
 
     public boolean estaDisponivel() {
-        return ativo && estoque > 0;
+        return ativo && (estoque > 0);
     }
 
     public void decrementarEstoque() {

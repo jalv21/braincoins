@@ -164,7 +164,7 @@ public class InstituicaoService {
                 instituicao.getNome(),
                 instituicao.getCnpj(),
                 instituicao.getEmail(),
-                null,
+                instituicao.getSenha(),
                 instituicao.getEndereco(),
                 instituicao.getTelefone()
         );

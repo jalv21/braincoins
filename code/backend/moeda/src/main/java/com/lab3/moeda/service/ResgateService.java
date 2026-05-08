@@ -52,13 +52,11 @@ public class ResgateService {
         VantagemEntity vantagem = vantagemRepository.findById(dto.vantagemId())
                 .orElseThrow(() -> new NoSuchElementException("Vantagem não encontrada com ID: " + dto.vantagemId()));
 
-        if (!vantagem.estaDisponivel()) {
+        if (!vantagem.estaDisponivel())
             throw new EstoqueEsgotadoException(vantagem.getNome());
-        }
 
-        if (aluno.getSaldoMoedas() < vantagem.getCusto()) {
+        if (aluno.getSaldoMoedas() < vantagem.getCusto())
             throw new SaldoInsuficienteException(aluno.getSaldoMoedas(), vantagem.getCusto());
-        }
 
         aluno.debitarMoedas(vantagem.getCusto());
         vantagem.decrementarEstoque();
@@ -98,9 +96,8 @@ public class ResgateService {
         ResgateEntity resgate = resgateRepository.findById(resgateId)
                 .orElseThrow(() -> new NoSuchElementException("Resgate não encontrado com ID: " + resgateId));
 
-        if (resgate.getStatus() != StatusResgate.ATIVO) {
+        if (resgate.getStatus() != StatusResgate.ATIVO)
             throw new IllegalStateException("Somente resgates ativos podem ser confirmados.");
-        }
 
         resgate.setStatus(StatusResgate.RETIRADO);
         return toResponseDTO(resgateRepository.save(resgate));
@@ -118,9 +115,8 @@ public class ResgateService {
             enviarEmailCancelamento(resgate);
         }
 
-        if (!expirados.isEmpty()) {
+        if (!expirados.isEmpty())
             System.out.printf("[Scheduler] %d resgate(s) expirado(s) processado(s).%n", expirados.size());
-        }
     }
 
     private void enviarEmailAluno(AlunoEntity aluno, VantagemEntity vantagem, String codigo, LocalDateTime dataResgate) {

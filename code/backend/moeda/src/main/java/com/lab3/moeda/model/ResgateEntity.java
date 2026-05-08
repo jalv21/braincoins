@@ -41,7 +41,7 @@ public class ResgateEntity {
         this.dataResgate = dataResgate;
         this.codigoCupom = codigoCupom;
         this.valorMoedas = valorMoedas;
-        this.status = StatusResgate.ATIVO;
+        // Atributo já inicializado como ativo, gera warning de redundância
     }
 
     public int getId() { return id; }
