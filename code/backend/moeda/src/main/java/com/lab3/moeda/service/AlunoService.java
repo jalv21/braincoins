@@ -4,8 +4,8 @@ import com.lab3.moeda.dto.request.AlunoRequestDTO;
 import com.lab3.moeda.dto.response.AlunoResponseDTO;
 import com.lab3.moeda.model.AlunoEntity;
 import com.lab3.moeda.repository.AlunoRepository;
+import com.lab3.moeda.repository.InstituicaoRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,22 +15,31 @@ import java.util.NoSuchElementException;
 @Service
 public class AlunoService {
     private final AlunoRepository alunoRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final InstituicaoRepository instituicaoRepository;
+    private final BCryptPasswordEncoder criptografia;
 
-    public AlunoService(AlunoRepository alunoRepository, BCryptPasswordEncoder passwordEncoder) {
+    public AlunoService(AlunoRepository alunoRepository,
+                        InstituicaoRepository instituicaoRepository,
+                        BCryptPasswordEncoder criptografia) {
         this.alunoRepository = alunoRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.instituicaoRepository = instituicaoRepository;
+        this.criptografia = criptografia;
     }
 
     // CREATE
     @Transactional
     public AlunoResponseDTO criar(AlunoRequestDTO request) {
+        if (!instituicaoRepository.existsByNome(request.instituicao()))
+            throw new NoSuchElementException("Instituição não encontrada: " + request.instituicao());
+
+        if(alunoRepository.existsByEmail(request.email()))
+            throw new IllegalStateException("Email inserido já está em uso.");
+
         AlunoEntity novoAluno = new AlunoEntity(
                 request.nome(), request.cpf(), request.rg(),
                 request.endereco(), request.instituicao(), request.curso(), request.email(),
-                request.senha()
+                criptografia.encode(request.senha())
         );
-        novoAluno.setSenha(passwordEncoder.encode(request.senha()));
         AlunoEntity alunoSalvo = alunoRepository.save(novoAluno);
         return toResponseDTO(alunoSalvo);
     }
@@ -64,10 +73,10 @@ public class AlunoService {
         aluno.setCurso(request.curso());
         aluno.setEmail(request.email());
 
-       if(!passwordEncoder.matches(request.senha(), aluno.getSenha()))
-           aluno.setSenha(passwordEncoder.encode(request.senha()));
+        if (request.senha() != null && !request.senha().isBlank())
+            aluno.setSenha(criptografia.encode(request.senha()));
 
-       return toResponseDTO(aluno);
+        return toResponseDTO(aluno);
     }
 
     // DELETE
@@ -83,7 +92,7 @@ public class AlunoService {
         AlunoEntity aluno = alunoRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
 
-        if (!passwordEncoder.matches(senha, aluno.getSenha()))
+        if (!criptografia.matches(senha, aluno.getSenha()))
             throw new RuntimeException("Senha incorreta.");
 
         return toResponseDTO(aluno);

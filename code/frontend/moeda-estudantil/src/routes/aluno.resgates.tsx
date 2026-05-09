@@ -1,25 +1,67 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { useStore, formatDate, daysUntil } from "@/lib/mock-data";
 import { GlassCard, PageHeader, StatusBadge, EmptyState } from "@/components/ui-bits";
 import { Ticket } from "lucide-react";
+import { buscarResgatesAluno } from "@/api/vantagensApi";
+
+type ResgateAPI = {
+  id: number;
+  alunoId: number;
+  alunoNome: string;
+  vantagemId: number;
+  vantagemNome: string;
+  empresaNome: string;
+  cupom: string;
+  data: string;
+  expiraEm: string;
+  status: string;
+};
 
 export const Route = createFileRoute("/aluno/resgates")({
   component: Resgates,
 });
 
 function Resgates() {
-  const { alunos, currentUserId, resgates } = useStore();
-  const aluno = alunos.find((a) => a.id === currentUserId) ?? alunos[0];
-  const meus = resgates.filter((r) => r.alunoId === aluno.id);
+  const { currentUserId, currentUser } = useStore();
+  const [resgates, setResgates] = useState<ResgateAPI[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const id = Number(currentUserId || (currentUser as any)?.id);
+    if (!id) return;
+
+    let mounted = true;
+    setLoading(true);
+
+    buscarResgatesAluno(id)
+      .then((res) => {
+        if (mounted) setResgates(res.data ?? []);
+      })
+      .catch(() => {
+        if (mounted) setResgates([]);
+      })
+      .finally(() => {
+        if (mounted) setLoading(false);
+      });
+
+    return () => { mounted = false; };
+  }, [currentUserId, currentUser]);
 
   return (
     <div>
       <PageHeader title="Meus Resgates" subtitle="Cupons ativos e histórico." />
-      {meus.length === 0 ? (
-        <GlassCard><EmptyState icon={<Ticket className="h-7 w-7 text-white/60" />} title="Nenhum resgate ainda" description="Acesse 'Vantagens' para usar suas moedas." /></GlassCard>
+      {loading ? (
+        <GlassCard><p className="text-white/70 text-sm">Carregando resgates...</p></GlassCard>
+      ) : resgates.length === 0 ? (
+        <GlassCard>
+          <EmptyState icon={<Ticket className="h-7 w-7 text-white/60" />}
+            title="Nenhum resgate ainda"
+            description="Acesse 'Vantagens' para usar suas moedas." />
+        </GlassCard>
       ) : (
         <div className="grid sm:grid-cols-2 gap-4">
-          {meus.map((r) => {
+          {resgates.map((r) => {
             const dias = daysUntil(r.expiraEm);
             const muted = r.status !== "ativo";
             return (
@@ -29,7 +71,7 @@ function Resgates() {
                     <h3 className="font-bold text-white">{r.vantagemNome}</h3>
                     <p className="text-xs text-white/65">{r.empresaNome}</p>
                   </div>
-                  <StatusBadge status={r.status} />
+                  <StatusBadge status={r.status as any} />
                 </div>
                 <div className="mt-4 bg-white/10 rounded-xl p-3">
                   <p className="text-xs text-white/60">Cupom</p>

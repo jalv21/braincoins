@@ -1,50 +1,115 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { useStore, type Vantagem, type Resgate } from "@/lib/mock-data";
+import { useEffect, useState } from "react";
+import { useStore } from "@/lib/mock-data";
 import { GlassCard, PageHeader, CoinBadge, StatusBadge } from "@/components/ui-bits";
 import { Gift, X, CheckCircle2, QrCode, Mail } from "lucide-react";
 import { toast } from "sonner";
+import { listarVantagens, resgatarVantagem } from "@/api/vantagensApi";
+
+type VantagemAPI = {
+  id: number;
+  empresaId: number;
+  empresaNome: string;
+  nome: string;
+  descricao: string;
+  foto: string | null;
+  custo: number;
+  estoque: number;
+  ativo: boolean;
+};
+
+type ResgateAPI = {
+  id: number;
+  alunoId: number;
+  alunoNome: string;
+  vantagemId: number;
+  vantagemNome: string;
+  empresaNome: string;
+  cupom: string;
+  data: string;
+  expiraEm: string;
+  status: string;
+};
 
 export const Route = createFileRoute("/aluno/vantagens")({
   component: Vantagens,
 });
 
+const API_BASE = "http://localhost:8080";
+const fotoSrc = (foto: string | null) =>
+  foto ? (foto.startsWith("/uploads/") ? API_BASE + foto : foto) : null;
+
 function Vantagens() {
-  const store = useStore();
-  const aluno = store.alunos.find((a) => a.id === store.currentUserId) ?? store.alunos[0];
-  const [openVant, setOpenVant] = useState<Vantagem | null>(null);
-  const [resgateOk, setResgateOk] = useState<Resgate | null>(null);
+  const { currentUserId, currentUser, currentRole, setCurrentUser } = useStore();
+  const [saldo, setSaldo] = useState<number>((currentUser as any)?.saldo ?? 0);
+  const [vantagens, setVantagens] = useState<VantagemAPI[]>([]);
+  const [openVant, setOpenVant] = useState<VantagemAPI | null>(null);
+  const [resgateOk, setResgateOk] = useState<ResgateAPI | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  const ativos = store.vantagens.filter((v) => v.ativo);
+  useEffect(() => {
+    listarVantagens()
+      .then((res) => setVantagens(res.data ?? []))
+      .catch(() => {});
+  }, []);
 
-  const confirmar = () => {
+  useEffect(() => {
+    setSaldo((currentUser as any)?.saldo ?? 0);
+  }, [currentUser]);
+
+  const confirmar = async () => {
     if (!openVant) return;
-    if (aluno.saldo < openVant.custo) {
-      toast.error("Cancelar operação — Saldo insuficiente.");
+    const alunoId = Number(currentUserId || (currentUser as any)?.id);
+    if (!alunoId) return;
+
+    setSubmitting(true);
+    try {
+      const res = await resgatarVantagem(alunoId, openVant.id);
+      const resgate: ResgateAPI = res.data;
+
+      const novoSaldo = saldo - openVant.custo;
+      setSaldo(novoSaldo);
+
+      if (currentUser) {
+        setCurrentUser(currentRole ?? "aluno", alunoId, { ...(currentUser as any), saldo: novoSaldo });
+      }
+
+      // Atualiza estoque local sem nova chamada à API
+      setVantagens((prev) =>
+        prev.map((v) => v.id === openVant.id ? { ...v, estoque: v.estoque - 1 } : v)
+      );
+
       setOpenVant(null);
-      return;
+      setResgateOk(resgate);
+      toast.success("📧 E-mail enviado com seu cupom!");
+    } catch (error: any) {
+      const msg = error?.response?.data?.message ?? "Não foi possível resgatar.";
+      toast.error(msg);
+      setOpenVant(null);
+    } finally {
+      setSubmitting(false);
     }
-    const r = store.resgatarVantagem(aluno.id, openVant.id);
-    if (!r) { toast.error("Não foi possível resgatar."); return; }
-    setOpenVant(null);
-    setResgateOk(r);
-    toast.success("📧 E-mail enviado para " + aluno.email);
   };
 
   return (
     <div>
-      <PageHeader title="Vantagens" subtitle="Troque suas moedas por benefícios das empresas parceiras."
-        action={<CoinBadge amount={aluno.saldo} size="lg" />} />
+      <PageHeader
+        title="Vantagens"
+        subtitle="Troque suas moedas por benefícios das empresas parceiras."
+        action={<CoinBadge amount={saldo} size="lg" />}
+      />
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {ativos.map((v) => {
+        {vantagens.map((v) => {
           const semEstoque = v.estoque === 0;
-          const semSaldo = aluno.saldo < v.custo;
+          const semSaldo = saldo < v.custo;
           return (
             <div key={v.id} className="glass rounded-2xl p-5 flex flex-col gap-3 hover:scale-[1.02] transition-transform">
-              <div className="h-32 rounded-xl flex items-center justify-center text-4xl"
+              <div className="h-32 rounded-xl flex items-center justify-center text-4xl overflow-hidden"
                 style={{ background: "linear-gradient(135deg, oklch(0.86 0.1 155 / 0.4), oklch(0.78 0.14 158 / 0.3))" }}>
-                <Gift className="h-12 w-12 text-white/90" />
+                {fotoSrc(v.foto)
+                  ? <img src={fotoSrc(v.foto)!} alt={v.nome} className="h-full w-full object-cover" />
+                  : <Gift className="h-12 w-12 text-white/90" />}
               </div>
               <div className="flex-1">
                 <div className="flex items-start justify-between gap-2">
@@ -70,7 +135,6 @@ function Vantagens() {
         })}
       </div>
 
-      {/* Modal Resgate */}
       {openVant && (
         <Modal onClose={() => setOpenVant(null)}>
           <h2 className="text-xl font-bold text-white">{openVant.nome}</h2>
@@ -79,19 +143,19 @@ function Vantagens() {
 
           <div className="grid grid-cols-2 gap-3 mt-5">
             <GlassCard className="p-4"><p className="text-xs text-white/60">Custo</p><CoinBadge amount={openVant.custo} /></GlassCard>
-            <GlassCard className="p-4"><p className="text-xs text-white/60">Seu saldo</p><CoinBadge amount={aluno.saldo} /></GlassCard>
+            <GlassCard className="p-4"><p className="text-xs text-white/60">Seu saldo</p><CoinBadge amount={saldo} /></GlassCard>
           </div>
 
-          {aluno.saldo < openVant.custo && (
+          {saldo < openVant.custo && (
             <p className="mt-4 text-sm text-coral">⚠ Saldo insuficiente para esta vantagem.</p>
           )}
 
           <div className="flex gap-2 mt-6">
             <button onClick={() => setOpenVant(null)}
               className="flex-1 py-2.5 rounded-xl bg-white/10 text-white font-semibold">Cancelar</button>
-            <button onClick={confirmar} disabled={aluno.saldo < openVant.custo}
+            <button onClick={confirmar} disabled={saldo < openVant.custo || submitting}
               className="flex-1 py-2.5 rounded-xl bg-mint text-mint-foreground font-semibold disabled:opacity-40">
-              Confirmar Resgate
+              {submitting ? "Aguarde..." : "Confirmar Resgate"}
             </button>
           </div>
         </Modal>

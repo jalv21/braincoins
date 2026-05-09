@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "vantagens")
 public class VantagemEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -13,17 +14,74 @@ public class VantagemEntity {
     @JoinColumn(name = "empresa_id", nullable = false)
     private EmpresaEntity empresa;
 
-    @Column(nullable = false)
-    private short valor;
+    @Column(nullable = false, length = 200)
+    private String nome;
 
     @Column(nullable = false, length = 1000)
     private String descricao;
 
-    @Column(nullable = false, length = 500)
+    @Column(length = 500)
     private String foto;
 
-    @Column
-    private int qtde_estoque;
+    @Column(name = "valor", nullable = false)
+    private short custo;
+
+    @Column // O atributo é nullable porque nem todas as vantagens tem quantidade em estoque
+    private int estoque;
+
+    @Column(nullable = false)
+    private boolean ativo = true;
 
     public VantagemEntity() {}
+
+    public VantagemEntity(EmpresaEntity empresa, String nome, String descricao, String foto, short custo, int estoque) {
+        this.empresa = empresa;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.foto = foto;
+        this.custo = custo;
+        this.estoque = estoque;
+        // Já declarou ativo como true antes, por isso tinha warning de redundância
+    }
+
+    public boolean estaDisponivel() {
+        return ativo && (estoque > 0);
+    }
+
+    public void decrementarEstoque() {
+        if (estoque <= 0) throw new IllegalStateException("Estoque já está zerado.");
+        estoque--;
+    }
+
+    public void incrementarEstoque() {
+        estoque++;
+    }
+
+    public int getId() { return id; }
+
+    public EmpresaEntity getEmpresa() { return empresa; }
+
+    public String getNome() { return nome; }
+
+    public void setNome(String nome) { this.nome = nome; }
+
+    public String getDescricao() { return descricao; }
+
+    public void setDescricao(String descricao) { this.descricao = descricao; }
+
+    public String getFoto() { return foto; }
+
+    public void setFoto(String foto) { this.foto = foto; }
+
+    public short getCusto() { return custo; }
+
+    public void setCusto(short custo) { this.custo = custo; }
+
+    public int getEstoque() { return estoque; }
+
+    public void setEstoque(int estoque) { this.estoque = estoque; }
+
+    public boolean isAtivo() { return ativo; }
+
+    public void setAtivo(boolean ativo) { this.ativo = ativo; }
 }

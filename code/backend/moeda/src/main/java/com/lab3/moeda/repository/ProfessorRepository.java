@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface ProfessorRepository extends JpaRepository<ProfessorEntity, Integer> {
     Optional<ProfessorEntity> findByEmail(String email);
     java.util.List<ProfessorEntity> findAllByEmail(String email);
+    boolean existsByEmail(String email);
 }

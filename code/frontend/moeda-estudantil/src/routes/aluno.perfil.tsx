@@ -70,16 +70,16 @@ function Perfil() {
         nome: updatedData.nome,
         email: updatedData.email,
         curso: updatedData.curso,
-        instituicao: updatedData.instituicao,
+        instituicao: aluno.instituicao,
         saldo: aluno.saldo,
       };
-      
+
       setAluno({
         id: parseInt(currentUserId.substring(1)),
         nome: updatedData.nome,
         email: updatedData.email,
         curso: updatedData.curso,
-        instituicao: updatedData.instituicao,
+        instituicao: aluno.instituicao,
         saldo: aluno.saldo,
         cpf: aluno.cpf,
         rg: aluno.rg,
@@ -99,7 +99,7 @@ function Perfil() {
         nome: updatedData.nome,
         email: updatedData.email,
         curso: updatedData.curso,
-        instituicao: updatedData.instituicao,
+        instituicao: aluno.instituicao,
         cpf: aluno.cpf,
         rg: aluno.rg,
         endereco: aluno.endereco,
@@ -185,9 +185,8 @@ function Perfil() {
           { key: "nome", label: "Nome", type: "text" },
           { key: "email", label: "E-mail", type: "email" },
           { key: "curso", label: "Curso", type: "text" },
-          { key: "instituicao", label: "Instituição", type: "text" },
         ]}
-        data={{ nome: aluno.nome, email: aluno.email, curso: aluno.curso, instituicao: aluno.instituicao }}
+        data={{ nome: aluno.nome, email: aluno.email, curso: aluno.curso }}
         onSave={handleSave}
         onClose={() => setIsEditOpen(false)}
       />

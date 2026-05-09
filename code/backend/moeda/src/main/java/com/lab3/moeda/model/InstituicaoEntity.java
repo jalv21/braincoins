@@ -14,6 +14,12 @@ public class InstituicaoEntity extends UsuarioEntity {
     @Column(unique = true, nullable = false)
     private String cnpj;
 
+    @Column(name = "endereco")
+    private String endereco;
+
+    @Column(name = "telefone", length = 20)
+    private String telefone;
+
     @OneToMany(mappedBy = "instituicao", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DepartamentoEntity> departamentos;
 
@@ -22,12 +28,22 @@ public class InstituicaoEntity extends UsuarioEntity {
 
     public InstituicaoEntity() { super(); }
 
-    public InstituicaoEntity(String nome, String cnpj, String email, String senha) {
+    public InstituicaoEntity(String nome, String cnpj, String endereco, String telefone, String email, String senha) {
         super(nome, email, senha);
         this.cnpj = cnpj;
+        this.endereco = endereco;
+        this.telefone = telefone;
     }
 
     public int getId() { return id; }
 
     public String getCnpj() { return cnpj; }
+
+    public String getEndereco() { return endereco; }
+
+    public void setEndereco(String endereco) { this.endereco = endereco; }
+
+    public String getTelefone() { return telefone; }
+
+    public void setTelefone(String telefone) { this.telefone = telefone; }
 }

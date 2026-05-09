@@ -1,10 +1,18 @@
 import { X, Save } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 interface Field {
   key: string;
   label: string;
   type?: "text" | "email" | "number";
+  mask?: "phone";
+}
+
+function applyPhoneMask(value: string): string {
+  const digits = value.replace(/\D/g, "").slice(0, 11);
+  if (digits.length <= 10)
+    return digits.replace(/^(\d{2})(\d)/, "($1) $2").replace(/(\d{4})(\d)/, "$1-$2");
+  return digits.replace(/^(\d{2})(\d)/, "($1) $2").replace(/(\d{5})(\d)/, "$1-$2");
 }
 
 interface EditModalProps {
@@ -12,12 +20,17 @@ interface EditModalProps {
   title: string;
   fields: Field[];
   data: Record<string, any>;
-  onSave: (updatedData: Record<string, any>) => void;
+  onSave: (updatedData: Record<string, any>) => Promise<void>;
   onClose: () => void;
 }
 
 export function EditModal({ isOpen, title, fields, data, onSave, onClose }: EditModalProps) {
   const [formData, setFormData] = useState(data);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) setFormData(data);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -25,9 +38,13 @@ export function EditModal({ isOpen, title, fields, data, onSave, onClose }: Edit
     setFormData({ ...formData, [key]: value });
   };
 
-  const handleSave = () => {
-    onSave(formData);
-    onClose();
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await onSave(formData);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -52,7 +69,10 @@ export function EditModal({ isOpen, title, fields, data, onSave, onClose }: Edit
               <input
                 type={field.type || "text"}
                 value={formData[field.key] || ""}
-                onChange={(e) => handleChange(field.key, e.target.value)}
+                onChange={(e) => {
+                  const val = field.mask === "phone" ? applyPhoneMask(e.target.value) : e.target.value;
+                  handleChange(field.key, val);
+                }}
                 className="w-full px-3 py-2 rounded-lg bg-white/10 border border-white/20 text-white placeholder-white/50 focus:outline-none focus:border-white/40 transition"
               />
             </div>
@@ -68,9 +88,10 @@ export function EditModal({ isOpen, title, fields, data, onSave, onClose }: Edit
           </button>
           <button
             onClick={handleSave}
-            className="flex-1 px-4 py-2 rounded-lg bg-mint text-mint-foreground font-semibold hover:bg-mint/90 transition flex items-center justify-center gap-2"
+            disabled={saving}
+            className="flex-1 px-4 py-2 rounded-lg bg-mint text-mint-foreground font-semibold hover:bg-mint/90 transition flex items-center justify-center gap-2 disabled:opacity-60"
           >
-            <Save className="h-4 w-4" /> Salvar
+            <Save className="h-4 w-4" /> {saving ? "Salvando..." : "Salvar"}
           </button>
         </div>
       </div>

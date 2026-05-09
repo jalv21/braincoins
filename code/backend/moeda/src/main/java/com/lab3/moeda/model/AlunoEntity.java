@@ -52,6 +52,8 @@ public class AlunoEntity extends UsuarioAcademicoEntity {
 
     public String getInstituicao() { return instituicao; }
 
+    public void setInstituicao(String instituicao) { this.instituicao = instituicao; }
+
     public String getCurso() { return curso; }
 
     public void setCurso(String curso) {
