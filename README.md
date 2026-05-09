@@ -167,11 +167,9 @@ Configure estas variáveis como **variáveis de ambiente do sistema** ou em um a
 
 | Variável | Descrição | Exemplo |
 | :--- | :--- | :--- |
-| `SERVER_PORT` | Porta onde o Back-end será executado. | `8080` |
-| `SPRING_DATASOURCE_URL` | URL de conexão JDBC (PostgreSQL). | `jdbc:postgresql://localhost:5432/meubanco` |
-| `SPRING_DATASOURCE_USERNAME` | Usuário do banco de dados. | `postgres` |
-| `SPRING_DATASOURCE_PASSWORD` | Senha do banco de dados. | `senha-segura-123` |
-| `JWT_SECRET` | Chave secreta para assinatura de tokens (Opcional). | `chave_super_segura_base64` |
+| `DATABASE_URL` | URL de conexão JDBC (PostgreSQL). | `jdbc:postgresql://localhost:5432/meubanco` |
+| `DATABASE_USERNAME` | Usuário do banco de dados. | `postgres` |
+| `DATABASE_PASSWORD` | Senha do banco de dados. | `senha-segura-123` |
 
 #### 2 Front-end (React, Vite)
 
@@ -181,7 +179,6 @@ Crie um arquivo **`.env`** na raiz da pasta `/frontend` e use o prefixo `VITE_` 
 | :--- | :--- | :--- |
 | `VITE_API_URL` | URL base do endpoint do Backend Spring Boot. | `http://localhost:8080/api` |
 | `VITE_EMAILJS_PUBLIC_KEY` | Chave pública para serviços de e-mail (Exemplo). | `sua_public_key_aqui` |
-| `VITE_GOOGLE_MAPS_KEY` | Chave de API para serviços de mapas (Opcional). | `AIzaSy...` |
 
 ---
 
@@ -543,23 +540,6 @@ Use GIFs e prints para mostrar o projeto em ação.
 > [!WARNING]
 > Dê preferência a hospedar suas imagens em um **CDN** (Content Delivery Network) ou no **GitHub Pages** para garantir que elas carreguem rapidamente e não quebrem. Saiba mais sobre o GitHub Pages clicando [aqui](https://github.com/joaopauloaramuni/joaopauloaramuni.github.io).
 
-### 📱 Aplicativo Mobile
-
-- GIF de demonstração (exemplo de fluxo de usuário):  
-
-| Demonstração 1 | Demonstração 2 | Demonstração 3 | Demonstração 4 |
-|----------------|----------------|----------------|----------------|
-| <img src="https://joaopauloaramuni.github.io/image/fundo_mobile_engsoft.jpeg" alt="Demonstração 1" height="400"> | <img src="https://joaopauloaramuni.github.io/image/fundo_mobile_engsoft.jpeg" alt="Demonstração 2" height="400"> | <img src="https://joaopauloaramuni.github.io/image/fundo_mobile_engsoft.jpeg" alt="Demonstração 3" height="400"> | <img src="https://joaopauloaramuni.github.io/image/fundo_mobile_engsoft.jpeg" alt="Demonstração 4" height="400"> |
-| _Sua gif aqui_ | _Sua gif aqui_ | _Sua gif aqui_ | _Sua gif aqui_ |
-
-Para melhor visualização, as telas principais estão organizadas lado a lado.
-
-| Tela | Captura de Tela |
-| :---: | :---: |
-| **Tela Inicial (Home)** | **Tela de Perfil / Settings** |
-| <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Tela 1 do Mobile" width="120px" height="120px"> | <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Tela 2 do Mobile" width="120px" height="120px"> |
-| **Tela de Cadastro** | **Tela de Lista / Detalhes** |
-| <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Tela 3 do Mobile" width="120px" height="120px"> | <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Tela 4 do Mobile" width="120px" height="120px"> |
 
 ### 🌐 Aplicação Web
 
