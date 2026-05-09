@@ -16,14 +16,14 @@ import java.util.NoSuchElementException;
 public class AlunoService {
     private final AlunoRepository alunoRepository;
     private final InstituicaoRepository instituicaoRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder criptografia;
 
     public AlunoService(AlunoRepository alunoRepository,
                         InstituicaoRepository instituicaoRepository,
-                        BCryptPasswordEncoder passwordEncoder) {
+                        BCryptPasswordEncoder criptografia) {
         this.alunoRepository = alunoRepository;
         this.instituicaoRepository = instituicaoRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.criptografia = criptografia;
     }
 
     // CREATE
@@ -32,12 +32,14 @@ public class AlunoService {
         if (!instituicaoRepository.existsByNome(request.instituicao()))
             throw new NoSuchElementException("Instituição não encontrada: " + request.instituicao());
 
+        if(alunoRepository.existsByEmail(request.email()))
+            throw new IllegalStateException("Email inserido já está em uso.");
+
         AlunoEntity novoAluno = new AlunoEntity(
                 request.nome(), request.cpf(), request.rg(),
                 request.endereco(), request.instituicao(), request.curso(), request.email(),
-                request.senha()
+                criptografia.encode(request.senha())
         );
-        novoAluno.setSenha(passwordEncoder.encode(request.senha()));
         AlunoEntity alunoSalvo = alunoRepository.save(novoAluno);
         return toResponseDTO(alunoSalvo);
     }
@@ -72,7 +74,7 @@ public class AlunoService {
         aluno.setEmail(request.email());
 
         if (request.senha() != null && !request.senha().isBlank())
-            aluno.setSenha(passwordEncoder.encode(request.senha()));
+            aluno.setSenha(criptografia.encode(request.senha()));
 
         return toResponseDTO(aluno);
     }
@@ -90,7 +92,7 @@ public class AlunoService {
         AlunoEntity aluno = alunoRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
 
-        if (!passwordEncoder.matches(senha, aluno.getSenha()))
+        if (!criptografia.matches(senha, aluno.getSenha()))
             throw new RuntimeException("Senha incorreta.");
 
         return toResponseDTO(aluno);
@@ -108,7 +110,7 @@ public class AlunoService {
                 aluno.getCurso(),
                 aluno.getSaldoMoedas(),
                 aluno.getEmail(),
-                null
+                aluno.getSenha()
         );
     }
 }

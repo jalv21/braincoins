@@ -23,10 +23,10 @@ public class VantagemEntity {
     @Column(length = 500)
     private String foto;
 
-    @Column(nullable = false)
-    private int custo;
+    @Column(name = "valor", nullable = false)
+    private short custo;
 
-    @Column(nullable = false)
+    @Column // O atributo é nullable porque nem todas as vantagens tem quantidade em estoque
     private int estoque;
 
     @Column(nullable = false)
@@ -34,18 +34,18 @@ public class VantagemEntity {
 
     public VantagemEntity() {}
 
-    public VantagemEntity(EmpresaEntity empresa, String nome, String descricao, String foto, int custo, int estoque) {
+    public VantagemEntity(EmpresaEntity empresa, String nome, String descricao, String foto, short custo, int estoque) {
         this.empresa = empresa;
         this.nome = nome;
         this.descricao = descricao;
         this.foto = foto;
         this.custo = custo;
         this.estoque = estoque;
-        this.ativo = true;
+        // Já declarou ativo como true antes, por isso tinha warning de redundância
     }
 
     public boolean estaDisponivel() {
-        return ativo && estoque > 0;
+        return ativo && (estoque > 0);
     }
 
     public void decrementarEstoque() {
@@ -73,9 +73,9 @@ public class VantagemEntity {
 
     public void setFoto(String foto) { this.foto = foto; }
 
-    public int getCusto() { return custo; }
+    public short getCusto() { return custo; }
 
-    public void setCusto(int custo) { this.custo = custo; }
+    public void setCusto(short custo) { this.custo = custo; }
 
     public int getEstoque() { return estoque; }
 

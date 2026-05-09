@@ -5,6 +5,6 @@ public record VantagemRequestDTO(
         String nome,
         String descricao,
         String foto,
-        int custo,
+        short custo,
         int estoque
 ) {}

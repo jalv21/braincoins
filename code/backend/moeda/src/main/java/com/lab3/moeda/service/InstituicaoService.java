@@ -43,11 +43,10 @@ public class InstituicaoService {
     public InstituicaoResponseDTO criar(InstituicaoRequestDTO request) {
         InstituicaoEntity novaInstituicao = new InstituicaoEntity(
                 request.nome(), request.cnpj(),
-                request.email(), request.senha()
+                request.endereco(), request.telefone(),
+                request.email(), criptografia.encode(request.senha())
         );
-        novaInstituicao.setSenha(criptografia.encode(request.senha()));
-        novaInstituicao.setEndereco(request.endereco());
-        novaInstituicao.setTelefone(request.telefone());
+
         InstituicaoEntity instituicaoSalva = repository.save(novaInstituicao);
         return toResponseDTO(instituicaoSalva);
     }
@@ -164,7 +163,7 @@ public class InstituicaoService {
                 instituicao.getNome(),
                 instituicao.getCnpj(),
                 instituicao.getEmail(),
-                null,
+                instituicao.getSenha(),
                 instituicao.getEndereco(),
                 instituicao.getTelefone()
         );
