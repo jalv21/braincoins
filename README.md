@@ -9,7 +9,7 @@
 
 # 🧠📖 BrainCoins - Sistema de Moeda Estudantil 🪙
 
-![Java](https://img.shields.io/badge/Java-21-007ec6?style=for-the-badge&logo=openjdk&logoColor=white) ![Maven](https://img.shields.io/badge/Maven-4.0.0-007ec6?style=for-the-badge&logo=apachemaven&logoColor=white) ![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.6-007ec6?style=for-the-badge&logo=springboot&logoColor=white) ![React](https://img.shields.io/badge/React-19.2.5-007ec6?style=for-the-badge&logo=react&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-3-007ec6?style=for-the-badge&logo=vite&logoColor=white) ![GitHub repo size](https://img.shields.io/github/repo-size/jalv21/braincoins?style=for-the-badge&logo=files) ![GitHub directory file count](https://img.shields.io/github/directory-file-count/jalv21/braincoins?style=for-the-badge&logo=files) ![GitHub stars](https://img.shields.io/github/stars/jalv21/braincoins?style=for-the-badge&logo=github) ![GitHub forks](https://img.shields.io/github/forks/jalv21/braincoins?style=for-the-badge&logo=git) ![GitHub language count](https://img.shields.io/github/languages/count/jalv21/braincoins?style=for-the-badge&logo=python) ![GitHub license](https://img.shields.io/github/license/jalv21/braincoins?style=for-the-badge&color=007ec6&logo=opensourceinitiative) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/jalv21/braincoins?style=for-the-badge&color=007ec6&logo=gitkraken) ![GitHub last commit](https://img.shields.io/github/last-commit/jalv21/braincoins?style=for-the-badge&logo=clockify) ![Views Counter](https://views-counter.vercel.app/badge?pageId=https%3A%2F%2Fgithub%2Ecom%2Fjalv21%2Fbraincoins&leftColor=555555&rightColor=007ec6&type=total&label=RepoViews)
+![Java](https://img.shields.io/badge/Java-21-007ec6?style=for-the-badge&logo=openjdk&logoColor=white) ![Maven](https://img.shields.io/badge/Maven-4.0.0-007ec6?style=for-the-badge&logo=apachemaven&logoColor=white) ![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.6-007ec6?style=for-the-badge&logo=springboot&logoColor=white) ![React](https://img.shields.io/badge/React-19.2.5-007ec6?style=for-the-badge&logo=react&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-8.0.9-007ec6?style=for-the-badge&logo=vite&logoColor=white) ![GitHub repo size](https://img.shields.io/github/repo-size/jalv21/braincoins?style=for-the-badge&logo=files) ![GitHub directory file count](https://img.shields.io/github/directory-file-count/jalv21/braincoins?style=for-the-badge&logo=files) ![GitHub stars](https://img.shields.io/github/stars/jalv21/braincoins?style=for-the-badge&logo=github) ![GitHub forks](https://img.shields.io/github/forks/jalv21/braincoins?style=for-the-badge&logo=git) ![GitHub language count](https://img.shields.io/github/languages/count/jalv21/braincoins?style=for-the-badge&logo=python) ![GitHub license](https://img.shields.io/github/license/jalv21/braincoins?style=for-the-badge&color=007ec6&logo=opensourceinitiative) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/jalv21/braincoins?style=for-the-badge&color=007ec6&logo=gitkraken) ![GitHub last commit](https://img.shields.io/github/last-commit/jalv21/braincoins?style=for-the-badge&logo=clockify) ![Views Counter](https://views-counter.vercel.app/badge?pageId=https%3A%2F%2Fgithub%2Ecom%2Fjalv21%2Fbraincoins&leftColor=555555&rightColor=007ec6&type=total&label=RepoViews)
 
 Um sistema gamificado de moeda estudantil em que professores podem reconhecer o mérito dos seus alunos através de moedas virtuais que podem ser trocadas por diversas vantagens, oferecidas por empresas parceiras. Gerencia transferência de moedas de professores para alunos, reivindicação e resgate de vantagens por alunos. Desenvolvido com **Spring Boot**, **React** e **Vite**. 
 
@@ -102,31 +102,23 @@ As seguintes ferramentas, frameworks e bibliotecas foram utilizados na construç
 
 ### 💻 Front-end
 
-* **Framework/Biblioteca:** [Ex: React v18, Vue.js v3, Angular v17]
-* **Linguagem/Superset:** [Ex: TypeScript, JavaScript ES6+]
-* **Estilização:** [Ex: Tailwind CSS, Sass, Styled Components, Material UI]
-* **Gerenciamento de Estado:** [Ex: Redux Toolkit, Zustand, Context API]
-* **Build Tool:** [Ex: Vite, Webpack]
+* **Framework/Biblioteca:** React v19.2.5, Vite v8.0.9
+* **Linguagem/Superset:** TypeScript, JavaScript ES6+
+* **Estilização:** TailwindCSS v4.2.3
+* **Gerenciamento de Estado:** Redux v9.2.0
+* **Build Tool:** Vite v8.0.9
 
 ### 🖥️ Back-end
 
-* **Linguagem/Runtime:** [Ex: Java 17 (JDK), Node.js v20, Python 3.11]
-* **Framework:** [Ex: Spring Boot 3.x, NestJS, Express, Django]
-* **Banco de Dados:** [Ex: PostgreSQL, MySQL, MongoDB]
-* **ORM / Query Builder:** [Ex: Hibernate/JPA, Prisma, TypeORM]
-* **Autenticação:** [Ex: JWT, OAuth2, Spring Security]
-
-### 📱 Mobile (Opcional)
-
-* **Framework:** [Ex: React Native, Flutter, Kotlin Multiplatform]
-* **Ferramentas:** [Ex: Expo, Android Studio, Xcode]
+* **Linguagem/Runtime:** Java 21
+* **Framework:** Spring Boot 4.0.6
+* **Banco de Dados:** PostgreSQL 18
+* **ORM / Query Builder:** Hibernate/JPA 7.3.2
+* **Autenticação:** Spring Security
 
 ### ⚙️ Infraestrutura & DevOps
 
-* **Containerização:** [Ex: Docker, Docker Compose]
-* **Orquestração:** [Ex: Kubernetes (K8s)]
-* **Cloud:** [Ex: AWS (EC2, RDS, S3), Vercel, Heroku, Google Cloud]
-* **CI/CD:** [Ex: GitHub Actions, Jenkins, SonarQube]
+* **Containerização:** Docker, Docker Compose
 
 ---
 
