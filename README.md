@@ -24,7 +24,7 @@ reivindicação e resgate de vantagens por alunos. Desenvolvido com **Spring Boo
     </td>
     <td>
       <div>
-        <img src="/code/frontend/moeda-estudantil/src/assets/braincoins-logo.png" alt="Logo do Projeto" width="120px"/>
+        <img src="/code/frontend/moeda-estudantil/src/assets/braincoins-logo.png" alt="Logo do Projeto" width="1000px"/>
       </div>
     </td>
   </tr> 
