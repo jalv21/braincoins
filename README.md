@@ -72,31 +72,17 @@ reivindicação e resgate de vantagens por alunos. Desenvolvido com **Spring Boo
 ## 🔗 Links Úteis
 * 🌐 **Demo Online:** [Acesse a Aplicação Web](<link-da-demo-web>)
   > 💻 **Descrição:** Link para a aplicação em ambiente de produção (Ex: hospedado na Vercel, Netlify ou AWS S3).
-* 📱 **Download Mobile:** [App Store](<link-app-store>) | [Google Play](<link-google-play>) | [APK Direto](<link-para-apk-direto>)
-  > 📱 **Descrição:** Links diretos para download nas lojas de aplicativos (se aplicável) e para o arquivo de instalação direta no Android (APK).
-* 📖 **Documentação:** [Leia a Wiki/Docs](<link-para-docs>)
-  > 📚 **Descrição:** Acesso à documentação técnica completa do projeto (Ex: Swagger/OpenAPI para API, ou Wiki interna).
 
 ---
 
 ## 📝 Sobre o Projeto
-Nesta seção, descreva de forma clara e objetiva **o propósito do seu projeto**, explicando:
+BrainCoins é um sistema de moeda estudantil desenvolvido como projeto acadêmico no contexto universitário. A ideia central é criar uma economia interna entre alunos, professores e empresas parceiras, onde o bom desempenho e a participação acadêmica são recompensados com moedas virtuais que podem ser trocadas por vantagens reais.
 
-- **Por que ele existe** — qual motivação levou à sua criação.  
-- **Qual problema ele resolve** — que dor, necessidade ou oportunidade ele atende.  
-- **Qual o contexto** — acadêmico, profissional, pessoal, experimental, etc.  
-- **Onde ele pode ser utilizado** — cenários reais ou simulados.  
+- **Por que ele existe?** A motivação é incentivar o engajamento acadêmico de forma tangível — professores reconhecem alunos que se destacam creditando moedas, e alunos utilizam esse saldo para resgatar benefícios oferecidos por empresas parceiras da instituição, como descontos e produtos.
+- **Qual problema ele resolve?** A falta de mecanismos práticos de reconhecimento e recompensa dentro do ambiente acadêmico. O BrainCoins cria uma ponte entre o desempenho do aluno e benefícios concretos, tornando o reconhecimento acadêmico mais motivador e visível.
+- **Onde pode ser utilizado?** Em instituições de ensino superior que queiram implementar programas de incentivo acadêmico, conectando alunos, corpo docente e empresas do entorno em um ecossistema de recompensas.
+- **O que o torna relevante?** O projeto cobre o ciclo completo de uma aplicação moderna — back-end em Spring Boot com PostgreSQL, front-end em React, autenticação, e múltiplos perfis de usuário (aluno, professor, empresa e instituição) com regras de negócio distintas para cada um.
 
-Procure responder perguntas como:
-- *Qual foi a ideia inicial do projeto?*
-- *O que ele entrega de valor ao usuário?*
-- *Por que alguém utilizaria ou contribuiria com esse projeto?*
-- *O que o torna relevante ou interessante?*
-
-Escreva de forma objetiva, mas completa, para que qualquer pessoa entenda rapidamente **o que é** e **por que importa**.
-
-> [!NOTE]
-> Esta seção segue boas práticas de documentação profissional e deve ser ajustada conforme o tipo e o objetivo do seu projeto.
 
 ---
 
