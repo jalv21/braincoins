@@ -9,7 +9,11 @@
 
 # 🧠📖 BrainCoins - Sistema de Moeda Estudantil 🪙
 
-![Java](https://img.shields.io/badge/Java-21-007ec6?style=for-the-badge&logo=openjdk&logoColor=white) ![Maven](https://img.shields.io/badge/Maven-4.0.0-007ec6?style=for-the-badge&logo=apachemaven&logoColor=white) ![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.6-007ec6?style=for-the-badge&logo=springboot&logoColor=white) ![GitHub repo size](https://img.shields.io/github/repo-size/jalv21/braincoins?style=for-the-badge&logo=files) ![GitHub directory file count](https://img.shields.io/github/directory-file-count/jalv21/braincoins?style=for-the-badge&logo=files) ![GitHub stars](https://img.shields.io/github/stars/jalv21/braincoins?style=for-the-badge&logo=github) ![GitHub forks](https://img.shields.io/github/forks/jalv21/braincoins?style=for-the-badge&logo=git) ![GitHub language count](https://img.shields.io/github/languages/count/jalv21/braincoins?style=for-the-badge&logo=python) ![GitHub license](https://img.shields.io/github/license/jalv21/braincoins?style=for-the-badge&color=007ec6&logo=opensourceinitiative) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/jalv21/braincoins?style=for-the-badge&color=007ec6&logo=gitkraken) ![GitHub last commit](https://img.shields.io/github/last-commit/jalv21/braincoins?style=for-the-badge&logo=clockify) ![Views Counter](https://views-counter.vercel.app/badge?pageId=https%3A%2F%2Fgithub%2Ecom%2Fjoaopauloaramuni%2Fpdf-translator&leftColor=555555&rightColor=007ec6&type=total&label=RepoViews)![GitHub Actions](https://img.shields.io/github/actions/workflow/status/jalv21/braincoins/keep-render-awake.yml?style=for-the-badge&logo=githubactions&label=RenderAlive)
+![Java](https://img.shields.io/badge/Java-21-007ec6?style=for-the-badge&logo=openjdk&logoColor=white) ![Maven](https://img.shields.io/badge/Maven-4.0.0-007ec6?style=for-the-badge&logo=apachemaven&logoColor=white) ![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.6-007ec6?style=for-the-badge&logo=springboot&logoColor=white) ![GitHub repo size](https://img.shields.io/github/repo-size/jalv21/braincoins?style=for-the-badge&logo=files) ![GitHub directory file count](https://img.shields.io/github/directory-file-count/jalv21/braincoins?style=for-the-badge&logo=files) ![GitHub stars](https://img.shields.io/github/stars/jalv21/braincoins?style=for-the-badge&logo=github) ![GitHub forks](https://img.shields.io/github/forks/jalv21/braincoins?style=for-the-badge&logo=git) ![GitHub language count](https://img.shields.io/github/languages/count/jalv21/braincoins?style=for-the-badge&logo=python) ![GitHub license](https://img.shields.io/github/license/jalv21/braincoins?style=for-the-badge&color=007ec6&logo=opensourceinitiative) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/jalv21/braincoins?style=for-the-badge&color=007ec6&logo=gitkraken) ![GitHub last commit](https://img.shields.io/github/last-commit/jalv21/braincoins?style=for-the-badge&logo=clockify) ![Views Counter](https://views-counter.vercel.app/badge?pageId=https%3A%2F%2Fgithub%2Ecom%2Fjalv21%2Fbraincoins&leftColor=555555&rightColor=007ec6&type=total&label=RepoViews)
+
+Um sistema gamificado de moeda estudantil em que professores podem reconhecer o mérito dos seus alunos através de moedas virtuais
+que podem ser trocadas por diversas vantagens, oferecidas por empresas parceiras. Gerencia transferência de moedas de professores para alunos, 
+reivindicação e resgate de vantagens por alunos. Desenvolvido com **Spring Boot**, **React** e **Vite**. 
 
 <table>
   <tr>
@@ -20,26 +24,11 @@
     </td>
     <td>
       <div>
-        <img src="https://joaopauloaramuni.github.io/image/logo_ES_vertical.png" alt="Logo do Projeto" width="120px"/>
+        <img src="../moeda-estudantil/code/frontend/moeda-estudantil/src/assets/braincoins-logo.png" alt="Logo do Projeto" width="120px"/>
       </div>
     </td>
   </tr> 
 </table>
-
----
-
-## 🚧 Status do Projeto
-
-### Exemplos de badges básicos:
-
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/joaopauloaramuni/joaopauloaramuni/main.yml?branch=main)](https://github.com/joaopauloaramuni/joaopauloaramuni/actions/workflows/main.yml)
-[![Test Coverage](https://codecov.io/gh/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software/branch/main/graph/badge.svg)](https://codecov.io/gh/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software)
-[![Versão](https://img.shields.io/badge/Versão-v1.0.0-blue)](https://github.com/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software/releases)
-[![Licença](https://img.shields.io/github/license/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software)](#licença)
-
-### Outros exemplos de badges:
-
-[![Versão](https://img.shields.io/badge/Versão-v1.0.0-blue?style=for-the-badge)](https://github.com/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software/releases) ![React](https://img.shields.io/badge/React-19.1.1-007ec6?style=for-the-badge&logo=react&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-7.1.2-007ec6?style=for-the-badge&logo=vite&logoColor=white) ![Java](https://img.shields.io/badge/Java-17-007ec6?style=for-the-badge&logo=openjdk&logoColor=white) ![Maven](https://img.shields.io/badge/Maven-3.9.9-007ec6?style=for-the-badge&logo=apachemaven&logoColor=white) ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.5-007ec6?style=for-the-badge&logo=springboot&logoColor=white) ![Thymeleaf](https://img.shields.io/badge/Thymeleaf-3.1.1-007ec6?style=for-the-badge&logo=thymeleaf&logoColor=white) ![GitHub repo size](https://img.shields.io/github/repo-size/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software?style=for-the-badge&logo=files) ![GitHub directory file count](https://img.shields.io/github/directory-file-count/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software?style=for-the-badge&logo=files) ![GitHub stars](https://img.shields.io/github/stars/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software?style=for-the-badge&logo=github) ![GitHub forks](https://img.shields.io/github/forks/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software?style=for-the-badge&logo=git) ![GitHub language count](https://img.shields.io/github/languages/count/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software?style=for-the-badge&logo=python) ![GitHub license](https://img.shields.io/github/license/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software?style=for-the-badge&color=007ec6&logo=opensourceinitiative) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software?style=for-the-badge&color=007ec6&logo=gitkraken) ![GitHub last commit](https://img.shields.io/github/last-commit/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software?style=for-the-badge&logo=clockify) ![Vercel](https://vercelbadge.vercel.app/api/joaopauloaramuni/joaopauloaramuni-portfolio?style=for-the-badge) ![Views Counter](https://views-counter.vercel.app/badge?pageId=https%3A%2F%2Fgithub%2Ecom%2Fjoaopauloaramuni%2Flaboratorio-de-desenvolvimento-de-software&leftColor=555555&rightColor=007ec6&type=total&label=RepoViews)
 
 ---
 
