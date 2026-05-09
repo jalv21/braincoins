@@ -124,17 +124,11 @@ As seguintes ferramentas, frameworks e bibliotecas foram utilizados na construç
 
 ## 🏗 Arquitetura
 
-Descreva aqui a **arquitetura completa do sistema**, explicando como as camadas, módulos e componentes foram organizados. Informe também **por que** essa arquitetura foi escolhida e **quais problemas ela ajuda a resolver**.
+A arquitetura usada no projeto foi a **Arquitetura em Camadas** usando o Padrão **MVC**, juntamente com outros padrões de projeto para aumentar a organização do código e separar responsabilidades, incluindo:
+- **Service Layer** / Camada de Serviço: Para separar a implementação das regras de negócio da camada **Controller** e concentrá-las em sua própria camada.
+- **DTO** / *Data Transfer Object*: Para abstrair a lógica da transferência dos dados no corpo requisição HTTP para o **Model**
 
-Você pode incluir:
-
-- **Visão geral da arquitetura** (ex.: camadas, módulos, microsserviços, monólito modular, hexagonal, MVC etc.)
-- **Principais componentes** e o papel de cada um
-- **Padrões de design adotados** (ex.: Repository, Service Layer, DTOs, Factory, Observer)
-- **Fluxo de dados** entre as partes do sistema
-- **Tecnologias utilizadas em cada camada**
-- **Decisões arquiteturais importantes**
-- **Trade-offs** ou limitações relevantes
+Essa arquitetura foi escolhida pela facilidade de implementação e escalabilidade compatíveis com o tamanho do projeto. 
 
 ### Exemplos de diagramas
 
