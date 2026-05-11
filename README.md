@@ -9,39 +9,9 @@
 
 # 🧠📖 BrainCoins - Sistema de Moeda Estudantil 🪙
 
-> [!NOTE]
-> Breve descrição do projeto. **Foque no principal valor/benefício.**  
-> Crie uma **logo** para o projeto que represente a aplicação em questão.
+![Java](https://img.shields.io/badge/Java-21-007ec6?style=for-the-badge&logo=openjdk&logoColor=white) ![Maven](https://img.shields.io/badge/Maven-4.0.0-007ec6?style=for-the-badge&logo=apachemaven&logoColor=white) ![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.6-007ec6?style=for-the-badge&logo=springboot&logoColor=white) ![React](https://img.shields.io/badge/React-19.2.5-007ec6?style=for-the-badge&logo=react&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-8.0.9-007ec6?style=for-the-badge&logo=vite&logoColor=white) ![GitHub repo size](https://img.shields.io/github/repo-size/jalv21/braincoins?style=for-the-badge&logo=files) ![GitHub directory file count](https://img.shields.io/github/directory-file-count/jalv21/braincoins?style=for-the-badge&logo=files) ![GitHub stars](https://img.shields.io/github/stars/jalv21/braincoins?style=for-the-badge&logo=github) ![GitHub forks](https://img.shields.io/github/forks/jalv21/braincoins?style=for-the-badge&logo=git) ![GitHub language count](https://img.shields.io/github/languages/count/jalv21/braincoins?style=for-the-badge&logo=python) ![GitHub license](https://img.shields.io/github/license/jalv21/braincoins?style=for-the-badge&color=007ec6&logo=opensourceinitiative) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/jalv21/braincoins?style=for-the-badge&color=007ec6&logo=gitkraken) ![GitHub last commit](https://img.shields.io/github/last-commit/jalv21/braincoins?style=for-the-badge&logo=clockify) ![Views Counter](https://views-counter.vercel.app/badge?pageId=https%3A%2F%2Fgithub%2Ecom%2Fjalv21%2Fbraincoins&leftColor=555555&rightColor=007ec6&type=total&label=RepoViews)
 
-<table>
-  <tr>
-    <td width="800px">
-      <div align="justify">
-        Este <b>README.md</b> apresenta um template organizado, ideal para servir como referência acadêmica e profissional em projetos de desenvolvimento, desde trabalhos da faculdade até projetos desenvolvidos para etapas técnicas de processos seletivos. Ele reúne as <i>seções essenciais</i> recomendadas pelo <a href="https://github.com/joaopauloaramuni">Prof. Dr. João Paulo Aramuni</a>, permitindo <i>organização clara</i>, <i>documentação eficiente</i> e <i>padronização</i> entre diferentes trabalhos. O objetivo deste esqueleto é <b>facilitar a construção de projetos bem documentados</b>, oferecendo um <i>guia completo</i> que inclui <b>boas práticas</b>, instruções de execução, tecnologias utilizadas, arquitetura, estruturas de pastas, testes, links úteis e orientações para colaboração. Esse template ajuda estudantes a desenvolverem <b>documentação de qualidade profissional</b> desde os primeiros períodos, promovendo <i>clareza</i>, <i>reprodutibilidade</i> e <i>padronização</i> nos projetos.
-      </div>
-    </td>
-    <td>
-      <div>
-        <img src="https://joaopauloaramuni.github.io/image/logo_ES_vertical.png" alt="Logo do Projeto" width="120px"/>
-      </div>
-    </td>
-  </tr> 
-</table>
-
----
-
-## 🚧 Status do Projeto
-
-### Exemplos de badges básicos:
-
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/joaopauloaramuni/joaopauloaramuni/main.yml?branch=main)](https://github.com/joaopauloaramuni/joaopauloaramuni/actions/workflows/main.yml)
-[![Test Coverage](https://codecov.io/gh/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software/branch/main/graph/badge.svg)](https://codecov.io/gh/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software)
-[![Versão](https://img.shields.io/badge/Versão-v1.0.0-blue)](https://github.com/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software/releases)
-[![Licença](https://img.shields.io/github/license/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software)](#licença)
-
-### Outros exemplos de badges:
-
-[![Versão](https://img.shields.io/badge/Versão-v1.0.0-blue?style=for-the-badge)](https://github.com/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software/releases) ![React](https://img.shields.io/badge/React-19.1.1-007ec6?style=for-the-badge&logo=react&logoColor=white) ![Vite](https://img.shields.io/badge/Vite-7.1.2-007ec6?style=for-the-badge&logo=vite&logoColor=white) ![Java](https://img.shields.io/badge/Java-17-007ec6?style=for-the-badge&logo=openjdk&logoColor=white) ![Maven](https://img.shields.io/badge/Maven-3.9.9-007ec6?style=for-the-badge&logo=apachemaven&logoColor=white) ![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.5-007ec6?style=for-the-badge&logo=springboot&logoColor=white) ![Thymeleaf](https://img.shields.io/badge/Thymeleaf-3.1.1-007ec6?style=for-the-badge&logo=thymeleaf&logoColor=white) ![GitHub repo size](https://img.shields.io/github/repo-size/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software?style=for-the-badge&logo=files) ![GitHub directory file count](https://img.shields.io/github/directory-file-count/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software?style=for-the-badge&logo=files) ![GitHub stars](https://img.shields.io/github/stars/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software?style=for-the-badge&logo=github) ![GitHub forks](https://img.shields.io/github/forks/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software?style=for-the-badge&logo=git) ![GitHub language count](https://img.shields.io/github/languages/count/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software?style=for-the-badge&logo=python) ![GitHub license](https://img.shields.io/github/license/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software?style=for-the-badge&color=007ec6&logo=opensourceinitiative) ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software?style=for-the-badge&color=007ec6&logo=gitkraken) ![GitHub last commit](https://img.shields.io/github/last-commit/joaopauloaramuni/laboratorio-de-desenvolvimento-de-software?style=for-the-badge&logo=clockify) ![Vercel](https://vercelbadge.vercel.app/api/joaopauloaramuni/joaopauloaramuni-portfolio?style=for-the-badge) ![Views Counter](https://views-counter.vercel.app/badge?pageId=https%3A%2F%2Fgithub%2Ecom%2Fjoaopauloaramuni%2Flaboratorio-de-desenvolvimento-de-software&leftColor=555555&rightColor=007ec6&type=total&label=RepoViews)
+Um sistema gamificado de moeda estudantil em que professores podem reconhecer o mérito dos seus alunos através de moedas virtuais que podem ser trocadas por diversas vantagens, oferecidas por empresas parceiras. Gerencia transferência de moedas de professores para alunos, reivindicação e resgate de vantagens por alunos. Desenvolvido com **Spring Boot**, **React** e **Vite**. 
 
 ---
 
@@ -85,45 +55,29 @@
 ## 🔗 Links Úteis
 * 🌐 **Demo Online:** [Acesse a Aplicação Web](<link-da-demo-web>)
   > 💻 **Descrição:** Link para a aplicação em ambiente de produção (Ex: hospedado na Vercel, Netlify ou AWS S3).
-* 📱 **Download Mobile:** [App Store](<link-app-store>) | [Google Play](<link-google-play>) | [APK Direto](<link-para-apk-direto>)
-  > 📱 **Descrição:** Links diretos para download nas lojas de aplicativos (se aplicável) e para o arquivo de instalação direta no Android (APK).
-* 📖 **Documentação:** [Leia a Wiki/Docs](<link-para-docs>)
-  > 📚 **Descrição:** Acesso à documentação técnica completa do projeto (Ex: Swagger/OpenAPI para API, ou Wiki interna).
 
 ---
 
 ## 📝 Sobre o Projeto
-Nesta seção, descreva de forma clara e objetiva **o propósito do seu projeto**, explicando:
+BrainCoins é um sistema de moeda estudantil desenvolvido como projeto acadêmico no contexto universitário. A ideia central é criar uma economia interna entre alunos, professores e empresas parceiras, onde o bom desempenho e a participação acadêmica são recompensados com moedas virtuais que podem ser trocadas por vantagens reais.
 
-- **Por que ele existe** — qual motivação levou à sua criação.  
-- **Qual problema ele resolve** — que dor, necessidade ou oportunidade ele atende.  
-- **Qual o contexto** — acadêmico, profissional, pessoal, experimental, etc.  
-- **Onde ele pode ser utilizado** — cenários reais ou simulados.  
-
-Procure responder perguntas como:
-- *Qual foi a ideia inicial do projeto?*
-- *O que ele entrega de valor ao usuário?*
-- *Por que alguém utilizaria ou contribuiria com esse projeto?*
-- *O que o torna relevante ou interessante?*
-
-Escreva de forma objetiva, mas completa, para que qualquer pessoa entenda rapidamente **o que é** e **por que importa**.
-
-> [!NOTE]
-> Esta seção segue boas práticas de documentação profissional e deve ser ajustada conforme o tipo e o objetivo do seu projeto.
+- **Por que ele existe?** A motivação é incentivar o engajamento acadêmico de forma tangível — professores reconhecem alunos que se destacam creditando moedas, e alunos utilizam esse saldo para resgatar benefícios oferecidos por empresas parceiras da instituição, como descontos e produtos.
+- **Qual problema ele resolve?** A falta de mecanismos práticos de reconhecimento e recompensa dentro do ambiente acadêmico. O BrainCoins cria uma ponte entre o desempenho do aluno e benefícios concretos, tornando o reconhecimento acadêmico mais motivador e visível.
+- **Onde pode ser utilizado?** Em instituições de ensino superior que queiram implementar programas de incentivo acadêmico, conectando alunos, corpo docente e empresas do entorno em um ecossistema de recompensas.
+- **O que o torna relevante?** O projeto cobre o ciclo completo de uma aplicação moderna — back-end em Spring Boot com PostgreSQL, front-end em React, autenticação, e múltiplos perfis de usuário (aluno, professor, empresa e instituição) com regras de negócio distintas para cada um.
 
 ---
 
 ## ✨ Funcionalidades Principais
 Liste as funcionalidades de forma clara e objetiva.
 
-- 🔐 **Autenticação Segura:** Login, Cadastro e Recuperação de Senha.
-- 📈 **Painel de Controle:** Visualização de dados em tempo real com gráficos.
-- ⚙️ **Gerenciamento de CRUD:** Criação, Leitura, Atualização e Deleção de recursos (e.g., Usuários, Itens, Posts).
-- 📊 **Relatórios Exportáveis:** Exportação de dados em PDF, CSV ou Excel.
-- 🌐 **Internacionalização (i18n):** Suporte a múltiplos idiomas.
-- 🧵 **Logs e Monitoramento:** Registro detalhado de atividades e análise de desempenho.
-- 🔄 **Integração com APIs Externas:** Conexão com serviços de terceiros (pagamentos, mapas, autenticação, etc.).
-- 📨 **Sistema de Notificações:** Envio de alertas por e-mail, push ou notificações internas.
+- 🔐 **Autenticação Segura:** Cadastro e Login de usuários com criptografia de senha.
+- ⚙️ **Gerenciamento de CRUD:** Criação, Leitura, Atualização e Deleção de recursos (e.g., Alunos, Professores, Transações, Vantagens).
+- 📨 **Envio de E-mail:** Envio de emails para usuários, incluindo: 
+  - Notificação de recebimento de moedas para alunos
+  - Notificação de solicitação de resgate de vantagem para alunos
+  - Notificação de reembolso para alunos em resgates expirados.
+  - Notificação de resgate de vantagem com código de confirmação para empresas.
 
 ---
 
@@ -133,47 +87,33 @@ As seguintes ferramentas, frameworks e bibliotecas foram utilizados na construç
 
 ### 💻 Front-end
 
-* **Framework/Biblioteca:** [Ex: React v18, Vue.js v3, Angular v17]
-* **Linguagem/Superset:** [Ex: TypeScript, JavaScript ES6+]
-* **Estilização:** [Ex: Tailwind CSS, Sass, Styled Components, Material UI]
-* **Gerenciamento de Estado:** [Ex: Redux Toolkit, Zustand, Context API]
-* **Build Tool:** [Ex: Vite, Webpack]
+* **Framework/Biblioteca:** React v19.2.5, Vite v8.0.9
+* **Linguagem/Superset:** TypeScript, JavaScript ES6+
+* **Estilização:** TailwindCSS v4.2.3
+* **Gerenciamento de Estado:** Redux v9.2.0
+* **Build Tool:** Vite v8.0.9
 
 ### 🖥️ Back-end
 
-* **Linguagem/Runtime:** [Ex: Java 17 (JDK), Node.js v20, Python 3.11]
-* **Framework:** [Ex: Spring Boot 3.x, NestJS, Express, Django]
-* **Banco de Dados:** [Ex: PostgreSQL, MySQL, MongoDB]
-* **ORM / Query Builder:** [Ex: Hibernate/JPA, Prisma, TypeORM]
-* **Autenticação:** [Ex: JWT, OAuth2, Spring Security]
-
-### 📱 Mobile (Opcional)
-
-* **Framework:** [Ex: React Native, Flutter, Kotlin Multiplatform]
-* **Ferramentas:** [Ex: Expo, Android Studio, Xcode]
+* **Linguagem/Runtime:** Java 21
+* **Framework:** Spring Boot 4.0.6
+* **Banco de Dados:** PostgreSQL 18
+* **ORM / Query Builder:** Hibernate/JPA 7.3.2
+* **Autenticação:** Spring Security
 
 ### ⚙️ Infraestrutura & DevOps
 
-* **Containerização:** [Ex: Docker, Docker Compose]
-* **Orquestração:** [Ex: Kubernetes (K8s)]
-* **Cloud:** [Ex: AWS (EC2, RDS, S3), Vercel, Heroku, Google Cloud]
-* **CI/CD:** [Ex: GitHub Actions, Jenkins, SonarQube]
+* **Containerização:** Docker, Docker Compose
 
 ---
 
 ## 🏗 Arquitetura
 
-Descreva aqui a **arquitetura completa do sistema**, explicando como as camadas, módulos e componentes foram organizados. Informe também **por que** essa arquitetura foi escolhida e **quais problemas ela ajuda a resolver**.
+A arquitetura usada no projeto foi a **Arquitetura em Camadas** usando o Padrão **MVC**, juntamente com outros padrões de projeto para aumentar a organização do código e separar responsabilidades, incluindo:
+- **Service Layer** / Camada de Serviço: Para separar a implementação das regras de negócio da camada **Controller** e concentrá-las em sua própria camada.
+- **DTO** / *Data Transfer Object*: Para desacoplar o contrato da API do schema do banco de dados e aumentar a segurança.
 
-Você pode incluir:
-
-- **Visão geral da arquitetura** (ex.: camadas, módulos, microsserviços, monólito modular, hexagonal, MVC etc.)
-- **Principais componentes** e o papel de cada um
-- **Padrões de design adotados** (ex.: Repository, Service Layer, DTOs, Factory, Observer)
-- **Fluxo de dados** entre as partes do sistema
-- **Tecnologias utilizadas em cada camada**
-- **Decisões arquiteturais importantes**
-- **Trade-offs** ou limitações relevantes
+Essa arquitetura foi escolhida pela facilidade de implementação e escalabilidade compatíveis com o tamanho do projeto. 
 
 ### Exemplos de diagramas
 
@@ -212,11 +152,9 @@ Configure estas variáveis como **variáveis de ambiente do sistema** ou em um a
 
 | Variável | Descrição | Exemplo |
 | :--- | :--- | :--- |
-| `SERVER_PORT` | Porta onde o Back-end será executado. | `8080` |
-| `SPRING_DATASOURCE_URL` | URL de conexão JDBC (PostgreSQL). | `jdbc:postgresql://localhost:5432/meubanco` |
-| `SPRING_DATASOURCE_USERNAME` | Usuário do banco de dados. | `postgres` |
-| `SPRING_DATASOURCE_PASSWORD` | Senha do banco de dados. | `senha-segura-123` |
-| `JWT_SECRET` | Chave secreta para assinatura de tokens (Opcional). | `chave_super_segura_base64` |
+| `DATABASE_URL` | URL de conexão JDBC (PostgreSQL). | `jdbc:postgresql://localhost:5432/meubanco` |
+| `DATABASE_USERNAME` | Usuário do banco de dados. | `postgres` |
+| `DATABASE_PASSWORD` | Senha do banco de dados. | `senha-segura-123` |
 
 #### 2 Front-end (React, Vite)
 
@@ -226,7 +164,6 @@ Crie um arquivo **`.env`** na raiz da pasta `/frontend` e use o prefixo `VITE_` 
 | :--- | :--- | :--- |
 | `VITE_API_URL` | URL base do endpoint do Backend Spring Boot. | `http://localhost:8080/api` |
 | `VITE_EMAILJS_PUBLIC_KEY` | Chave pública para serviços de e-mail (Exemplo). | `sua_public_key_aqui` |
-| `VITE_GOOGLE_MAPS_KEY` | Chave de API para serviços de mapas (Opcional). | `AIzaSy...` |
 
 ---
 
@@ -588,23 +525,6 @@ Use GIFs e prints para mostrar o projeto em ação.
 > [!WARNING]
 > Dê preferência a hospedar suas imagens em um **CDN** (Content Delivery Network) ou no **GitHub Pages** para garantir que elas carreguem rapidamente e não quebrem. Saiba mais sobre o GitHub Pages clicando [aqui](https://github.com/joaopauloaramuni/joaopauloaramuni.github.io).
 
-### 📱 Aplicativo Mobile
-
-- GIF de demonstração (exemplo de fluxo de usuário):  
-
-| Demonstração 1 | Demonstração 2 | Demonstração 3 | Demonstração 4 |
-|----------------|----------------|----------------|----------------|
-| <img src="https://joaopauloaramuni.github.io/image/fundo_mobile_engsoft.jpeg" alt="Demonstração 1" height="400"> | <img src="https://joaopauloaramuni.github.io/image/fundo_mobile_engsoft.jpeg" alt="Demonstração 2" height="400"> | <img src="https://joaopauloaramuni.github.io/image/fundo_mobile_engsoft.jpeg" alt="Demonstração 3" height="400"> | <img src="https://joaopauloaramuni.github.io/image/fundo_mobile_engsoft.jpeg" alt="Demonstração 4" height="400"> |
-| _Sua gif aqui_ | _Sua gif aqui_ | _Sua gif aqui_ | _Sua gif aqui_ |
-
-Para melhor visualização, as telas principais estão organizadas lado a lado.
-
-| Tela | Captura de Tela |
-| :---: | :---: |
-| **Tela Inicial (Home)** | **Tela de Perfil / Settings** |
-| <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Tela 1 do Mobile" width="120px" height="120px"> | <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Tela 2 do Mobile" width="120px" height="120px"> |
-| **Tela de Cadastro** | **Tela de Lista / Detalhes** |
-| <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Tela 3 do Mobile" width="120px" height="120px"> | <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Tela 4 do Mobile" width="120px" height="120px"> |
 
 ### 🌐 Aplicação Web
 
