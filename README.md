@@ -64,15 +64,114 @@ BrainCoins é um sistema de moeda estudantil desenvolvido como projeto acadêmic
 ---
 
 ## ✨ Funcionalidades Principais
-Liste as funcionalidades de forma clara e objetiva.
 
-- 🔐 **Autenticação Segura:** Cadastro e Login de usuários com criptografia de senha.
-- ⚙️ **Gerenciamento de CRUD:** Criação, Leitura, Atualização e Deleção de recursos (e.g., Alunos, Professores, Transações, Vantagens).
-- 📨 **Envio de E-mail:** Envio de emails para usuários, incluindo: 
-  - Notificação de recebimento de moedas para alunos
-  - Notificação de solicitação de resgate de vantagem para alunos
-  - Notificação de reembolso para alunos em resgates expirados.
-  - Notificação de resgate de vantagem com código de confirmação para empresas.
+### 🎓 Para Alunos
+- 🔐 **Login Seguro:** Acesso individual com email e senha criptografada
+- 📊 **Visualizar Saldo:** Consultar saldo atual de moedas
+- 📜 **Histórico de Transações:** Ver todas as moedas recebidas de professores
+- 🛍️ **Resgatar Vantagens:** Trocar moedas por benefícios oferecidos por empresas
+- 📱 **Notificações:** Receber email ao ganhar moedas e ao resgatar vantagens
+
+### 👨‍🏫 Para Professores
+- 🔐 **Login Seguro:** Acesso com email e senha criptografada
+- 💰 **Distribuir Moedas:** Enviar moedas para alunos como reconhecimento por bom desempenho
+- 📋 **Histórico:** Rastrear todas as moedas distribuídas
+- 🎯 **Gestão Acadêmica:** Incentivar engajamento estudantil através de recompensas
+
+### 🏢 Para Empresas
+- 🔐 **Login Seguro:** Acesso à plataforma com email e senha criptografada
+- 🛒 **Criar Vantagens:** Oferecer produtos/serviços que alunos podem resgatar
+- 📦 **Gerenciar Estoque:** Controlar quantidade de benefícios disponíveis
+- ✅ **Aprovar Resgates:** Validar solicitações de resgate com código de confirmação
+- 📧 **Notificações:** Receber alerta ao haver novo resgate de vantagem
+
+### 🏛️ Para Instituições
+- 🔐 **Login Seguro:** Acesso administrativo com credenciais
+- 📊 **Visão Geral do Sistema:** Monitorar movimentação de moedas e resgates
+- ⚙️ **Configuração:** Gerenciar parâmetros e regras do sistema
+
+### 🔐 **Autenticação Segura:** 
+- Cadastro e login de usuários (Aluno, Professor, Empresa, Instituição)
+- Criptografia de senha com Spring Security
+- Validação de credenciais
+
+### ⚙️ **Gerenciamento de CRUD:** 
+- Criação, Leitura, Atualização e Deleção de recursos
+- Alunos, Professores, Empresas, Instituições
+- Transações de moedas e Vantagens
+
+### 💳 **Sistema de Moedas:** 
+- Transferência de moedas de professor para aluno
+- Rastreamento de saldo por aluno
+- Histórico de transações
+
+### 📨 **Envio de E-mail:** 
+- Notificação de recebimento de moedas
+- Notificação de solicitação de resgate
+- Notificação de reembolso para resgates expirados
+- Confirmação de resgate com código único
+
+---
+
+## 📖 Histórias de Usuário
+
+### HU-01: Aluno Recebe Moedas do Professor
+**Como** um aluno  
+**Desejo** receber moedas de reconhecimento de um professor  
+**Para que** eu possa acumular saldo e resgatá-las por benefícios  
+
+**Fluxo:**
+1. Professor realiza login
+2. Professor distribui moedas para um aluno com descrição da ação
+3. Aluno recebe notificação por email
+4. Aluno visualiza saldo atualizado
+
+### HU-02: Aluno Resga Vantagem
+**Como** um aluno  
+**Desejo** resgatar minhas moedas por vantagens oferecidas  
+**Para que** eu possa obter benefícios reais em troca do meu desempenho  
+
+**Fluxo:**
+1. Aluno visualiza lista de vantagens disponíveis
+2. Aluno seleciona uma vantagem (se tem saldo suficiente)
+3. Sistema cria solicitação de resgate
+4. Empresa recebe notificação e código de confirmação
+5. Empresa aprova o resgate
+6. Aluno recebe email de confirmação
+
+### HU-03: Professor Distribui Moedas
+**Como** um professor  
+**Desejo** reconhecer alunos que se destacam com moedas  
+**Para que** eu possa incentivar engajamento e bom desempenho acadêmico  
+
+**Fluxo:**
+1. Professor realiza login
+2. Professor acessa seção de distribuição de moedas
+3. Professor seleciona aluno e quantidade
+4. Professor insere motivo (ex: "Ótima participação em aula")
+5. Sistema registra transação
+6. Aluno recebe notificação
+
+### HU-04: Empresa Oferece Vantagens
+**Como** uma empresa parceira  
+**Desejo** oferecer benefícios aos alunos da instituição  
+**Para que** eu possa aumentar visibilidade e fidelizar clientes jovens  
+
+**Fluxo:**
+1. Empresa realiza login
+2. Empresa cria nova vantagem (nome, descrição, custo em moedas, estoque)
+3. Vantagem fica disponível para alunos
+4. Empresa gerencia estoque e resgates
+
+### HU-05: Instituição Monitora Sistema
+**Como** gestor da instituição  
+**Desejo** acompanhar a movimentação de moedas no sistema  
+**Para que** eu possa verificar se os objetivos de engajamento estão sendo atingidos  
+
+**Fluxo:**
+1. Gestor realiza login
+2. Gestor acessa dashboard com métricas
+3. Gestor visualiza total de moedas distribuídas, resgatadas, etc.
 
 ---
 
@@ -120,21 +219,193 @@ A arquitetura usada no projeto foi a **Arquitetura em Camadas** usando o Padrão
 - **DTO** / *Data Transfer Object*: Desacoplamento do contrato da API do schema do banco de dados, aumentando a segurança e flexibilidade
 - **Entity/Model Layer**: Entidades JPA que representam as tabelas do banco de dados
 
+### Modelo de Dados (Entidades Principais)
+
+**Aluno**
+- `id`: ID único (PK)
+- `nome`: Nome completo
+- `email`: Email único
+- `senha`: Criptografada
+- `cpf`: CPF único
+- `saldo`: Quantidade de moedas
+- `dataCadastro`: Timestamp
+
+**Professor**
+- `id`: ID único (PK)
+- `nome`: Nome completo
+- `email`: Email único
+- `senha`: Criptografada
+- `cpf`: CPF único
+- `disciplina`: Disciplina lecionada
+- `dataCadastro`: Timestamp
+
+**Empresa**
+- `id`: ID único (PK)
+- `nome`: Nome da empresa
+- `email`: Email único
+- `senha`: Criptografada
+- `cnpj`: CNPJ único
+- `descricao`: Descrição/Bio
+- `dataCadastro`: Timestamp
+
+**Instituição**
+- `id`: ID único (PK)
+- `nome`: Nome da instituição
+- `email`: Email único
+- `senha`: Criptografada
+- `cnpj`: CNPJ único
+
+**Transação** (Professor → Aluno)
+- `id`: ID único (PK)
+- `professorId`: FK para Professor
+- `alunoId`: FK para Aluno
+- `quantidade`: Quantidade de moedas transferidas
+- `descricao`: Motivo da transferência
+- `data`: Data/hora da transação
+- `status`: Status (CONCLUÍDA, PENDENTE, etc.)
+
+**Vantagem** (Ofertada por Empresa)
+- `id`: ID único (PK)
+- `empresaId`: FK para Empresa
+- `nome`: Nome da vantagem
+- `descricao`: Descrição detalhada
+- `custo`: Custo em moedas
+- `estoque`: Quantidade disponível
+- `ativo`: Flag de ativação
+- `dataCadastro`: Timestamp
+
+**Resgate** (Aluno → Vantagem)
+- `id`: ID único (PK)
+- `alunoId`: FK para Aluno
+- `vantagemId`: FK para Vantagem
+- `empresaId`: FK para Empresa
+- `codigoConfirmacao`: Código único para validação
+- `status`: PENDENTE, APROVADO, REJEITADO
+- `dataSolicitacao`: Data de solicitação
+- `dataAprovacao`: Data de aprovação
+
 ### Componentes Principais
 
-**Entidades do Sistema:**
-- **Aluno**: Usuários que recebem moedas e resgatam vantagens
-- **Professor**: Usuários que distribuem moedas aos alunos
-- **Empresa**: Parceiras que oferecem vantagens
-- **Instituição**: Gestora do sistema de moedas
-- **Transação**: Registro de transferência de moedas
-- **Vantagem**: Benefícios oferecidos pelas empresas
+**Camadas da Arquitetura:**
+- **Controller Layer**: REST endpoints que recebem requisições HTTP
+- **Service Layer**: Lógica de negócio, validações e orquestração
+- **Repository Layer**: Acesso a dados via JPA/Hibernate
+- **Entity Layer**: Modelos JPA que representam as tabelas
+- **DTO Layer**: Data Transfer Objects para requisições/respostas
 
-**Fluxo de Autenticação:**
-1. Usuário realiza login com email/password
-2. Spring Security valida credenciais
-3. Geração de token JWT (se aplicável)
-4. Acesso aos endpoints protegidos com autorização baseada em perfil
+### Fluxo de Autenticação
+```
+┌─────────────┐
+│   Usuário   │
+└──────┬──────┘
+       │ Email + Senha
+       ▼
+┌──────────────────────┐
+│  Spring Security     │
+│  (Validação)         │
+└──────┬───────────────┘
+       │ Credenciais OK?
+       ├─────────────────┬─────────────────┐
+       │ NÃO             │ SIM             │
+       ▼                 ▼                 ▼
+   ┌────────┐    ┌──────────────┐    ┌──────────────┐
+   │ Erro   │    │ Autenticado  │    │ Token/Sessão │
+   │ 401    │    │ & Autorizado │    │   Gerado     │
+   └────────┘    └──────────────┘    └──────────────┘
+```
+
+### Fluxo de Distribuição de Moedas
+```
+┌──────────┐
+│Professor │
+└────┬─────┘
+     │ Login
+     ▼
+┌─────────────────────────┐
+│ Seleciona Aluno + Qtd   │
+│ + Descrição             │
+└────┬────────────────────┘
+     │
+     ▼
+┌─────────────────────────┐
+│ Verifica Saldo          │
+│ do Professor            │
+└────┬────────────────────┘
+     │ Saldo OK?
+     ├──────┬──────┐
+     │ NÃO  │ SIM  │
+     ▼      ▼      ▼
+  ┌────┐ ┌─────────────────┐
+  │Erro│ │ Registra        │
+  │    │ │ Transação       │
+  └────┘ └────┬────────────┘
+              │
+              ▼
+         ┌──────────────────┐
+         │ Envia Email      │
+         │ p/ Aluno        │
+         └──────────────────┘
+```
+
+### Fluxo de Resgate de Vantagem
+```
+┌────────┐
+│ Aluno  │
+└───┬────┘
+    │ Login
+    ▼
+┌──────────────────────┐
+│ Visualiza Vantagens  │
+│ Disponíveis          │
+└───┬─────────────────┘
+    │
+    ▼
+┌──────────────────────┐
+│ Seleciona Vantagem   │
+└───┬─────────────────┘
+    │
+    ▼
+┌──────────────────────┐    Saldo      ┌──────────┐
+│ Verifica:            │◄──Insuficiente┤   Erro   │
+│ • Saldo              │               └──────────┘
+│ • Estoque            │
+└───┬─────────────────┘
+    │ OK
+    ▼
+┌──────────────────────┐
+│ Cria Solicitação de  │
+│ Resgate              │
+└───┬─────────────────┘
+    │
+    ▼
+┌──────────────────────┐
+│ Notifica Empresa     │
+│ com Código           │
+└───┬─────────────────┘
+    │
+    ▼
+┌──────────────────────┐
+│ Empresa Aprova       │
+│ Resgate              │
+└───┬─────────────────┘
+    │
+    ▼
+┌──────────────────────┐
+│ Notifica Aluno       │
+│ Resgate Concluído    │
+└──────────────────────┘
+```
+
+---
+
+## 🎯 Casos de Uso por Perfil
+
+| Perfil | Ações Permitidas |
+|:---:|:---|
+| **Aluno** | Login, Visualizar saldo, Histórico de transações, Resgatar vantagens, Visualizar vantagens |
+| **Professor** | Login, Distribuir moedas para alunos, Visualizar histórico de distribuições, Selecionar alunos |
+| **Empresa** | Login, Criar/atualizar/deletar vantagens, Gerenciar estoque, Aprovar resgates, Receber notificações |
+| **Instituição** | Login, Visualizar métricas gerais, Monitorar movimentação de moedas, Configurações |
 
 ---
 
