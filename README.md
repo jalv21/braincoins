@@ -1,11 +1,3 @@
-<!-- Este template foi criado para servir como referência e pode ser facilmente adaptado para diferentes projetos de desenvolvimento -->
-
-<!-- [![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=99999999&assignment_repo_type=AssignmentRepo) [![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=99999999)
--->
-
-<a href="https://classroom.github.com/online_ide?assignment_repo_id=99999999&assignment_repo_type=AssignmentRepo"><img src="https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg" width="200"/></a> <a href="https://classroom.github.com/open-in-codespaces?assignment_repo_id=99999999"><img src="https://classroom.github.com/assets/launch-codespace-2972f46106e565e64193e422d61a12cf1da4916b45550586e14ef0a7c637dd04.svg" width="250"/></a>
-
----
 
 # 🧠📖 BrainCoins - Sistema de Moeda Estudantil 🪙
 
@@ -53,8 +45,11 @@ Um sistema gamificado de moeda estudantil em que professores podem reconhecer o 
 ---
 
 ## 🔗 Links Úteis
-* 🌐 **Demo Online:** [Acesse a Aplicação Web](<link-da-demo-web>)
-  > 💻 **Descrição:** Link para a aplicação em ambiente de produção (Ex: hospedado na Vercel, Netlify ou AWS S3).
+* 📚 **Documentação:** Consulte as seções abaixo para mais informações sobre instalação, arquitetura e uso.
+* 🐙 **Repositório GitHub:** [BrainCoins](https://github.com/jalv21/braincoins)
+* 🚀 **Backend API:** http://localhost:8080
+* 🎨 **Frontend Web:** http://localhost:5173
+* 📋 **Postman Collection:** `BrainCoins_API.postman_collection.json`
 
 ---
 
@@ -87,46 +82,59 @@ As seguintes ferramentas, frameworks e bibliotecas foram utilizados na construç
 
 ### 💻 Front-end
 
-* **Framework/Biblioteca:** React v19.2.5, Vite v8.0.9
+* **Framework/Biblioteca:** React v19.2.5
+* **Build Tool:** Vite v8.0.9
 * **Linguagem/Superset:** TypeScript, JavaScript ES6+
 * **Estilização:** TailwindCSS v4.2.3
-* **Gerenciamento de Estado:** Redux v9.2.0
-* **Build Tool:** Vite v8.0.9
+* **Componentes UI:** Radix UI (Accordion, Dialog, Dropdown, etc.)
+* **Roteamento:** TanStack Router v1.169.1
+* **Gráficos:** Recharts v3.8.1
+* **HTTP Client:** Axios v1.16.0
+* **Formulários:** React Hook Form v7.75.0
 
 ### 🖥️ Back-end
 
 * **Linguagem/Runtime:** Java 21
 * **Framework:** Spring Boot 4.0.6
-* **Banco de Dados:** PostgreSQL 18
+* **Build Tool:** Maven (com Spring Boot Maven Plugin)
+* **Banco de Dados:** PostgreSQL 17
 * **ORM / Query Builder:** Hibernate/JPA 7.3.2
 * **Autenticação:** Spring Security
+* **Email:** Integração com EmailJS
+* **Recursos Assincronos:** Spring Async & Scheduling habilitado
 
 ### ⚙️ Infraestrutura & DevOps
 
 * **Containerização:** Docker, Docker Compose
+* **PostgreSQL:** Versão 17-alpine (otimizada e leve)
 
 ---
 
 ## 🏗 Arquitetura
 
 A arquitetura usada no projeto foi a **Arquitetura em Camadas** usando o Padrão **MVC**, juntamente com outros padrões de projeto para aumentar a organização do código e separar responsabilidades, incluindo:
-- **Service Layer** / Camada de Serviço: Para separar a implementação das regras de negócio da camada **Controller** e concentrá-las em sua própria camada.
-- **DTO** / *Data Transfer Object*: Para desacoplar o contrato da API do schema do banco de dados e aumentar a segurança.
 
-Essa arquitetura foi escolhida pela facilidade de implementação e escalabilidade compatíveis com o tamanho do projeto. 
+- **Controller Layer**: Endpoints REST que recebem requisições HTTP
+- **Service Layer** / Camada de Serviço: Implementação das regras de negócio, validações e orquestração de operações
+- **Repository Layer**: Acesso ao banco de dados através de JPA/Hibernate
+- **DTO** / *Data Transfer Object*: Desacoplamento do contrato da API do schema do banco de dados, aumentando a segurança e flexibilidade
+- **Entity/Model Layer**: Entidades JPA que representam as tabelas do banco de dados
 
-### Exemplos de diagramas
+### Componentes Principais
 
-Para melhor visualização e entendimento da estrutura do sistema, os diagramas principais estão organizados lado a lado.
+**Entidades do Sistema:**
+- **Aluno**: Usuários que recebem moedas e resgatam vantagens
+- **Professor**: Usuários que distribuem moedas aos alunos
+- **Empresa**: Parceiras que oferecem vantagens
+- **Instituição**: Gestora do sistema de moedas
+- **Transação**: Registro de transferência de moedas
+- **Vantagem**: Benefícios oferecidos pelas empresas
 
-| Diagrama de Arquitetura | Detalhe da Arquitetura |
-| :---: | :---: |
-| **Visão Geral (Macro)** | **Camada de Serviço (Micro)** |
-| <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Diagrama de Visão Geral do Sistema" width="120px" height="120px"> | <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Diagrama de Componentes ou Serviço X" width="120px" height="120px"> |
-| **Modelo de Dados (Entidades)** | **Fluxo de Autenticação** |
-| <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Diagrama de Entidade-Relacionamento (DER)" width="120px" height="120px"> | <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Diagrama de Sequência de Login" width="120px" height="120px"> |
-| **Infraestrutura (Cloud)** | **API Gateway (Rotas)** |
-| <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Diagrama de Deploy na AWS/Vercel" width="120px" height="120px"> | <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Mapa de Endpoints da API" width="120px" height="120px"> |
+**Fluxo de Autenticação:**
+1. Usuário realiza login com email/password
+2. Spring Security valida credenciais
+3. Geração de token JWT (se aplicável)
+4. Acesso aos endpoints protegidos com autorização baseada em perfil
 
 ---
 
@@ -148,96 +156,51 @@ Crie arquivos `.env` específicos e/ou configure as variáveis de ambiente no se
 
 #### 1 Back-end (Spring Boot)
 
-Configure estas variáveis como **variáveis de ambiente do sistema** ou em um arquivo de configuração do Spring (ex: `application.properties`/`application.yml`).
+Configure estas variáveis no arquivo `.env` na raiz do projeto ou como variáveis de ambiente do sistema.
 
 | Variável | Descrição | Exemplo |
 | :--- | :--- | :--- |
-| `DATABASE_URL` | URL de conexão JDBC (PostgreSQL). | `jdbc:postgresql://localhost:5432/meubanco` |
-| `DATABASE_USERNAME` | Usuário do banco de dados. | `postgres` |
-| `DATABASE_PASSWORD` | Senha do banco de dados. | `senha-segura-123` |
+| `DATABASE_URL` | String de conexão JDBC (PostgreSQL). | `postgresql://postgres:admin2513@localhost:5432/braincoins?schema=public` |
+| `DB_USERNAME` | Usuário do banco de dados. | `postgres` |
+| `DB_PASSWORD` | Senha do banco de dados. | `admin2513` |
+| `NEXTAUTH_SECRET` | Chave secreta para autenticação. | `secret_chave_aleatoria_123` |
+| `NEXTAUTH_URL` | URL base da aplicação para autenticação. | `http://localhost:3000` |
 
 #### 2 Front-end (React, Vite)
 
-Crie um arquivo **`.env`** na raiz da pasta `/frontend` e use o prefixo `VITE_` (ou `REACT_APP_` se estiver usando CRA) para expor as variáveis ao *bundle* da aplicação.
+Crie um arquivo **`.env.local`** na pasta `/code/frontend/moeda-estudantil` e use o prefixo `VITE_` para expor as variáveis ao *bundle* da aplicação.
 
 | Variável | Descrição | Exemplo |
 | :--- | :--- | :--- |
-| `VITE_API_URL` | URL base do endpoint do Backend Spring Boot. | `http://localhost:8080/api` |
-| `VITE_EMAILJS_PUBLIC_KEY` | Chave pública para serviços de e-mail (Exemplo). | `sua_public_key_aqui` |
+| `VITE_API_URL` | URL base do Backend Spring Boot API. | `http://localhost:8080/api` |
 
 ---
 
-#### 3. Exemplos de Variáveis de Ambiente na Vercel
+#### 3. Configuração Local Completa
 
-A Vercel permite configurar variáveis no painel (Project Settings > Environment Variables).
-Aqui estão exemplos comuns utilizadas em aplicações front-end e full-stack:
+Para desenvolvimento local completo, crie/atualize os seguintes arquivos:
 
----
+**Arquivo: `.env` (raiz do projeto)**
+```bash
+# Variáveis para o Docker
+DB_USERNAME=postgres
+DB_PASSWORD=admin2513
 
-##### **Exemplo 1 – Front-end com Next.js usando API externa**
+# String de conexão com PostgreSQL
+DATABASE_URL="postgresql://postgres:admin2513@localhost:5432/braincoins?schema=public"
 
-```
-NEXT_PUBLIC_API_URL=https://meu-backend.vercel.app/api
-NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=G-seu_google_analytics_id_aqui
-```
-
----
-
-##### **Exemplo 2 – Aplicação Full-stack (Next.js + Prisma + PostgreSQL)**
-
-```
-DATABASE_URL=postgresql://admin:senha-super-segura@ep-meu-banco.aws.neon.tech:5432/verceldb
-NEXTAUTH_SECRET=uma_chave_muito_longa_e_segura
-NEXTAUTH_URL=https://meu-sistema.vercel.app
+# Configuração para autenticação
+NEXTAUTH_SECRET="secret_chave_aleatoria_123"
+NEXTAUTH_URL="http://localhost:3000"
 ```
 
----
-
-##### **Exemplo 3 – Integração com APIs externas**
-
-```
-STRIPE_SECRET_KEY=sk_live_seu_stripe_key_aqui
-OPENAI_API_KEY=sk-sua_openai_key_aqui
-SENDGRID_API_KEY=SG.sua_sendgrid_key_aqui
-```
-
----
-
-##### **Exemplo 4 – Frontend com Vite (EmailJS)**
-
-```
-VITE_EMAILJS_SERVICE_ID=seu_service_id_aqui
-VITE_EMAILJS_TEMPLATE_ID_FOR_ME=seu_template_id_for_me_aqui
-VITE_EMAILJS_TEMPLATE_ID_FOR_SENDER=seu_template_id_for_sender_aqui
-VITE_EMAILJS_PUBLIC_KEY=sua_public_key_aqui
-```
-
-> **Obs:** As variáveis de ambiente em projetos **Vite** precisam começar com `VITE_` para que o Vite as reconheça e as inclua no *bundle* do frontend; variáveis sem esse prefixo não ficam disponíveis no código do cliente.
-
----
-
-Para adicionar essas variáveis:
-
-1.  Acesse a página de Environment Variables do seu projeto no Vercel (ex.: `https://vercel.com/<seu-usuario>/<seu-projeto>/settings/environment-variables`)
-2.  Clique em **"Add"** para adicionar cada variável com o nome e valor correspondente.
-
-Alternativamente, se estiver desenvolvendo localmente, crie um arquivo **`.env.local`** dentro da pasta **`frontend`** do seu projeto com o seguinte conteúdo:
-
-```
-# Variável essencial para conectar ao Back-end Spring Boot rodando localmente (normalmente na porta 8080)
+**Arquivo: `code/frontend/moeda-estudantil/.env.local`**
+```bash
+# URL da API Backend
 VITE_API_URL=http://localhost:8080/api
-
-# Variáveis para integrações externas de serviço de e-mail
-VITE_EMAILJS_SERVICE_ID=seu_service_id_aqui
-VITE_EMAILJS_TEMPLATE_ID_FOR_ME=seu_template_id_for_me_aqui
-VITE_EMAILJS_TEMPLATE_ID_FOR_SENDER=seu_template_id_for_sender_aqui
-VITE_EMAILJS_PUBLIC_KEY=sua_public_key_aqui
-
-# Outras chaves de serviço
-VITE_GOOGLE_MAPS_KEY=AIzaSy...
 ```
 
-> 💡 **Localização:** Garanta que este arquivo esteja em **`/frontend/.env.local`** para que o **Vite** consiga carregá-lo e disponibilizar as variáveis para o Front-end durante o desenvolvimento.
+> 💡 **Localização:** O arquivo `.env.local` deve estar em `code/frontend/moeda-estudantil/.env.local` para que o Vite consiga carregá-lo durante o desenvolvimento.
 
 ### 📦 Instalação de Dependências
 
@@ -246,43 +209,35 @@ Clone o repositório e instale as dependências.
 1.  **Clone o Repositório:**
 
 ```bash
-git clone <URL_DO_SEU_REPOSITÓRIO>
-cd <pasta-do-projeto>
+git clone https://github.com/jalv21/braincoins.git
+cd braincoins
 ```
 
 2.  **Instale as Dependências (Monorepo):**
 
 Como o projeto está dividido, você precisa instalar as dependências separadamente para o Front-end (React, usando NPM/Yarn) e garantir que o Back-end (Spring Boot, usando Maven/Gradle Wrapper) tenha suas dependências resolvidas.
 
-#### Front-end (React)
+#### Front-end (React + Vite)
 
 Acesse a pasta do Front-end e instale as dependências do Node.js:
 
 ```bash
-cd frontend
+cd code/frontend/moeda-estudantil
 npm install
-# ou
-yarn install
-cd .. # Retorna para a raiz
+cd ../../../ # Retorna para a raiz
 ```
 
-#### Back-end (Spring Boot)
+#### Back-end (Spring Boot + Maven)
 
-O Spring Boot utiliza o **Maven Wrapper** (`./mvnw`) ou **Gradle Wrapper** (`./gradlew`) para gerenciar dependências. Execute o comando de instalação/build limpo antes de rodar.
+O projeto utiliza **Maven Wrapper** (`./mvnw`) para gerenciar dependências:
 
-* **Usando Maven (`pom.xml`):**
-    ```bash
-    cd backend
-    ./mvnw clean install
-    cd ..
-    ```
+```bash
+cd code/backend/moeda
+./mvnw clean install
+cd ../../.. # Retorna para a raiz
+```
 
-* **Usando Gradle (`build.gradle`):**
-    ```bash
-    cd backend
-    ./gradlew clean build
-    cd ..
-    ```
+> **Nota:** As dependências serão baixadas automaticamente. Use `clean install` para garantir uma build limpa e consistente.
 
 ---
 
@@ -294,7 +249,7 @@ O projeto utiliza **PostgreSQL**. A forma mais fácil de inicializar o banco é 
    (Certifique-se que o Docker está em execução)
 
 ```bash
-docker run --name minha_db -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=senha-segura-123 -e POSTGRES_DB=nome_do_banco -p 5432:5432 -d postgres:16
+docker run --name braincoins-db -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=admin2513 -e POSTGRES_DB=braincoins -p 5432:5432 -d postgres:17-alpine
 ```
 
 2. **Execute as Migrações:**  
@@ -318,7 +273,7 @@ Execute a aplicação em modo de desenvolvimento em **dois terminais separados**
 Inicie a API do Spring Boot. Ela tentará se conectar ao banco de dados rodando no Docker.
 
 ```bash
-cd backend
+cd code/backend/moeda
 ./mvnw spring-boot:run
 ```
 🚀 *O Back-end estará disponível em **http://localhost:8080**.*
@@ -330,12 +285,10 @@ cd backend
 Inicie o servidor de desenvolvimento do Front-end.
 
 ```bash
-cd frontend
+cd code/frontend/moeda-estudantil
 npm run dev
-# ou
-yarn dev
 ```
-🎨 *O Front-end estará disponível em **http://localhost:5173** (ou a porta configurada no Vite/CRA).*
+🎨 *O Front-end estará disponível em **http://localhost:5173**.*
 
 ---
 
@@ -400,19 +353,20 @@ docker-compose down
 ---
 
 ## 🚀 Deploy
-Instruções claras para deploy em produção.
+
+Instruções para deploy em produção.
 
 1.  **Build do Projeto:**
     Execute o build separadamente para os dois artefatos (JAR para o Back-end e arquivos estáticos para o Front-end).
 
 ```bash
-# 1. Build do Front-end (React/Vite) - Gera a pasta /dist com arquivos estáticos
-cd frontend
+# 1. Build do Front-end (React/Vite)
+cd code/frontend/moeda-estudantil
 npm run build
 
-# 2. Build do Back-end (Spring Boot/Maven) - Gera o arquivo .jar executável em /target
-cd ../backend
-./mvnw clean package
+# 2. Build do Back-end (Spring Boot/Maven)
+cd ../../backend/moeda
+./mvnw clean package -DskipTests
 ```
 
 2.  **Configuração do Ambiente de Produção:** Defina as variáveis de ambiente no seu provedor (e.g., Vercel, Railway, Heroku, DigitalOcean).
@@ -425,194 +379,167 @@ cd ../backend
 ```bash
 # ☕ Execução do Back-end Spring Boot (Java JAR)
 # Este comando inicia a API usando o artefato JAR gerado.
-java -jar backend/target/nome-do-do-projeto-0.0.1-SNAPSHOT.jar
+java -jar code/backend/moeda/target/moeda-0.0.1-SNAPSHOT.jar
 
 # 🟢 Execução do Front-end (React/Vite)
-# O Front-end (arquivos estáticos) não é executado via Node, mas servido por um servidor web.
-# Exemplo de servidor de arquivos estáticos (usando Nginx, Vercel, Netlify, etc.)
-# Para simular a produção localmente ou rodar em uma VPS simples, use o pacote 'serve':
+# Servir arquivos estáticos com 'serve' (para testes locais)
 npm install -g serve
-serve -s frontend/dist
+serve -s code/frontend/moeda-estudantil/dist -l 3000
+
+# Em produção, deploy em Vercel/Netlify ou servir com Nginx/Apache
 ```
 
 ---
 
 ## 📂 Estrutura de Pastas
 
-Descreva o propósito das pastas principais.
-
 ```
 .
-├── .editorconfig                # ✍️ Padronização de estilo de código.
-├── .env.local                   # 🔒 Variáveis SENSÍVEIS do ambiente LOCAL (não versionado).
-├── .env.test                    # 🧪 Variáveis de ambiente para TESTES AUTOMATIZADOS.
-├── .env.staging                 # ☁️ Variáveis de ambiente para STAGING/HOMOLOGAÇÃO.
-├── .env.example                 # 🧩 Exemplo de TODAS as variáveis necessárias (sem valores sensíveis).
-├── .gitignore                   # 🧹 Ignora arquivos/pastas não versionadas (.env, node_modules, target, etc.).
-├── .vscode/                     # ⚙️ Configurações de ambiente da IDE (opcional).
-├── .github/                     # 🤖 CI/CD (Actions), templates de Issues e Pull Requests.
-├── README.md                    # 📘 Documentação principal do projeto.
-├── CONTRIBUTING.md              # 🤝 Guia de contribuição.
-├── LICENSE                      # ⚖️ Licença do projeto.
-├── docker-compose.yml           # 🐳 Orquestração dos containers (front/back/db/etc).
-├── docker-compose.override.yml  # 🐳 Configurações extras apenas para desenvolvimento.
+├── .env                         # 🔒 Variáveis de ambiente (contém credenciais do DB).
+├── .env.example                 # 🧩 Exemplo de variáveis necessárias.
+├── .gitignore                   # 🧹 Ignora arquivos não versionados (.env, node_modules, target, etc.).
+├── .vscode/                     # ⚙️ Configurações do VS Code.
+├── .github/                     # 🤖 CI/CD (Actions), templates de Issues/PRs.
+├── README.md                    # 📘 Documentação do projeto.
+├── LICENSE                      # ⚖️ Licença (MIT).
+├── docker-compose.yml           # 🐳 Orquestração dos containers (PostgreSQL).
+├── package.json                 # 📦 Scripts e dependências da raiz (se houver).
 │
-├── /frontend                    # 📁 Aplicação React
-│   ├── .env.example             # 🧩 Variáveis de ambiente do Front-end.
-│   ├── Dockerfile               # 🐳 Docker build do Front-end.
-│   ├── .eslintrc.js             # ✨ Regras do ESLint.
-│   ├── .prettierrc              # 🎨 Configuração do Prettier.
-│   ├── /public                  # 📂 Arquivos estáticos e index.html.
-│   ├── /src                     # 📂 Código-fonte React
-│   │   ├── /components          # 🧱 Componentes reutilizáveis (UI).
-│   │   ├── /pages               # 📄 Páginas/rotas da aplicação.
-│   │   ├── /services            # 🔌 Serviços e chamadas HTTP.
-│   │   ├── /hooks               # 🎣 Hooks personalizados.
-│   │   ├── /styles              # 🎨 Estilos globais, temas, Design System.
-│   │   ├── /assets              # 🖼️ Recursos estáticos importados
-│   │   │   ├── /images          # 🖼️ Imagens.
-│   │   │   ├── /icons           # 💡 Ícones.
-│   │   │   └── /fonts           # ✒️ Fontes personalizadas.
-│   │   └── /utils               # 🛠️ Funções utilitárias.
-│   ├── package.json             # 📦 Dependências e scripts.
-│   └── yarn.lock / package-lock.json # 🔒 Lockfile das dependências.
-│
-├── /backend                     # 📁 Aplicação Spring Boot
-│   ├── .env.example             # 🧩 Variáveis de ambiente do Back-end.
-│   ├── Dockerfile               # 🐳 Docker build do Back-end.
+├── /code
+│   ├── /backend                 # 📁 Aplicação Backend (Spring Boot)
+│   │   └── /moeda
+│   │       ├── pom.xml          # 🛠️ Dependências e configuração Maven.
+│   │       ├── mvnw             # 🔧 Maven Wrapper (executável).
+│   │       ├── mvnw.cmd         # 🔧 Maven Wrapper (Windows).
+│   │       │
+│   │       ├── /src/main/java
+│   │       │   └── /com/lab3/moeda
+│   │       │       ├── /controller          # 🎮 Endpoints REST (Auth, Aluno, Professor, etc.).
+│   │       │       ├── /service             # ⚙️ Lógica de negócio.
+│   │       │       ├── /repository          # 🗄️ Acesso a dados (JPA).
+│   │       │       ├── /model               # 🧬 Entidades JPA (Aluno, Professor, etc.).
+│   │       │       ├── /dto                 # ✉️ DTOs de requisição/resposta.
+│   │       │       ├── /config              # 🔧 Configurações (CORS, DB, etc.).
+│   │       │       ├── /exception           # 💥 Handlers de exceção.
+│   │       │       ├── /security            # 🛡️ Autenticação (Spring Security).
+│   │       │       ├── MoedaApplication.java # 🚀 Classe principal.
+│   │       │       └── /util                # 🛠️ Utilitários.
+│   │       │
+│   │       ├── /src/main/resources
+│   │       │   ├── application.yml          # ⚙️ Configuração principal.
+│   │       │   ├── application-dev.yml      # 🧪 Config de desenvolvimento.
+│   │       │   ├── application-prod.yml     # 🚀 Config de produção.
+│   │       │   └── /db/migration            # 📜 Migrações SQL (se usar Flyway).
+│   │       │
+│   │       ├── /src/test/java               # 🧪 Testes.
+│   │       ├── /uploads                     # 📁 Uploads de arquivos da aplicação.
+│   │       └── /target                      # 📦 Build output (JAR gerado).
 │   │
-│   ├── /src/main/java           # 📂 Código-fonte Java
-│   │   └── /com/exemplo/app
-│   │       ├── /controller      # 🎮 Endpoints REST.
-│   │       ├── /service         # ⚙️ Regras e lógica de negócio.
-│   │       ├── /repository      # 🗄️ Repositórios (JPA/Hibernate).
-│   │       ├── /model           # 🧬 Entidades persistentes (JPA).
-│   │       ├── /domain          # 🌐 Objetos de Domínio puro (sem anotações).
-│   │       ├── /dto             # ✉️ Data Transfer Objects.
-│   │       ├── /config          # 🔧 Configurações gerais (DB, Swagger, CORS, etc.).
-│   │       ├── /exception       # 💥 Exceptions e handlers globais.
-│   │       └── /security        # 🛡️ Autenticação e Autorização (Spring Security).
-│   │
-│   ├── /src/main/resources      # 📂 Recursos do Spring Boot
-│   │   ├── application.yml         # ⚙️ Configuração principal da aplicação
-│   │   ├── application-dev.yml     # 🧪 Configurações específicas do ambiente de DESENVOLVIMENTO
-│   │   ├── application-prod.yml    # 🚀 Configurações específicas para PRODUÇÃO
-│   │   ├── application-test.yml    # 🧪 Configurações usadas nos testes automatizados
-│   │   ├── /static                # 🌐 Arquivos estáticos (HTML/CSS/JS).
-│   │   ├── /templates             # 🖼️ Templates Thymeleaf/Freemarker.
-│   │   ├── /messages              # 🌎 Arquivos de internacionalização (i18n).
-│   │   └── /db                    # 💾 Scripts de banco usados pela aplicação
-│   │       └── /migration         # 📜 Migrações do banco (Flyway/Liquibase).
-│   │
-│   ├── /src/test/java            # 🧪 Testes unitários e de integração.
-│   └── pom.xml / build.gradle    # 🛠️ Build e dependências.
+│   └── /frontend                # 📁 Aplicação Frontend (React + Vite)
+│       └── /moeda-estudantil
+│           ├── package.json                 # 📦 Dependências e scripts npm.
+│           ├── package-lock.json            # 🔒 Lockfile das dependências.
+│           ├── vite.config.js               # ⚙️ Configuração Vite.
+│           ├── index.html                   # 🌐 HTML raiz.
+│           ├── .env.local                   # 🔒 Variáveis de ambiente (VITE_API_URL).
+│           │
+│           ├── /src
+│           │   ├── /components              # 🧱 Componentes React (UI reutilizáveis).
+│           │   ├── /pages                   # 📄 Páginas/rotas da aplicação.
+│           │   ├── /services                # 🔌 Serviços HTTP (axios).
+│           │   ├── /hooks                   # 🎣 Hooks personalizados.
+│           │   ├── /assets                  # 🖼️ Imagens, ícones, fontes.
+│           │   ├── /styles                  # 🎨 Estilos CSS/Tailwind.
+│           │   ├── /utils                   # 🛠️ Funções utilitárias.
+│           │   ├── /routes                  # 🛣️ Configuração de rotas (TanStack Router).
+│           │   ├── App.jsx                  # 🎨 Componente raiz.
+│           │   └── main.jsx                 # 🚀 Ponto de entrada.
+│           │
+│           ├── /public                      # 🌐 Arquivos estáticos.
+│           ├── /dist                        # 📦 Build output (gerado por `npm run build`).
+│           └── /node_modules                # 📦 Dependências instaladas.
 │
-├── /scripts                      # 📜 Scripts de automação
-│   ├── dev.sh                    # 🚀 Ambiente de desenvolvimento completo.
-│   ├── build_all.sh              # 🛠️ Build geral (front + back).
-│   └── deploy.sh                 # ☁️ Deploy em produção/homologação.
-│
-├── /docs                         # 📚 Documentação, arquitetura, modelos C4, Swagger/OpenAPI.
-└── /tests                        # 🧪 Testes End-to-End (Cypress/Playwright).
+├── /docs                        # 📚 Documentação adicional (arquitetura, guias).
+├── /.postman                    # 🔗 Coleção Postman para testes da API.
+├── /postman                     # 🔗 Exemplos e testes Postman.
+└── BrainCoins_API.postman_collection.json # 📋 Collection Postman pronta para importar.
 ```
 
 ---
 
 ## 🎥 Demonstração
 
-Use GIFs e prints para mostrar o projeto em ação.  
+### 🌐 Endpoints Principais da API
 
-> [!WARNING]
-> Dê preferência a hospedar suas imagens em um **CDN** (Content Delivery Network) ou no **GitHub Pages** para garantir que elas carreguem rapidamente e não quebrem. Saiba mais sobre o GitHub Pages clicando [aqui](https://github.com/joaopauloaramuni/joaopauloaramuni.github.io).
+O Backend expõe os seguintes endpoints para interação:
 
-
-### 🌐 Aplicação Web
-
-Para melhor visualização, as telas principais estão organizadas lado a lado.
-
-| Tela | Captura de Tela |
-| :---: | :---: |
-| **Página Inicial (Home)** | **Página de Login** |
-| <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Tela Inicial da Aplicação Web" width="120px" height="120px"> | <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Tela de Login" width="120px" height="120px"> |
-| **Cadastro de Clientes** | **Cadastro de Produtos** |
-| <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Tela de Cadastro de Clientes" width="120px" height="120px"> | <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Tela de Cadastro de Produtos" width="120px" height="120px"> |
-| **Dashboard (Visão Geral)** | **Página Admin / Configurações** |
-| <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Tela de Dashboard" width="120px" height="120px"> | <img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" alt="Tela Administrativa" width="120px" height="120px"> |
-
-### 💻 Exemplo de Saída no Terminal (para Back-end, API, CLI)
-
-Caso o projeto seja focado em serviços de Back-end (API, microserviço, CLI), utilize esta seção para demonstrar a interação com o sistema e a resposta esperada.
-
-#### 1. Demonstração da API (Exemplo com cURL)
-
-Mostra uma chamada simples para um endpoint da API (ex: GET de listagem).
-
+#### Autenticação
 ```bash
-# Chama o endpoint de listagem de usuários com o token de autenticação
-curl -X GET 'http://localhost:3000/api/v1/users' \
-     -H 'Authorization: Bearer <seu-jwt-token>'
+POST /api/auth/login
+POST /api/auth/logout
+POST /api/auth/register
 ```
 
-**Saída Esperada:**
-```json
-{
-  "total": 2,
-  "users": [
-    {
-      "id": "1a2b3c",
-      "name": "Prof. Aramuni",
-      "email": "contato@exemplo.com",
-      "status": "active"
-    },
-    {
-      "id": "4d5e6f",
-      "name": "Colaborador Teste",
-      "email": "teste@exemplo.com",
-      "status": "inactive"
-    }
-  ]
-}
-```
-
----
-
-#### 2. Demonstração de Execução de CLI/Script
-
-Mostra como executar uma ferramenta de linha de comando ou um script de manutenção do projeto (ex: rodar migrações ou um job agendado).
-
+#### Alunos
 ```bash
-# Executa a ferramenta de validação de Schema
-npm run cli validate:schema --target=production
+GET /api/aluno                   # Listar todos os alunos
+GET /api/aluno/{id}              # Obter aluno por ID
+POST /api/aluno                  # Criar novo aluno
+PUT /api/aluno/{id}              # Atualizar aluno
+DELETE /api/aluno/{id}           # Deletar aluno
 ```
 
-**Saída Esperada:**
-```text
-[INFO] Iniciando validação do banco de dados...
-[SUCCESS] 15/15 tabelas verificadas.
-[WARNING] Coluna 'descricao' na tabela 'produtos' é nullable.
-[SUCCESS] Validação concluída. Nenhum erro crítico encontrado.
-Tempo de execução: 1.25s
+#### Professores
+```bash
+GET /api/professor               # Listar professores
+POST /api/professor              # Criar professor
+GET /api/professor/{id}          # Obter professor por ID
 ```
+
+#### Transações (Transferência de Moedas)
+```bash
+GET /api/transacao               # Listar transações
+POST /api/transacao              # Criar transação (transferência de moedas)
+GET /api/transacao/{id}          # Obter detalhes da transação
+```
+
+#### Vantagens
+```bash
+GET /api/vantagem                # Listar vantagens disponíveis
+POST /api/vantagem               # Criar nova vantagem
+PUT /api/vantagem/{id}           # Atualizar vantagem
+GET /api/vantagem/{id}/redeem    # Resgatar vantagem
+```
+
+### 💻 Testando com Postman
+
+1. Importe a collection: **`BrainCoins_API.postman_collection.json`**
+2. Configure a URL base: **`http://localhost:8080`**
+3. Realize testes nos endpoints listados acima
 
 ---
 
 ## 🧪 Testes
 
-### Testes Unitários e de Integração
-Para rodar os testes da unidade e integração:
+### Testes do Backend (Spring Boot/Maven)
 
+Execute os testes do backend:
+
+```bash
+cd code/backend/moeda
+./mvnw test
 ```
+
+### Testes do Frontend (React)
+
+Se houver testes configurados no frontend:
+
+```bash
+cd code/frontend/moeda-estudantil
 npm run test
 ```
-*Ferramenta utilizada: Jest, Vitest, Mocha, etc.*
 
-### Testes End-to-End (E2E)
-Para rodar os testes de ponta a ponta (E2E):
-
-```
-npm run test:e2e
-```
-*Ferramenta utilizada: Cypress, Playwright, Selenium, etc.*
+> **Nota:** Configure testes unitários e E2E conforme necessário para seu caso de uso.
 
 ---
 
@@ -630,15 +557,12 @@ Liste aqui links para documentação técnica, referências de bibliotecas compl
 ---
 
 ## 👥 Autores
-Liste os principais contribuidores. Você pode usar links para seus perfis.
 
-| 👤 Nome | 🖼️ Foto | :octocat: GitHub | 💼 LinkedIn | 📤 Gmail |
-|---------|----------|-----------------|-------------|-----------|
-| Nome 1  | <div align="center"><img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" width="70px" height="70px"></div> | <div align="center"><a href="https://github.com/user1"><img src="https://joaopauloaramuni.github.io/image/github6.png" width="50px" height="50px"></a></div> | <div align="center"><a href="https://www.linkedin.com/in/user1"><img src="https://joaopauloaramuni.github.io/image/linkedin2.png" width="50px" height="50px"></a></div> | <div align="center"><a href="mailto:user1@gmail.com"><img src="https://joaopauloaramuni.github.io/image/gmail3.png" width="50px" height="50px"></a></div> |
-| Nome 2  | <div align="center"><img src="https://joaopauloaramuni.github.io/image/aramunilogo.png" width="70px" height="70px"></div> | <div align="center"><a href="https://github.com/user2"><img src="https://joaopauloaramuni.github.io/image/github6.png" width="50px" height="50px"></a></div> | <div align="center"><a href="https://www.linkedin.com/in/user2"><img src="https://joaopauloaramuni.github.io/image/linkedin2.png" width="50px" height="50px"></a></div> | <div align="center"><a href="mailto:user2@gmail.com"><img src="https://joaopauloaramuni.github.io/image/gmail3.png" width="50px" height="50px"></a></div> |
+- **Bernardo Gomes** - @be.gpereira25@gmail.com
+- **João Álvaro** - @jalv21
+- **Pedro Silva**
 
-> [!TIP]
-> 💡 **Dica:** Escolha uma foto profissional, preferencialmente de rosto, evitando imagens com baixa qualidade, filtros excessivos ou elementos distrativos.
+Desenvolvido como projeto acadêmico de Engenharia de Software na **PUC Minas**.
 
 ---
 
