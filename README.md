@@ -47,8 +47,8 @@ Um sistema gamificado de moeda estudantil em que professores podem reconhecer o 
 ## 🔗 Links Úteis
 * 📚 **Documentação:** Consulte as seções abaixo para mais informações sobre instalação, arquitetura e uso.
 * 🐙 **Repositório GitHub:** [BrainCoins](https://github.com/jalv21/braincoins)
-* 🚀 **Backend API:** http://localhost:8080
-* 🎨 **Frontend Web:** http://localhost:5173
+* 🚀 **Backend API:** hospedado localmente por enquanto
+* 🎨 **Frontend Web:** hospedado localmente por enquanto
 * 📋 **Postman Collection:** `BrainCoins_API.postman_collection.json`
 
 ---
