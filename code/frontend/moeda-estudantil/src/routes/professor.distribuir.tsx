@@ -89,7 +89,8 @@ function Distribuir() {
       toast.success(`🪙 ${amount} moedas enviadas para ${aluno.nome}!`);
       setShowConfetti(true);
       setTimeout(() => setShowConfetti(false), 1500);
-      setAlunoId(null); setQuery(""); setReason(""); setAmount(50);
+      const defaultAmount = Math.min(50, profResp.data.saldo);
+      setAlunoId(null); setQuery(""); setReason(""); setAmount(defaultAmount);
     } catch (error: any) {
       const msg = error?.response?.data?.message ?? "Erro ao distribuir moedas.";
       toast.error(msg);
