@@ -5,7 +5,6 @@ public record InstituicaoResponseDTO(
         String nome,
         String cnpj,
         String email,
-        String senha,
         String endereco,
         String telefone
 ) {}

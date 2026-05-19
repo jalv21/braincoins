@@ -23,7 +23,7 @@ public class InstituicaoEntity extends UsuarioEntity {
     @OneToMany(mappedBy = "instituicao", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DepartamentoEntity> departamentos;
 
-    @OneToMany(mappedBy = "instituicao", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "instituicao")
     private List<ProfessorEntity> professores;
 
     public InstituicaoEntity() { super(); }
@@ -46,4 +46,6 @@ public class InstituicaoEntity extends UsuarioEntity {
     public String getTelefone() { return telefone; }
 
     public void setTelefone(String telefone) { this.telefone = telefone; }
+
+    public List<ProfessorEntity> getProfessores() { return professores; }
 }

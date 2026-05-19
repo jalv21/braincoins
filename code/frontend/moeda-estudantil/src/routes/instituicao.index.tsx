@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { StatCard, PageHeader, GlassCard } from "@/components/ui-bits";
 import { Users, BookOpen, Building2, Loader } from "lucide-react";
 import { buscarInstituicao, listarProfessores } from "@/api/instituicoesApi";
+import { useStore } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/instituicao/")({
   component: InstDash,
@@ -12,12 +13,14 @@ function InstDash() {
   const [instituicao, setInstituicao] = useState<any>(null);
   const [professores, setProfessores] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const store = useStore();
 
   useEffect(() => {
     const carregarDados = async () => {
       try {
         setLoading(true);
-        const resInst = await buscarInstituicao(1);
+        const instituicaoId = store.currentUser?.id || store.currentUserId;
+        const resInst = await buscarInstituicao(instituicaoId);
         setInstituicao(resInst.data);
         const resProfs = await listarProfessores();
         setProfessores(resProfs.data);
@@ -28,7 +31,7 @@ function InstDash() {
       }
     };
     carregarDados();
-  }, []);
+  }, [store.currentUser?.id, store.currentUserId]);
 
   if (loading) {
     return (

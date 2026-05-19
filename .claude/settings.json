@@ -16,7 +16,14 @@
       "mcp__plugin_playwright_playwright__browser_take_screenshot",
       "mcp__plugin_playwright_playwright__browser_click",
       "mcp__plugin_playwright_playwright__browser_type",
-      "mcp__plugin_playwright_playwright__browser_evaluate"
+      "mcp__plugin_playwright_playwright__browser_evaluate",
+      "Bash(./mvnw spring-boot:run -q)",
+      "Bash(curl -X POST http://localhost:8080/instituicoes -H 'Content-Type: application/json' -d '{ *)",
+      "Bash(python -m json.tool)",
+      "Bash(curl -X POST http://localhost:8080/instituicoes -H 'Content-Type: application/json' -d '{\"nome\":\"USP\",\"cnpj\":\"12345678901234\",\"email\":\"contato@usp.br\",\"senha\":\"senha123\",\"endereco\":\"Avenida Paulista, São Paulo\",\"telefone\":\"\\(11\\) 98765-4321\"}')",
+      "Bash(curl -X POST http://localhost:8080/instituicoes -H 'Content-Type: application/json' -d '{\"nome\":\"Universidade de São Paulo\",\"cnpj\":\"63025530000172\",\"email\":\"admin@usp.br\",\"senha\":\"senha123\",\"endereco\":\"Avenida Paulista 900, São Paulo, SP\",\"telefone\":\"\\(11\\) 3091-9000\"}' -v)",
+      "Bash(lsof -ti:8080)",
+      "Bash(xargs kill -9)"
     ]
   }
 }
