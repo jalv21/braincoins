@@ -1,3 +1,4 @@
+import React from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { BrainLogo } from "@/components/brand";
 import {
@@ -93,10 +94,7 @@ function Landing() {
           {/* Logo com glow pulsante */}
           <div className="relative mb-6">
             <BrainLogo size={72} />
-            <div
-              className="absolute inset-0 rounded-full -z-10 animate-amber-pulse"
-              style={{ background: "transparent" }}
-            />
+            <div className="absolute inset-0 rounded-full -z-10 animate-amber-pulse" />
           </div>
 
           {/* Título principal */}
