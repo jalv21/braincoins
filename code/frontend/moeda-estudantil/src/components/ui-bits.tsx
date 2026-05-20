@@ -78,7 +78,7 @@ export function StatCard({
   );
 }
 
-type StatusKind =
+export type StatusKind =
   | "ativo"
   | "expirado"
   | "retirado"
