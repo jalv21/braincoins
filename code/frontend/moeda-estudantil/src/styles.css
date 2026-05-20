@@ -5,12 +5,15 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* ── Radius scale ── */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
+
+  /* ── Semantic colors → Tailwind utilities ── */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -30,12 +33,19 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  /* ── Brand tokens → Tailwind utilities ── */
   --color-mint: var(--mint);
   --color-mint-foreground: var(--mint-foreground);
   --color-sage: var(--sage);
   --color-coral: var(--coral);
   --color-coin: var(--coin);
+  --color-coin-foreground: var(--coin-foreground);
   --color-warning: var(--warning);
+  --color-emerald: var(--emerald);
+  --color-violet: var(--violet);
+
+  /* ── Sidebar tokens → Tailwind utilities ── */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -44,68 +54,102 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  --font-sans: "Nunito", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+
+  /* ── Typography → font-sans / font-display / font-mono utilities ── */
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Syne", "Plus Jakarta Sans", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
+/* ══════════════════════════════════════════════════════
+   ROOT — Amber Intelligence Design System
+   ══════════════════════════════════════════════════════ */
 :root {
-  --radius: 1rem;
+  --radius: 0.75rem;
 
-  /* Brand gradient backdrop */
-  --bg-gradient: linear-gradient(135deg, oklch(0.55 0.18 290) 0%, oklch(0.50 0.20 295) 100%);
-  --gradient-mint: linear-gradient(135deg, oklch(0.82 0.13 155) 0%, oklch(0.74 0.15 160) 100%);
-  --gradient-glass: linear-gradient(135deg, oklch(1 0 0 / 0.18) 0%, oklch(1 0 0 / 0.08) 100%);
+  /* ── Âmbar (moeda — cor primária da marca) ── */
+  --amber: oklch(0.82 0.16 78);
+  --amber-dim: oklch(0.70 0.14 78);
 
-  --shadow-glass: 0 8px 32px 0 oklch(0.3 0.05 290 / 0.25);
-  --shadow-mint: 0 8px 24px -4px oklch(0.74 0.15 160 / 0.5);
+  /* ── Violeta (acento digital/acadêmico) ── */
+  --violet: oklch(0.70 0.22 268);
 
-  /* Surfaces — translucent for glassmorphism */
-  --background: oklch(0.55 0.18 290);
-  --foreground: oklch(0.99 0.005 250);
+  /* ── Semânticos ── */
+  --emerald: oklch(0.72 0.15 152);
+  --coral: oklch(0.72 0.16 35);
+  --warning: oklch(0.82 0.14 80);
 
-  --card: oklch(1 0 0 / 0.14);
-  --card-foreground: oklch(0.99 0.005 250);
+  /* ── Gradientes ── */
+  --gradient-amber: linear-gradient(135deg, oklch(0.82 0.16 78) 0%, oklch(0.72 0.18 62) 100%);
+  --gradient-dark: linear-gradient(160deg, oklch(0.11 0.025 250) 0%, oklch(0.09 0.02 260) 100%);
+  --gradient-card: linear-gradient(160deg, oklch(0.17 0.025 250) 0%, oklch(0.14 0.02 250) 100%);
 
-  --popover: oklch(0.28 0.08 290);
-  --popover-foreground: oklch(0.99 0.005 250);
+  /* Aliases de compatibilidade (usados no JSX existente) */
+  --gradient-mint: linear-gradient(135deg, oklch(0.82 0.16 78) 0%, oklch(0.72 0.18 62) 100%);
+  --gradient-glass: linear-gradient(160deg, oklch(0.17 0.025 250) 0%, oklch(0.14 0.02 250) 100%);
 
-  /* Primary = mint green */
-  --primary: oklch(0.78 0.14 158);
-  --primary-foreground: oklch(0.22 0.05 160);
+  /* ── Sombras ── */
+  --shadow-amber: 0 0 24px oklch(0.82 0.16 78 / 0.30);
+  --shadow-card: 0 4px 24px oklch(0 0 0 / 0.35);
+  --shadow-elevated: 0 8px 40px oklch(0 0 0 / 0.5);
 
-  --secondary: oklch(1 0 0 / 0.12);
-  --secondary-foreground: oklch(0.99 0.005 250);
+  /* Aliases de compatibilidade */
+  --shadow-mint: 0 0 24px oklch(0.82 0.16 78 / 0.30);
+  --shadow-glass: 0 4px 24px oklch(0 0 0 / 0.35);
 
-  --muted: oklch(1 0 0 / 0.08);
-  --muted-foreground: oklch(0.92 0.01 250);
+  /* ── Superfícies core ── */
+  --background: oklch(0.10 0.025 250);
+  --foreground: oklch(0.95 0.008 80);
 
-  --accent: oklch(0.86 0.1 155);
-  --accent-foreground: oklch(0.22 0.05 160);
+  --card: oklch(0.16 0.025 250);
+  --card-foreground: oklch(0.95 0.008 80);
 
-  --destructive: oklch(0.72 0.16 25);
-  --destructive-foreground: oklch(0.99 0.005 250);
+  --popover: oklch(0.15 0.025 250);
+  --popover-foreground: oklch(0.95 0.008 80);
 
-  --border: oklch(1 0 0 / 0.18);
-  --input: oklch(1 0 0 / 0.16);
-  --ring: oklch(0.78 0.14 158);
+  /* Primary = Âmbar */
+  --primary: oklch(0.82 0.16 78);
+  --primary-foreground: oklch(0.12 0.04 78);
 
-  /* Custom brand tokens */
-  --mint: oklch(0.78 0.14 158);
-  --mint-foreground: oklch(0.22 0.05 160);
-  --sage: oklch(0.86 0.1 155);
-  --coral: oklch(0.74 0.14 28);
-  --coin: oklch(0.86 0.13 90);
-  --warning: oklch(0.85 0.14 85);
+  --secondary: oklch(0.20 0.025 250);
+  --secondary-foreground: oklch(0.90 0.008 80);
 
-  --sidebar: oklch(1 0 0 / 0.1);
-  --sidebar-foreground: oklch(0.99 0.005 250);
-  --sidebar-primary: oklch(0.78 0.14 158);
-  --sidebar-primary-foreground: oklch(0.22 0.05 160);
-  --sidebar-accent: oklch(1 0 0 / 0.12);
-  --sidebar-accent-foreground: oklch(0.99 0.005 250);
-  --sidebar-border: oklch(1 0 0 / 0.15);
-  --sidebar-ring: oklch(0.78 0.14 158);
+  --muted: oklch(0.16 0.02 250);
+  --muted-foreground: oklch(0.58 0.015 250);
+
+  --accent: oklch(0.70 0.22 268);
+  --accent-foreground: oklch(0.95 0.008 80);
+
+  --destructive: oklch(0.65 0.20 25);
+  --destructive-foreground: oklch(0.95 0.008 80);
+
+  --border: oklch(0.24 0.025 250);
+  --input: oklch(0.19 0.025 250);
+  --ring: oklch(0.82 0.16 78);
+
+  /* ── Brand tokens ── */
+  --coin: oklch(0.82 0.16 78);
+  --coin-foreground: oklch(0.12 0.04 78);
+
+  /* mint → aliased to âmbar (backward compat) */
+  --mint: oklch(0.82 0.16 78);
+  --mint-foreground: oklch(0.12 0.04 78);
+  --sage: oklch(0.68 0.12 152);
+
+  /* ── Sidebar ── */
+  --sidebar: oklch(0.08 0.022 250);
+  --sidebar-foreground: oklch(0.90 0.008 80);
+  --sidebar-primary: oklch(0.82 0.16 78);
+  --sidebar-primary-foreground: oklch(0.12 0.04 78);
+  --sidebar-accent: oklch(0.14 0.025 250);
+  --sidebar-accent-foreground: oklch(0.90 0.008 80);
+  --sidebar-border: oklch(0.18 0.022 250);
+  --sidebar-ring: oklch(0.82 0.16 78);
 }
 
+/* ══════════════════════════════════════════════════════
+   BASE
+   ══════════════════════════════════════════════════════ */
 @layer base {
   * {
     border-color: var(--color-border);
@@ -119,38 +163,96 @@
 
   body {
     color: var(--color-foreground);
-    background: linear-gradient(135deg, oklch(0.55 0.18 290) 0%, oklch(0.50 0.20 295) 100%);
+    background: var(--gradient-dark);
     background-attachment: fixed;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Todos os headings usam Syne automaticamente */
   h1, h2, h3, h4 {
+    font-family: var(--font-display);
     font-weight: 700;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
   }
 }
 
+/* ══════════════════════════════════════════════════════
+   COMPONENTS
+   ══════════════════════════════════════════════════════ */
 @layer components {
+  /* Superfície primária de card — navy escuro com borda sutil */
+  .vault-card {
+    background: var(--gradient-card);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* .glass e .glass-strong: compatibilidade com código existente
+     Agora são superfícies escuras em vez de glassmorphism */
   .glass {
-    background: var(--gradient-glass);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-glass);
+    background: var(--gradient-card);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-card);
   }
+
   .glass-strong {
-    background: oklch(1 0 0 / 0.22);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid oklch(1 0 0 / 0.28);
-    box-shadow: var(--shadow-glass);
+    background: oklch(0.13 0.025 250);
+    border: 1px solid oklch(0.22 0.03 250);
+    box-shadow: var(--shadow-card);
   }
+
+  /* Nav item ativo: borda âmbar à esquerda + fundo âmbar sutil */
+  .nav-active {
+    position: relative;
+    background: oklch(0.82 0.16 78 / 0.08);
+    color: oklch(0.82 0.16 78);
+  }
+
+  .nav-active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.25rem;
+    bottom: 0.25rem;
+    width: 2px;
+    border-radius: 0 2px 2px 0;
+    background: oklch(0.82 0.16 78);
+    box-shadow: 0 0 8px oklch(0.82 0.16 78 / 0.6);
+  }
+
+  /* Dot grid de fundo — pontilhado âmbar subtilíssimo */
+  .bg-dots {
+    background-image: radial-gradient(
+      oklch(0.82 0.16 78 / 0.04) 1.5px,
+      transparent 1.5px
+    );
+    background-size: 28px 28px;
+  }
+
+  /* Glow âmbar para elementos de destaque */
+  .amber-glow {
+    box-shadow: var(--shadow-amber);
+  }
+
   .text-shadow-soft {
-    text-shadow: 0 2px 12px oklch(0.3 0.05 290 / 0.25);
+    text-shadow: 0 2px 20px oklch(0 0 0 / 0.5);
+  }
+
+  /* Oculta scrollbar (mobile nav) */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
 
+/* ══════════════════════════════════════════════════════
+   ANIMAÇÕES
+   ══════════════════════════════════════════════════════ */
 @keyframes coin-spin {
   0% { transform: rotateY(0deg); }
   100% { transform: rotateY(360deg); }
@@ -161,3 +263,21 @@
   0% { transform: translateY(0) scale(0); opacity: 1; }
   100% { transform: translateY(-80px) scale(1); opacity: 0; }
 }
+
+@keyframes amber-pulse {
+  0%, 100% { box-shadow: 0 0 16px oklch(0.82 0.16 78 / 0.15); }
+  50%       { box-shadow: 0 0 28px oklch(0.82 0.16 78 / 0.40); }
+}
+.animate-amber-pulse { animation: amber-pulse 2.5s ease-in-out infinite; }
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up { animation: slide-up 0.3s ease-out; }
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.animate-fade-in { animation: fade-in 0.4s ease-out; }
