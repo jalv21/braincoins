@@ -7,10 +7,12 @@ import { toast } from "sonner";
 import {
   listarVantagensPorEmpresa,
   criarVantagem,
+  atualizarVantagem,
   deletarVantagem,
   toggleVantagem,
   uploadFoto,
 } from "@/api/vantagensApi";
+import { Pencil } from "lucide-react";
 
 type VantagemAPI = {
   id: number;
@@ -42,7 +44,10 @@ function EmpresaVantagens() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [fotoFile, setFotoFile] = useState<File | null>(null);
+  const [fotoUrl, setFotoUrl] = useState("");
   const [fotoPreview, setFotoPreview] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
@@ -51,6 +56,30 @@ function EmpresaVantagens() {
     descricao: "",
     estoque: 10,
   });
+
+  const resetForm = () => {
+    setForm({ nome: "", custo: 50, descricao: "", estoque: 10 });
+    setFotoFile(null);
+    setFotoUrl("");
+    setFotoPreview(null);
+    setEditingId(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleEditar = (v: VantagemAPI) => {
+    setEditingId(v.id);
+    setForm({
+      nome: v.nome,
+      custo: v.custo,
+      descricao: v.descricao ?? "",
+      estoque: v.estoque,
+    });
+    setFotoFile(null);
+    setFotoUrl(v.foto && !v.foto.startsWith("/uploads/") ? v.foto : "");
+    setFotoPreview(v.foto ? (v.foto.startsWith("/uploads/") ? API_BASE + v.foto : v.foto) : null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   useEffect(() => {
     if (!empresaId) return;
@@ -65,7 +94,20 @@ function EmpresaVantagens() {
     const file = e.target.files?.[0];
     if (!file) return;
     setFotoFile(file);
+    setFotoUrl("");
     setFotoPreview(URL.createObjectURL(file));
+  };
+
+  const onFotoUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const url = e.target.value;
+    setFotoUrl(url);
+    if (url) {
+      setFotoFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+      setFotoPreview(url);
+    } else if (!fotoFile) {
+      setFotoPreview(null);
+    }
   };
 
   const submit = async (e: React.FormEvent) => {
@@ -77,28 +119,38 @@ function EmpresaVantagens() {
 
     setSubmitting(true);
     try {
-      let fotoUrl: string | null = null;
+      let fotoFinal: string | null = null;
       if (fotoFile) {
-        fotoUrl = await uploadFoto(fotoFile);
+        fotoFinal = await uploadFoto(fotoFile);
+      } else if (fotoUrl.trim()) {
+        fotoFinal = fotoUrl.trim();
+      } else if (editingId) {
+        const original = vantagens.find((v) => v.id === editingId);
+        fotoFinal = original?.foto ?? null;
       }
 
-      const res = await criarVantagem({
+      const payload = {
         empresaId,
         nome: form.nome,
         descricao: form.descricao,
-        foto: fotoUrl,
+        foto: fotoFinal,
         custo: form.custo,
         estoque: form.estoque,
-      });
+      };
 
-      setVantagens((prev) => [...prev, res.data]);
-      toast.success("Vantagem cadastrada!");
-      setForm({ nome: "", custo: 50, descricao: "", estoque: 10 });
-      setFotoFile(null);
-      setFotoPreview(null);
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      if (editingId) {
+        const res = await atualizarVantagem(editingId, payload);
+        setVantagens((prev) => prev.map((v) => (v.id === editingId ? res.data : v)));
+        toast.success("Vantagem atualizada!");
+      } else {
+        const res = await criarVantagem(payload);
+        setVantagens((prev) => [...prev, res.data]);
+        toast.success("Vantagem cadastrada!");
+      }
+
+      resetForm();
     } catch (err: any) {
-      toast.error(err?.response?.data?.message ?? "Erro ao cadastrar vantagem.");
+      toast.error(err?.response?.data?.message ?? "Erro ao salvar vantagem.");
     } finally {
       setSubmitting(false);
     }
@@ -113,15 +165,21 @@ function EmpresaVantagens() {
     }
   };
 
-  const handleDeletar = async (id: number) => {
+  const confirmarDelete = async () => {
+    if (deletingId == null) return;
+    const id = deletingId;
+    setDeletingId(null);
     try {
       await deletarVantagem(id);
       setVantagens((prev) => prev.filter((v) => v.id !== id));
+      if (editingId === id) resetForm();
       toast.success("Removida.");
     } catch {
       toast.error("Erro ao remover vantagem.");
     }
   };
+
+  const vantagemEmDelecao = deletingId != null ? vantagens.find((v) => v.id === deletingId) : null;
 
   const fotoSrc = (foto: string | null) =>
     foto ? (foto.startsWith("/uploads/") ? API_BASE + foto : foto) : null;
@@ -133,7 +191,20 @@ function EmpresaVantagens() {
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Formulário */}
         <GlassCard>
-          <h2 className="font-bold text-white mb-4">Nova vantagem</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-bold text-white">
+              {editingId ? "Editar vantagem" : "Nova vantagem"}
+            </h2>
+            {editingId && (
+              <button
+                type="button"
+                onClick={resetForm}
+                className="text-xs px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white"
+              >
+                Cancelar edição
+              </button>
+            )}
+          </div>
           <form onSubmit={submit} className="space-y-3">
             <div>
               <label className="text-xs text-white/80">Nome</label>
@@ -196,7 +267,7 @@ function EmpresaVantagens() {
                 onChange={(e) => setForm({ ...form, descricao: e.target.value })}
               />
             </div>
-            {/* Upload de foto */}
+            {/* Foto: upload OU URL */}
             <div>
               <label className="text-xs text-white/80">Foto (opcional)</label>
               <label className="mt-1 flex items-center gap-3 cursor-pointer border border-dashed border-white/30 rounded-xl px-3 py-2 hover:bg-white/5">
@@ -212,13 +283,22 @@ function EmpresaVantagens() {
                   onChange={onFotoChange}
                 />
               </label>
+              <input
+                type="url"
+                className={`${inputCls} mt-2`}
+                placeholder="...ou cole uma URL de imagem"
+                value={fotoUrl}
+                onChange={onFotoUrlChange}
+              />
             </div>
             <button
               type="submit"
               disabled={submitting}
               className="w-full py-2.5 rounded-xl bg-mint text-mint-foreground font-semibold disabled:opacity-50"
             >
-              {submitting ? "Cadastrando..." : "Cadastrar"}
+              {submitting
+                ? editingId ? "Salvando..." : "Cadastrando..."
+                : editingId ? "Salvar alterações" : "Cadastrar"}
             </button>
           </form>
         </GlassCard>
@@ -298,7 +378,15 @@ function EmpresaVantagens() {
                     {v.ativo ? "Desativar" : "Ativar"}
                   </button>
                   <button
-                    onClick={() => handleDeletar(v.id)}
+                    onClick={() => handleEditar(v)}
+                    title="Editar"
+                    className="h-8 w-8 rounded-lg bg-white/10 hover:bg-white/20 text-white flex items-center justify-center"
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => setDeletingId(v.id)}
+                    title="Remover"
                     className="h-8 w-8 rounded-lg bg-coral/20 hover:bg-coral/30 text-coral flex items-center justify-center"
                   >
                     <Trash2 className="h-4 w-4" />
@@ -309,6 +397,39 @@ function EmpresaVantagens() {
           )}
         </GlassCard>
       </div>
+
+      {/* Confirmação de delete */}
+      {vantagemEmDelecao && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4"
+          onClick={() => setDeletingId(null)}
+        >
+          <div
+            className="glass-strong rounded-3xl p-6 max-w-sm w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="font-bold text-white text-lg mb-2">Remover vantagem?</h3>
+            <p className="text-white/80 text-sm mb-5">
+              A vantagem <span className="font-semibold">"{vantagemEmDelecao.nome}"</span> será
+              removida permanentemente. Resgates já feitos não serão afetados.
+            </p>
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={() => setDeletingId(null)}
+                className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={confirmarDelete}
+                className="px-4 py-2 rounded-xl bg-coral text-white font-semibold text-sm"
+              >
+                Remover
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -2,6 +2,7 @@ package com.lab3.moeda.service;
 
 import com.lab3.moeda.dto.request.EmpresaRequestDTO;
 import com.lab3.moeda.dto.response.EmpresaResponseDTO;
+import com.lab3.moeda.exception.SenhaIncorretaException;
 import com.lab3.moeda.model.EmpresaEntity;
 import com.lab3.moeda.repository.EmpresaRepository;
 import jakarta.transaction.Transactional;
@@ -83,7 +84,7 @@ public class EmpresaService {
                 .orElseThrow(() -> new NoSuchElementException("Empresa não encontrada."));
 
         if (!criptografia.matches(senha, empresa.getSenha()))
-            throw new RuntimeException("Senha incorreta.");
+            throw new SenhaIncorretaException();
 
         return toResponseDTO(empresa);
     }

@@ -122,6 +122,12 @@ function Perfil() {
   if (erro) return <p className="text-white p-8">Erro ao carregar perfil.</p>;
   if (!empresa) return <p className="text-white p-8">Carregando...</p>;
 
+  const formatCnpj = (cnpj: string) => {
+    const d = (cnpj || "").replace(/\D/g, "");
+    if (d.length !== 14) return cnpj;
+    return `${d.slice(0, 2)}.${d.slice(2, 5)}.${d.slice(5, 8)}/${d.slice(8, 12)}-${d.slice(12)}`;
+  };
+
   return (
     <div>
       <PageHeader title="Perfil da Empresa" />
@@ -130,7 +136,7 @@ function Perfil() {
           <div className="space-y-3 text-white flex-1">
             {[
               ["Nome", empresa.nome],
-              ["CNPJ", empresa.cnpj],
+              ["CNPJ", formatCnpj(empresa.cnpj)],
               ["Endereço", empresa.endereco],
               ["E-mail", empresa.email],
             ].map(([k, v]) => (

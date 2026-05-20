@@ -200,7 +200,7 @@ export function DashboardLayout({
           })}
         </nav>
 
-        {children}
+        <div key={path} className="animate-page-enter">{children}</div>
       </main>
     </div>
   );

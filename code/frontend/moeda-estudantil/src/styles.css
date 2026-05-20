@@ -151,6 +151,21 @@
     border-color: var(--color-border);
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+
   html,
   body,
   #root {
@@ -183,6 +198,10 @@
     background: var(--gradient-card);
     border: 1px solid var(--color-border);
     box-shadow: var(--shadow-card);
+    transition:
+      transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.25s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   /* .glass e .glass-strong: compatibilidade com código existente
@@ -191,12 +210,20 @@
     background: var(--gradient-card);
     border: 1px solid var(--color-border);
     box-shadow: var(--shadow-card);
+    transition:
+      transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.25s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .glass-strong {
     background: oklch(0.13 0.025 250);
     border: 1px solid oklch(0.22 0.03 250);
     box-shadow: var(--shadow-card);
+    transition:
+      transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.25s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   /* Nav item ativo: borda âmbar à esquerda + fundo âmbar sutil */
@@ -278,3 +305,58 @@
   to   { opacity: 1; }
 }
 .animate-fade-in { animation: fade-in 0.4s ease-out; }
+
+/* ── Route page transition: fade + slight upward slide on mount ── */
+@keyframes page-enter {
+  from { opacity: 0; transform: translate3d(0, 8px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+.animate-page-enter {
+  animation: page-enter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Card "open" effect: subtle zoom-in/scale used on hover and click ── */
+@keyframes card-open {
+  from { opacity: 0; transform: scale(0.96) translate3d(0, 6px, 0); }
+  to   { opacity: 1; transform: scale(1) translate3d(0, 0, 0); }
+}
+.animate-card-open {
+  animation: card-open 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Stagger helper: applies a base delay scale; consumers pass --stagger-i ── */
+.stagger-item {
+  opacity: 0;
+  animation: page-enter 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(var(--stagger-i, 0) * 70ms + 50ms);
+}
+
+/* ── Hover lift used on cards and interactive surfaces ── */
+.hover-lift {
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-elevated);
+}
+
+/* ── Press-down effect for clickable cards ── */
+.press-scale {
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.press-scale:active {
+  transform: scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-page-enter,
+  .animate-card-open,
+  .stagger-item {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

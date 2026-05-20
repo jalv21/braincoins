@@ -21,6 +21,12 @@ function AuthPage() {
   const store = useStore();
   const [mode, setMode] = useState<"login" | "register">("login");
 
+  useEffect(() => {
+    if (store.isInitialized && store.currentRole && store.currentRole !== role) {
+      store.logout();
+    }
+  }, [store.isInitialized, store.currentRole, role]);
+
   if (!["aluno", "professor", "empresa", "instituicao"].includes(role)) {
     return <div className="p-8 text-white">Perfil inválido. <Link to="/" className="underline">Voltar</Link></div>;
   }
@@ -127,9 +133,6 @@ function LoginForm({ onSubmit }: { onSubmit: (e: React.FormEvent) => void }) {
       </Field>
       <button className="w-full py-2.5 rounded-xl bg-mint text-mint-foreground font-semibold hover:opacity-90">
         Entrar
-      </button>
-      <button type="button" className="w-full text-xs text-white/70 hover:text-white">
-        Esqueci minha senha
       </button>
     </form>
   );

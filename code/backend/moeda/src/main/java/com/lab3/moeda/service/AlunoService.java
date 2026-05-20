@@ -2,6 +2,7 @@ package com.lab3.moeda.service;
 
 import com.lab3.moeda.dto.request.AlunoRequestDTO;
 import com.lab3.moeda.dto.response.AlunoResponseDTO;
+import com.lab3.moeda.exception.SenhaIncorretaException;
 import com.lab3.moeda.model.AlunoEntity;
 import com.lab3.moeda.repository.AlunoRepository;
 import com.lab3.moeda.repository.InstituicaoRepository;
@@ -90,10 +91,10 @@ public class AlunoService {
 
     public AlunoResponseDTO login(String email, String senha) {
         AlunoEntity aluno = alunoRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado."));
+                .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado."));
 
         if (!criptografia.matches(senha, aluno.getSenha()))
-            throw new RuntimeException("Senha incorreta.");
+            throw new SenhaIncorretaException();
 
         return toResponseDTO(aluno);
     }

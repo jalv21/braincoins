@@ -5,6 +5,7 @@ import com.lab3.moeda.dto.request.LoginRequestDTO;
 import com.lab3.moeda.dto.response.EmpresaResponseDTO;
 import com.lab3.moeda.dto.response.InstituicaoResponseDTO;
 import com.lab3.moeda.dto.response.ProfessorResponseDTO;
+import com.lab3.moeda.exception.SenhaIncorretaException;
 import com.lab3.moeda.service.AlunoService;
 import com.lab3.moeda.service.EmpresaService;
 import com.lab3.moeda.service.InstituicaoService;
@@ -50,14 +51,18 @@ public class AuthController {
         return ResponseEntity.ok(professorService.login(dto.email(), dto.senha()));
     }
 
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<String> handleNotFound(NoSuchElementException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+    }
+
+    @ExceptionHandler(SenhaIncorretaException.class)
+    public ResponseEntity<String> handleSenhaIncorreta(SenhaIncorretaException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Senha incorreta.");
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleLoginError(RuntimeException ex) {
-        if (ex instanceof NoSuchElementException)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
-
-        if (ex instanceof IllegalStateException && ex.getMessage() != null && ex.getMessage().toLowerCase().contains("senha"))
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Senha incorreta.");
-
         if (ex.getMessage() != null && ex.getMessage().toLowerCase().contains("múltiplos"))
             return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
 

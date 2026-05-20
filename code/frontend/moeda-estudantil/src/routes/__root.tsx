@@ -1,4 +1,4 @@
-import { Outlet, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { Outlet, createRootRoute, HeadContent, Scripts, useRouterState } from "@tanstack/react-router";
 import appCss from "../styles.css?url";
 import { MockDataProvider } from "@/lib/mock-data";
 import { Toaster } from "@/components/ui/sonner";
@@ -47,9 +47,15 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  // Re-key only when switching top-level section (/, /aluno, /professor, ...).
+  // Internal navigation within a section is handled by DashboardLayout.
+  const sectionKey = pathname.split("/")[1] || "root";
   return (
     <MockDataProvider>
-      <Outlet />
+      <div key={sectionKey} className="animate-page-enter">
+        <Outlet />
+      </div>
       <Toaster position="top-right" richColors />
     </MockDataProvider>
   );

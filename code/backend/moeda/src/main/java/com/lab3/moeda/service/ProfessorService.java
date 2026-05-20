@@ -2,6 +2,7 @@ package com.lab3.moeda.service;
 
 import com.lab3.moeda.dto.request.ProfessorRequestDTO;
 import com.lab3.moeda.dto.response.ProfessorResponseDTO;
+import com.lab3.moeda.exception.SenhaIncorretaException;
 import com.lab3.moeda.model.InstituicaoEntity;
 import com.lab3.moeda.model.ProfessorEntity;
 import com.lab3.moeda.repository.InstituicaoRepository;
@@ -96,7 +97,7 @@ public class ProfessorService {
                 .orElseThrow(() -> new NoSuchElementException("Professor não encontrado."));
 
         if(!criptografia.matches(senha, professor.getSenha()))
-            throw new IllegalStateException("Senha incorreta.");
+            throw new SenhaIncorretaException();
 
         return toResponseDTO(professor);
     }

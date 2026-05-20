@@ -11,12 +11,16 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useStore, type Role } from "@/lib/mock-data";
+import { listarInstituicoes } from "@/api/instituicoesApi";
+import { toast } from "sonner";
 import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
+import { RevealOnScroll } from "@/components/reveal-on-scroll";
+import { useScrollY } from "@/lib/use-parallax";
 
 // ── Dados estáticos ──────────────────────────────────────────────
 const stats = [
@@ -190,18 +194,38 @@ function Landing() {
   const navigate = useNavigate();
   const { setCurrentUser, empresas } = useStore();
   const [activeTab, setActiveTab] = useState<Role>("aluno");
+  const scrollY = useScrollY();
 
-  const demoIds: Record<Role, string> = {
+  const demoIds: Record<Exclude<Role, "instituicao">, string> = {
     aluno: "a1",
     professor: "p1",
     empresa: "e1",
-    instituicao: "i1",
   };
 
-  const enterDemo = (role: Role) => {
-    setCurrentUser(role, demoIds[role]);
+  const enterDemo = async (role: Role) => {
+    if (role === "instituicao") {
+      try {
+        const res = await listarInstituicoes();
+        const seed = res.data?.[0];
+        if (!seed) {
+          toast.error("Nenhuma instituição cadastrada para demo.");
+          return;
+        }
+        setCurrentUser("instituicao", seed.id, seed);
+      } catch {
+        toast.error("Não foi possível carregar a demo da instituição.");
+        return;
+      }
+    } else {
+      setCurrentUser(role, demoIds[role]);
+    }
     navigate({ to: `/${role}` });
   };
+
+  // Parallax: hero content drifts upward slightly as we scroll, glow drifts faster
+  const heroContentOffset = Math.min(scrollY * 0.2, 80);
+  const heroGlowOffset = Math.min(scrollY * 0.35, 140);
+  const heroOpacity = Math.max(1 - scrollY / 600, 0);
 
   return (
     <div className="min-h-screen bg-dots pb-20 overflow-x-clip">
@@ -209,13 +233,24 @@ function Landing() {
 
       {/* ── HERO ───────────────────────────────────────── */}
       <section className="relative flex flex-col items-center justify-center min-h-[96vh] px-6 pt-20 pb-16 text-center overflow-hidden">
-        {/* Glow radial */}
+        {/* Glow radial (parallax — drifts down faster than content) */}
         <div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(520px,90vw)] aspect-square rounded-full pointer-events-none"
-          style={{ background: "radial-gradient(circle, oklch(0.82 0.16 78 / 0.07) 0%, transparent 70%)" }}
+          style={{
+            background: "radial-gradient(circle, oklch(0.82 0.16 78 / 0.07) 0%, transparent 70%)",
+            transform: `translate(-50%, calc(-50% + ${heroGlowOffset}px))`,
+            willChange: "transform",
+          }}
         />
 
-        <div className="relative z-10 flex flex-col items-center w-full max-w-2xl mx-auto">
+        <div
+          className="relative z-10 flex flex-col items-center w-full max-w-2xl mx-auto"
+          style={{
+            transform: `translate3d(0, ${-heroContentOffset}px, 0)`,
+            opacity: heroOpacity,
+            willChange: "transform, opacity",
+          }}
+        >
           {/* Logo real */}
           <div className="relative mb-8">
             <BrainLogo size={96} />
@@ -266,94 +301,105 @@ function Landing() {
       </section>
 
       {/* ── STATS STRIP ─────────────────────────────────── */}
-      <div
-        className="border-y border-border"
-        style={{ background: "oklch(0.12 0.025 250)" }}
-      >
-        <div className="max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-4">
-          {stats.map((s, i) => (
-            <div
-              key={s.label}
-              className={`flex flex-col items-center justify-center py-6 px-4 text-center ${i < stats.length - 1 ? "border-r border-border" : ""}`}
-            >
-              <span className="font-display font-semibold text-3xl sm:text-4xl tracking-tight" style={{ color: "var(--coin)" }}>
-                {s.value}
-              </span>
-              <span className="mt-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
-                {s.label}
-              </span>
-            </div>
-          ))}
+      <RevealOnScroll>
+        <div
+          className="border-y border-border"
+          style={{ background: "oklch(0.12 0.025 250)" }}
+        >
+          <div className="max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-4">
+            {stats.map((s, i) => (
+              <div
+                key={s.label}
+                className={`stagger-item flex flex-col items-center justify-center py-6 px-4 text-center ${i < stats.length - 1 ? "border-r border-border" : ""}`}
+                style={{ ["--stagger-i" as string]: i }}
+              >
+                <span className="font-display font-semibold text-3xl sm:text-4xl tracking-tight" style={{ color: "var(--coin)" }}>
+                  {s.value}
+                </span>
+                <span className="mt-1 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  {s.label}
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </RevealOnScroll>
 
       {/* ── COMO FUNCIONA ────────────────────────────────── */}
       <section id="how-it-works" className="max-w-5xl mx-auto px-6 py-20">
-        {/* Header */}
-        <div className="mb-12">
-          <span
-            className="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4"
-            style={{ background: "oklch(0.82 0.16 78 / 0.1)", border: "1px solid oklch(0.82 0.16 78 / 0.25)", color: "var(--coin)" }}
-          >
-            Como funciona
-          </span>
-          <h2 className="font-display font-semibold text-[1.75rem] sm:text-[2.25rem] tracking-[-0.025em] leading-[1.1] text-foreground">
-            Do reconhecimento ao benefício
-          </h2>
-          <p className="mt-2 text-muted-foreground text-sm sm:text-base max-w-lg">
-            Quatro etapas simples conectam professores, alunos e empresas num ciclo de recompensa real.
-          </p>
-        </div>
+        <RevealOnScroll>
+          <div className="mb-12">
+            <span
+              className="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4"
+              style={{ background: "oklch(0.82 0.16 78 / 0.1)", border: "1px solid oklch(0.82 0.16 78 / 0.25)", color: "var(--coin)" }}
+            >
+              Como funciona
+            </span>
+            <h2 className="font-display font-semibold text-[1.75rem] sm:text-[2.25rem] tracking-[-0.025em] leading-[1.1] text-foreground">
+              Do reconhecimento ao benefício
+            </h2>
+            <p className="mt-2 text-muted-foreground text-sm sm:text-base max-w-lg">
+              Quatro etapas simples conectam professores, alunos e empresas num ciclo de recompensa real.
+            </p>
+          </div>
+        </RevealOnScroll>
 
-        {/* Steps */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-4 relative">
-          {/* Linha conectora — só desktop */}
-          <div
-            className="hidden lg:block absolute top-[28px] left-[12%] right-[12%] h-px pointer-events-none"
-            style={{ background: "linear-gradient(90deg, transparent, oklch(0.82 0.16 78 / 0.3), oklch(0.82 0.16 78 / 0.3), transparent)" }}
-          />
+        <RevealOnScroll delay={120}>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-4 relative">
+            {/* Linha conectora — só desktop */}
+            <div
+              className="hidden lg:block absolute top-[28px] left-[12%] right-[12%] h-px pointer-events-none"
+              style={{ background: "linear-gradient(90deg, transparent, oklch(0.82 0.16 78 / 0.3), oklch(0.82 0.16 78 / 0.3), transparent)" }}
+            />
 
-          {howItWorksSteps.map((step, i) => {
-            const Icon = step.icon;
-            return (
-              <div key={i} className="flex flex-col items-center text-center relative">
+            {howItWorksSteps.map((step, i) => {
+              const Icon = step.icon;
+              return (
                 <div
-                  className={`h-14 w-14 rounded-full flex items-center justify-center border mb-4 relative z-10 ${step.colorClass}`}
+                  key={i}
+                  className="stagger-item flex flex-col items-center text-center relative"
+                  style={{ ["--stagger-i" as string]: i }}
                 >
-                  <Icon className="h-6 w-6" />
+                  <div
+                    className={`h-14 w-14 rounded-full flex items-center justify-center border mb-4 relative z-10 ${step.colorClass}`}
+                  >
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <p className="font-display font-bold text-sm text-foreground leading-tight mb-1">
+                    {step.title}
+                  </p>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    {step.desc}
+                  </p>
                 </div>
-                <p className="font-display font-bold text-sm text-foreground leading-tight mb-1">
-                  {step.title}
-                </p>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  {step.desc}
-                </p>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        </RevealOnScroll>
       </section>
 
       <div className="border-t border-border" />
 
       {/* ── PERFIS ───────────────────────────────────────── */}
       <section className="max-w-5xl mx-auto px-6 py-20">
-        {/* Header */}
-        <div className="mb-10">
-          <span
-            className="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4"
-            style={{ background: "oklch(0.82 0.16 78 / 0.1)", border: "1px solid oklch(0.82 0.16 78 / 0.25)", color: "var(--coin)" }}
-          >
-            Perfis
-          </span>
-          <h2 className="font-display font-semibold text-[1.75rem] sm:text-[2.25rem] tracking-[-0.025em] leading-[1.1] text-foreground">
-            Uma plataforma, quatro atores
-          </h2>
-          <p className="mt-2 text-muted-foreground text-sm sm:text-base max-w-lg">
-            Cada perfil tem um painel dedicado com as ferramentas certas para o seu papel.
-          </p>
-        </div>
+        <RevealOnScroll>
+          <div className="mb-10">
+            <span
+              className="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4"
+              style={{ background: "oklch(0.82 0.16 78 / 0.1)", border: "1px solid oklch(0.82 0.16 78 / 0.25)", color: "var(--coin)" }}
+            >
+              Perfis
+            </span>
+            <h2 className="font-display font-semibold text-[1.75rem] sm:text-[2.25rem] tracking-[-0.025em] leading-[1.1] text-foreground">
+              Uma plataforma, quatro atores
+            </h2>
+            <p className="mt-2 text-muted-foreground text-sm sm:text-base max-w-lg">
+              Cada perfil tem um painel dedicado com as ferramentas certas para o seu papel.
+            </p>
+          </div>
+        </RevealOnScroll>
 
+        <RevealOnScroll delay={120}>
         {/* Tab bar */}
         <div className="flex gap-1 border-b border-border mb-6 overflow-x-auto no-scrollbar">
           {(["aluno", "professor", "empresa", "instituicao"] as Role[]).map((role) => {
@@ -409,116 +455,131 @@ function Landing() {
             </div>
           );
         })()}
+        </RevealOnScroll>
       </section>
 
       <div className="border-t border-border" />
 
       {/* ── PARCEIROS ────────────────────────────────────── */}
       <section className="max-w-5xl mx-auto px-6 py-20">
-        <div className="mb-10">
-          <span
-            className="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4"
-            style={{ background: "oklch(0.82 0.16 78 / 0.1)", border: "1px solid oklch(0.82 0.16 78 / 0.25)", color: "var(--coin)" }}
-          >
-            Parceiros
-          </span>
-          <h2 className="font-display font-semibold text-[1.75rem] sm:text-[2.25rem] tracking-[-0.025em] leading-[1.1] text-foreground">
-            Empresas que valorizam o mérito
-          </h2>
-          <p className="mt-2 text-muted-foreground text-sm sm:text-base max-w-lg">
-            Empresas parceiras oferecem produtos e serviços reais em troca de BrainCoins acumulados pelos alunos.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {/* Empresas reais do store */}
-          {empresas.map((e) => (
-            <div
-              key={e.id}
-              className="vault-card rounded-xl p-5 flex flex-col items-center justify-center gap-2 text-center hover:border-coin/30 transition-all duration-200"
+        <RevealOnScroll>
+          <div className="mb-10">
+            <span
+              className="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4"
+              style={{ background: "oklch(0.82 0.16 78 / 0.1)", border: "1px solid oklch(0.82 0.16 78 / 0.25)", color: "var(--coin)" }}
             >
-              <Building2 className="h-7 w-7 text-muted-foreground/40" />
-              <span className="text-sm font-semibold text-muted-foreground">{e.nome}</span>
-            </div>
-          ))}
+              Parceiros
+            </span>
+            <h2 className="font-display font-semibold text-[1.75rem] sm:text-[2.25rem] tracking-[-0.025em] leading-[1.1] text-foreground">
+              Empresas que valorizam o mérito
+            </h2>
+            <p className="mt-2 text-muted-foreground text-sm sm:text-base max-w-lg">
+              Empresas parceiras oferecem produtos e serviços reais em troca de BrainCoins acumulados pelos alunos.
+            </p>
+          </div>
+        </RevealOnScroll>
 
-          {/* Slots "Sua empresa" */}
-          {[1, 2].map((n) => (
-            <div
-              key={`slot-${n}`}
-              className="rounded-xl p-5 flex flex-col items-center justify-center gap-2 text-center opacity-30"
-              style={{ border: "1px dashed var(--color-border)" }}
-            >
-              <span className="text-lg font-bold text-muted-foreground">＋</span>
-              <span className="text-xs text-muted-foreground">Sua empresa</span>
-            </div>
-          ))}
-        </div>
+        <RevealOnScroll delay={120}>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {/* Empresas reais do store */}
+            {empresas.map((e, i) => (
+              <div
+                key={e.id}
+                className="stagger-item vault-card hover-lift rounded-xl p-5 flex flex-col items-center justify-center gap-2 text-center hover:border-coin/30"
+                style={{ ["--stagger-i" as string]: i }}
+              >
+                <Building2 className="h-7 w-7 text-muted-foreground/40" />
+                <span className="text-sm font-semibold text-muted-foreground">{e.nome}</span>
+              </div>
+            ))}
+
+            {/* Slots "Sua empresa" */}
+            {[1, 2].map((n, i) => (
+              <div
+                key={`slot-${n}`}
+                className="stagger-item rounded-xl p-5 flex flex-col items-center justify-center gap-2 text-center opacity-30"
+                style={{ border: "1px dashed var(--color-border)", ["--stagger-i" as string]: empresas.length + i }}
+              >
+                <span className="text-lg font-bold text-muted-foreground">＋</span>
+                <span className="text-xs text-muted-foreground">Sua empresa</span>
+              </div>
+            ))}
+          </div>
+        </RevealOnScroll>
       </section>
 
       <div className="border-t border-border" />
 
       {/* ── FAQ ──────────────────────────────────────────── */}
       <section className="max-w-5xl mx-auto px-6 py-20">
-        <div className="mb-10">
-          <span
-            className="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4"
-            style={{ background: "oklch(0.82 0.16 78 / 0.1)", border: "1px solid oklch(0.82 0.16 78 / 0.25)", color: "var(--coin)" }}
-          >
-            Dúvidas
-          </span>
-          <h2 className="font-display font-semibold text-[1.75rem] sm:text-[2.25rem] tracking-[-0.025em] leading-[1.1] text-foreground">
-            Perguntas frequentes
-          </h2>
-        </div>
-
-        <Accordion type="single" collapsible className="flex flex-col gap-3">
-          {faqItems.map((item, i) => (
-            <AccordionItem
-              key={i}
-              value={`faq-${i}`}
-              className="vault-card rounded-xl border-0 px-5"
+        <RevealOnScroll>
+          <div className="mb-10">
+            <span
+              className="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4"
+              style={{ background: "oklch(0.82 0.16 78 / 0.1)", border: "1px solid oklch(0.82 0.16 78 / 0.25)", color: "var(--coin)" }}
             >
-              <AccordionTrigger className="text-sm font-semibold text-foreground py-4 hover:no-underline">
-                {item.q}
-              </AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground leading-relaxed">
-                {item.a}
-              </AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+              Dúvidas
+            </span>
+            <h2 className="font-display font-semibold text-[1.75rem] sm:text-[2.25rem] tracking-[-0.025em] leading-[1.1] text-foreground">
+              Perguntas frequentes
+            </h2>
+          </div>
+        </RevealOnScroll>
+
+        <RevealOnScroll delay={120}>
+          <Accordion type="single" collapsible className="flex flex-col gap-3">
+            {faqItems.map((item, i) => (
+              <AccordionItem
+                key={i}
+                value={`faq-${i}`}
+                className="stagger-item vault-card rounded-xl border-0 px-5"
+                style={{ ["--stagger-i" as string]: i }}
+              >
+                <AccordionTrigger className="text-sm font-semibold text-foreground py-4 hover:no-underline">
+                  {item.q}
+                </AccordionTrigger>
+                <AccordionContent className="text-sm text-muted-foreground leading-relaxed">
+                  {item.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </RevealOnScroll>
       </section>
 
       <div className="border-t border-border" />
 
       {/* ── CARDS DE PERFIL (âncora) ─────────────────────── */}
       <section id="profiles" className="max-w-5xl mx-auto px-6 py-20">
-        {/* Header centralizado */}
-        <div className="text-center mb-10">
-          <span
-            className="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4"
-            style={{ background: "oklch(0.82 0.16 78 / 0.1)", border: "1px solid oklch(0.82 0.16 78 / 0.25)", color: "var(--coin)" }}
-          >
-            Acesso
-          </span>
-          <h2 className="font-display font-semibold text-[1.75rem] sm:text-[2.25rem] tracking-[-0.025em] leading-[1.1] text-foreground">
-            Escolha seu perfil
-          </h2>
-          <p className="mt-2 text-muted-foreground text-sm sm:text-base">
-            Selecione o perfil que corresponde ao seu papel e entre na plataforma.
-          </p>
-        </div>
+        <RevealOnScroll>
+          {/* Header centralizado */}
+          <div className="text-center mb-10">
+            <span
+              className="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4"
+              style={{ background: "oklch(0.82 0.16 78 / 0.1)", border: "1px solid oklch(0.82 0.16 78 / 0.25)", color: "var(--coin)" }}
+            >
+              Acesso
+            </span>
+            <h2 className="font-display font-semibold text-[1.75rem] sm:text-[2.25rem] tracking-[-0.025em] leading-[1.1] text-foreground">
+              Escolha seu perfil
+            </h2>
+            <p className="mt-2 text-muted-foreground text-sm sm:text-base">
+              Selecione o perfil que corresponde ao seu papel e entre na plataforma.
+            </p>
+          </div>
+        </RevealOnScroll>
 
-        {/* Cards de perfil — funcionalidade original preservada */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {roles.map((r) => {
-            const Icon = r.icon;
-            return (
-              <div
-                key={r.id}
-                className="vault-card rounded-xl p-5 flex flex-col gap-5 group hover:border-coin/40 transition-all duration-200"
-              >
+        <RevealOnScroll delay={120}>
+          {/* Cards de perfil — funcionalidade original preservada */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {roles.map((r, i) => {
+              const Icon = r.icon;
+              return (
+                <div
+                  key={r.id}
+                  className="stagger-item vault-card hover-lift press-scale rounded-xl p-5 flex flex-col gap-5 group hover:border-coin/40"
+                  style={{ ["--stagger-i" as string]: i }}
+                >
                 {/* Ícone + seta */}
                 <div className="flex items-center justify-between">
                   <div className="h-10 w-10 rounded-lg flex items-center justify-center bg-coin/10 border border-coin/20 text-coin">
@@ -551,9 +612,10 @@ function Landing() {
                   </Link>
                 </div>
               </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+        </RevealOnScroll>
       </section>
 
       {/* ── FOOTER ───────────────────────────────────────── */}

@@ -2,6 +2,7 @@ package com.lab3.moeda.service;
 
 import com.lab3.moeda.dto.request.InstituicaoRequestDTO;
 import com.lab3.moeda.dto.response.InstituicaoResponseDTO;
+import com.lab3.moeda.exception.SenhaIncorretaException;
 import com.lab3.moeda.model.AlunoEntity;
 import com.lab3.moeda.model.InstituicaoEntity;
 import com.lab3.moeda.model.ProfessorEntity;
@@ -110,7 +111,7 @@ public class InstituicaoService {
                 .orElseThrow(() -> new NoSuchElementException("Instituicao não encontrada."));
 
         if (!criptografia.matches(senha, instituicao.getSenha()))
-            throw new RuntimeException("Senha incorreta.");
+            throw new SenhaIncorretaException();
 
         return toResponseDTO(instituicao);
     }

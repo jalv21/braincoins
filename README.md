@@ -80,9 +80,9 @@ BrainCoins é um sistema de moeda estudantil desenvolvido como projeto acadêmic
 
 ### 🏢 Para Empresas
 - 🔐 **Login Seguro:** Acesso à plataforma com email e senha criptografada
-- 🛒 **Criar Vantagens:** Oferecer produtos/serviços que alunos podem resgatar
+- 🛒 **CRUD de Vantagens:** Criar, editar, ativar/desativar e remover (com confirmação) os benefícios oferecidos aos alunos. Aceita foto por upload ou URL.
 - 📦 **Gerenciar Estoque:** Controlar quantidade de benefícios disponíveis
-- ✅ **Aprovar Resgates:** Validar solicitações de resgate com código de confirmação
+- ✅ **Aprovar Resgates:** Confirmar retirada do cupom apresentado pelo aluno
 - 📧 **Notificações:** Receber alerta ao haver novo resgate de vantagem
 
 ### 🏛️ Para Instituições
