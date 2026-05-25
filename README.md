@@ -545,7 +545,7 @@ Inicie a API do Spring Boot. Ela tentará se conectar ao banco de dados rodando 
 
 ```bash
 cd code/backend/moeda
-./mvnw spring-boot:run
+mvn spring-boot:run
 ```
 🚀 *O Back-end estará disponível em **http://localhost:8080**.*
 
