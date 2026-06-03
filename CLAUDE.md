@@ -4,6 +4,13 @@ Guia rápido para trabalhar neste repositório com Claude Code.
 
 ---
 
+## Regras Git
+
+- **Nunca faça commits sem perguntar antes.** Sempre apresente as mudanças e aguarde confirmação explícita.
+- **Commits devem ter apenas o usuário do GitHub como autor.** Nunca use Claude, Anthropic ou qualquer nome gerado como autor ou co-autor.
+
+---
+
 ## Visão Geral
 
 **BrainCoins** é um sistema gamificado de moeda estudantil com 4 atores:
