@@ -12,7 +12,7 @@ import com.lab3.moeda.model.TrocaEntity;
 import com.lab3.moeda.repository.AlunoRepository;
 import com.lab3.moeda.repository.ResgateRepository;
 import com.lab3.moeda.repository.TrocaRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -168,6 +168,8 @@ public class TrocaService {
 
         troca.setStatus(StatusTroca.CANCELADA);
 
+        enviarEmailCancelamentoTroca(troca);
+
         return toResponseDTO(troca);
     }
 
@@ -300,6 +302,35 @@ public class TrocaService {
             emailService.enviarEmailAssincrono(troca.getAlunoSolicitante().getEmail(), assunto, corpo);
         } catch (Exception e) {
             log.error("Erro ao enviar e-mail de expiração de troca {}: {}", troca.getId(), e.getMessage(), e);
+        }
+    }
+
+    private void enviarEmailCancelamentoTroca(TrocaEntity troca) {
+        try {
+            String assunto = "🚫 Solicitação de troca cancelada — BrainCoins";
+            String corpo = String.format("""
+                    Olá %s,
+
+                    %s cancelou a solicitação de troca enviada para você.
+
+                    Ele oferecia: %s (%s)
+                    Ele queria: %s (%s)
+
+                    Nenhuma ação é necessária da sua parte.
+
+                    ---
+                    BrainCoins - Sistema de Moeda Estudantil
+                    """,
+                    troca.getAlunoDestinatario().getNome(),
+                    troca.getAlunoSolicitante().getNome(),
+                    troca.getResgateOferecido().getVantagem().getNome(),
+                    troca.getResgateOferecido().getVantagem().getEmpresa().getNome(),
+                    troca.getResgateDesejado().getVantagem().getNome(),
+                    troca.getResgateDesejado().getVantagem().getEmpresa().getNome()
+            );
+            emailService.enviarEmailAssincrono(troca.getAlunoDestinatario().getEmail(), assunto, corpo);
+        } catch (Exception e) {
+            log.error("Erro ao enviar e-mail de cancelamento de troca {}: {}", troca.getId(), e.getMessage(), e);
         }
     }
 

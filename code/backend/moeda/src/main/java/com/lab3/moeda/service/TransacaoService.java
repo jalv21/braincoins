@@ -9,9 +9,7 @@ import com.lab3.moeda.model.TransacaoEntity;
 import com.lab3.moeda.repository.AlunoRepository;
 import com.lab3.moeda.repository.ProfessorRepository;
 import com.lab3.moeda.repository.TransacaoRepository;
-import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,7 +18,6 @@ import java.util.NoSuchElementException;
 
 @Service
 public class TransacaoService {
-    private static final Logger log = LoggerFactory.getLogger(TransacaoService.class);
 
     private final TransacaoRepository transacaoRepository;
     private final AlunoRepository alunoRepository;
@@ -128,59 +125,54 @@ public class TransacaoService {
     }
 
     private void enviarEmailNotificacao(ProfessorEntity professor, AlunoEntity aluno, short valor, String motivo) {
-        try {
-            String assuntoAluno = "🪙 Você recebeu moedas de mérito!";
-            String corpoAluno = String.format(
-                    """
-                    Olá %s,
+        String assuntoAluno = "🪙 Você recebeu moedas de mérito!";
+        String corpoAluno = String.format(
+                """
+                Olá %s,
 
-                    Você recebeu %d moedas de mérito de %s pela seguinte razão:
+                Você recebeu %d moedas de mérito de %s pela seguinte razão:
 
-                    "%s"
+                "%s"
 
-                    Seu novo saldo: %d moedas
+                Seu novo saldo: %d moedas
 
-                    Continue assim! 🚀
+                Continue assim! 🚀
 
-                    ---
-                    BrainCoins - Sistema de Moeda Estudantil
-                    """,
-                    aluno.getNome(),
-                    valor,
-                    professor.getNome(),
-                    motivo,
-                    aluno.getSaldoMoedas()
-            );
-            emailService.enviarEmailAssincrono(aluno.getEmail(), assuntoAluno, corpoAluno);
+                ---
+                BrainCoins - Sistema de Moeda Estudantil
+                """,
+                aluno.getNome(),
+                valor,
+                professor.getNome(),
+                motivo,
+                aluno.getSaldoMoedas()
+        );
+        emailService.enviarEmailAssincrono(aluno.getEmail(), assuntoAluno, corpoAluno);
 
-            String assuntoProfessor = "✅ Confirmação: moedas enviadas para " + aluno.getNome();
-            String corpoProfessor = String.format(
-                    """
-                    Olá Prof. %s,
+        String assuntoProfessor = "✅ Confirmação: moedas enviadas para " + aluno.getNome();
+        String corpoProfessor = String.format(
+                """
+                Olá Prof. %s,
 
-                    Sua transação foi registrada com sucesso.
+                Sua transação foi registrada com sucesso.
 
-                    📋 Detalhes da transação:
-                    👤 Aluno: %s
-                    🪙 Moedas enviadas: %d
-                    📝 Justificativa: "%s"
+                📋 Detalhes da transação:
+                👤 Aluno: %s
+                🪙 Moedas enviadas: %d
+                📝 Justificativa: "%s"
 
-                    💰 Seu saldo atual: %d moedas
+                💰 Seu saldo atual: %d moedas
 
-                    ---
-                    BrainCoins - Sistema de Moeda Estudantil
-                    """,
-                    professor.getNome(),
-                    aluno.getNome(),
-                    valor,
-                    motivo,
-                    professor.getSaldoMoedas()
-            );
-            emailService.enviarEmailAssincrono(professor.getEmail(), assuntoProfessor, corpoProfessor);
-
-        } catch (Exception e) {
-            log.error("Erro ao enviar e-mail de notificação: {}", e.getMessage(), e);
-        }
+                ---
+                BrainCoins - Sistema de Moeda Estudantil
+                """,
+                professor.getNome(),
+                aluno.getNome(),
+                valor,
+                motivo,
+                professor.getSaldoMoedas()
+        );
+        emailService.enviarEmailAssincrono(professor.getEmail(), assuntoProfessor, corpoProfessor);
     }
 
     /**

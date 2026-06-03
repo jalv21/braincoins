@@ -225,7 +225,10 @@ cd code/backend/moeda
 - TanStack Router: type-safe, tipagem automática de rotas
 - Radix UI: headless, totalmente customizável com Tailwind
 - `@EnableAsync` e `@EnableScheduling`: Reset semestral + expiração de resgates (`ResgateScheduler`) + expiração de trocas pendentes (`TrocaScheduler`, cron diário à meia-noite, 15 dias)
-- **Envio de e-mails** via Spring Mail + Mailtrap: notificações disparadas em `TransacaoService` (recebimento de moedas) e `ResgateService` (cupom de vantagem) — chamadas `@Async` para não bloquear a request
+- **Envio de e-mails** via Spring Mail + Mailtrap: todas as notificações são `@Async` (não bloqueiam a request) e falham silenciosamente com log de erro quando o SMTP não está configurado. Eventos cobertos por serviço:
+  - `TransacaoService`: aluno recebe moedas; professor confirma envio
+  - `ResgateService`: aluno recebe cupom; empresa é notificada de novo resgate; aluno é notificado quando resgate expira (reembolso automático)
+  - `TrocaService`: destinatário recebe nova solicitação; solicitante recebe aceite; aceitante confirma aceite; solicitante recebe recusa; destinatário recebe cancelamento (pelo solicitante); solicitante recebe notificação de expiração por prazo
 - Design tokens centralizados em `styles.css` (`@theme inline`) — toda paleta/tipografia consumida via utilitários Tailwind, não hardcoded
 - `DataSeeder` (`config/`) cria automaticamente uma Instituição "PUC Minas" no boot se a tabela estiver vazia — usada pelo botão "Entrar (demo)" da Instituição na landing
 - `AuthController` invalida sessão stale: ao acessar `/auth/$role` com outra role já logada, o `AuthPage` chama `store.logout()` antes do novo login

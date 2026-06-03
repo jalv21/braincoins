@@ -107,10 +107,18 @@ BrainCoins é um sistema de moeda estudantil desenvolvido como projeto acadêmic
 - Histórico de transações
 
 ### 📨 **Envio de E-mail:** 
-- Notificação de recebimento de moedas
-- Notificação de solicitação de resgate
-- Notificação de reembolso para resgates expirados
-- Confirmação de resgate com código único
+Todos os envios são assíncronos (não bloqueiam a operação) e falham silenciosamente quando o SMTP não está configurado.
+
+| Evento | Destinatário(s) |
+|:---|:---|
+| Professor distribui moedas | Aluno (saldo atualizado) + Professor (confirmação) |
+| Aluno resgata vantagem | Aluno (cupom único) + Empresa (aviso de novo resgate) |
+| Resgate expira sem retirada (15 dias) | Aluno (moedas reembolsadas) |
+| Nova solicitação de troca | Aluno destinatário |
+| Troca aceita | Ambos os alunos envolvidos |
+| Troca recusada | Aluno solicitante |
+| Troca cancelada pelo solicitante | Aluno destinatário |
+| Solicitação de troca expira (15 dias) | Aluno solicitante |
 
 ---
 
@@ -127,18 +135,18 @@ BrainCoins é um sistema de moeda estudantil desenvolvido como projeto acadêmic
 3. Aluno recebe notificação por email
 4. Aluno visualiza saldo atualizado
 
-### HU-02: Aluno Resga Vantagem
+### HU-02: Aluno Resgata Vantagem
 **Como** um aluno  
 **Desejo** resgatar minhas moedas por vantagens oferecidas  
 **Para que** eu possa obter benefícios reais em troca do meu desempenho  
 
 **Fluxo:**
 1. Aluno visualiza lista de vantagens disponíveis
-2. Aluno seleciona uma vantagem (se tem saldo suficiente)
-3. Sistema cria solicitação de resgate
-4. Empresa recebe notificação e código de confirmação
-5. Empresa aprova o resgate
-6. Aluno recebe email de confirmação
+2. Aluno seleciona uma vantagem (se tem saldo suficiente e há estoque)
+3. Sistema debita moedas, gera código de cupom único e cria o resgate com status `ATIVO`
+4. Aluno recebe e-mail imediatamente com o cupom e prazo de validade (15 dias)
+5. Empresa recebe e-mail com o código para validar na retirada
+6. Aluno apresenta o cupom; empresa confirma o resgate no sistema (`APROVADO`)
 
 ### HU-03: Professor Distribui Moedas
 **Como** um professor  
@@ -216,7 +224,7 @@ As seguintes ferramentas, frameworks e bibliotecas foram utilizados na construç
 * **Banco de Dados:** PostgreSQL 17
 * **ORM / Query Builder:** Hibernate/JPA 7.3.2
 * **Autenticação:** Spring Security
-* **Email:** Integração com EmailJS
+* **Email:** Spring Mail + Mailtrap (SMTP via `JavaMailSender`, envio assíncrono com `@Async`)
 * **Recursos Assincronos:** Spring Async & Scheduling habilitado
 
 ### ⚙️ Infraestrutura & DevOps
@@ -461,6 +469,11 @@ Configure estas variáveis no arquivo `.env` na raiz do projeto ou como variáve
 | `DB_PASSWORD` | Senha do banco de dados. | `admin2513` |
 | `NEXTAUTH_SECRET` | Chave secreta para autenticação. | `secret_chave_aleatoria_123` |
 | `NEXTAUTH_URL` | URL base da aplicação para autenticação. | `http://localhost:3000` |
+| `MAIL_HOST` | Servidor SMTP (Mailtrap). | `live.smtp.mailtrap.io` |
+| `MAIL_PORT` | Porta SMTP. | `587` |
+| `MAIL_USERNAME` | Usuário SMTP (Mailtrap). | `api` |
+| `MAIL_PASSWORD` | Token/senha SMTP (Mailtrap). | `seu-token-mailtrap-aqui` |
+| `MAIL_FROM` | E-mail remetente (verificado no Mailtrap). | `noreply@braincoins.io` |
 
 #### 2 Front-end (React, Vite)
 
@@ -488,7 +501,15 @@ DATABASE_URL="postgresql://postgres:admin2513@localhost:5432/braincoins?schema=p
 # Configuração para autenticação
 NEXTAUTH_SECRET="secret_chave_aleatoria_123"
 NEXTAUTH_URL="http://localhost:3000"
+
+# Mailtrap — envio de e-mails (transações, resgates, trocas)
+MAIL_HOST=live.smtp.mailtrap.io
+MAIL_PORT=587
+MAIL_USERNAME=api
+MAIL_PASSWORD=seu-token-mailtrap-aqui
+MAIL_FROM=noreply@braincoins.io
 ```
+> 💡 **Sem Mailtrap configurado:** as operações funcionam normalmente, mas o envio de e-mail falha silenciosamente (erro registrado em log).
 
 **Arquivo: `code/frontend/moeda-estudantil/.env.local`**
 ```bash
