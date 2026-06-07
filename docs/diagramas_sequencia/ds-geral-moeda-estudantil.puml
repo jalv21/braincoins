@@ -258,6 +258,7 @@ group UC17 — Cadastrar Vantagem (Empresa)
     Empresa -> Frontend : preenche nome, descrição, custo,\nestoque, foto e salva
     activate Frontend
     Frontend -> VantagemController : POST /vantagens\n{empresaId, nome, descricao, custo, estoque, foto, ativo}
+    activate VantagemController
     VantagemController -> VantagemService : criarVantagem(VantagemRequestDTO)
     VantagemService -> VantagemService : validar: custo > 0, estoque >= 0
     VantagemService -> PostgreSQL : findById(empresaId) → EmpresaEntity
@@ -266,6 +267,7 @@ group UC17 — Cadastrar Vantagem (Empresa)
     PostgreSQL --> VantagemService : VantagemEntity {id}
     VantagemService --> VantagemController : VantagemResponseDTO
     VantagemController --> Frontend : 201 Created + VantagemResponseDTO
+    deactivate VantagemController
     Frontend --> Empresa : vantagem exibida na listagem
     deactivate Frontend
 end
@@ -274,6 +276,7 @@ group UC12 — Resgatar Vantagem (Aluno)
     Aluno -> Frontend : seleciona vantagem e confirma resgate
     activate Frontend
     Frontend -> VantagemController : POST /vantagens/resgatar\n{alunoId, vantagemId}
+    activate VantagemController
     VantagemController -> ResgateService : resgatarVantagem(alunoId, vantagemId)
     ResgateService -> PostgreSQL : findById(alunoId) → AlunoEntity {saldo}
     ResgateService -> PostgreSQL : findById(vantagemId) → VantagemEntity {custo, estoque, ativo}
@@ -307,6 +310,7 @@ group UC12 — Resgatar Vantagem (Aluno)
 
         ResgateService --> VantagemController : ResgateResponseDTO {codigoCupom}
         VantagemController --> Frontend : 201 Created + {codigoCupom}
+        deactivate VantagemController
         Frontend --> Aluno : exibe código do cupom e instruções
         deactivate Frontend
     end
