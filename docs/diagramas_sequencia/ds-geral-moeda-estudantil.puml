@@ -45,6 +45,7 @@ group UC02 — Criar Conta (Aluno)
     activate Frontend
     Frontend -> Frontend : validação local\n(campos obrigatórios, CPF regex)
     Frontend -> AlunoController : POST /alunos\n{nome, email, cpf, senha, curso, instituicaoId}
+    activate AlunoController
     AlunoController -> AlunoService : cadastrarAluno(AlunoRequestDTO)
     AlunoService -> AlunoService : validarCPF(cpf)
     AlunoService -> PostgreSQL : existePorEmail(email) → false
@@ -60,6 +61,7 @@ group UC02 — Criar Conta (Aluno)
         PostgreSQL --> AlunoService : DataIntegrityViolationException
         AlunoService --> AlunoController : 409 Conflict
         AlunoController --> Frontend : 409 "Email/CPF já cadastrado."
+        deactivate AlunoController
         Frontend --> Aluno : exibe mensagem de conflito
         deactivate Frontend
     end
@@ -211,11 +213,13 @@ group UC10 — Receber Moedas / Consultar Saldo (Aluno)
     Aluno -> Frontend : abre dashboard ou aba de saldo
     activate Frontend
     Frontend -> AlunoController : GET /alunos/{id}
+    activate AlunoController
     AlunoController -> AlunoService : buscarAluno(id)
     AlunoService -> PostgreSQL : findById(id)
     PostgreSQL --> AlunoService : AlunoEntity {saldo, nome, …}
     AlunoService --> AlunoController : AlunoResponseDTO
     AlunoController --> Frontend : 200 OK + {saldo, nome, …}
+    deactivate AlunoController
     Frontend --> Aluno : exibe saldo atual de moedas\ne histórico de recebimentos
     deactivate Frontend
 end
