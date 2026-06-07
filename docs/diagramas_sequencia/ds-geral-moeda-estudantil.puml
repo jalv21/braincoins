@@ -97,6 +97,7 @@ group UC04 — Pré-cadastrar Instituição via CSV
     Instituicao -> Frontend : seleciona arquivo CSV\n(nome, email, departamento, disciplina…)
     activate Frontend
     Frontend -> InstituicaoCtrl : POST /instituicoes/upload-csv\n{multipart: arquivo.csv}
+    activate InstituicaoCtrl
     InstituicaoCtrl -> InstituicaoService : processarCSV(arquivo, instituicaoId)
     InstituicaoService -> InstituicaoService : parsearLinhasCSV(arquivo)
 
@@ -123,6 +124,7 @@ group UC04 — Pré-cadastrar Instituição via CSV
 
     InstituicaoService --> InstituicaoCtrl : relatorioCadastro {total, sucessos, falhas}
     InstituicaoCtrl --> Frontend : 200 OK + relatório
+    deactivate InstituicaoCtrl
     Frontend --> Instituicao : exibe resumo do processamento
     deactivate Frontend
 end
