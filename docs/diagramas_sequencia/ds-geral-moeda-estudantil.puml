@@ -179,6 +179,7 @@ group UC07 — Distribuir Moedas (Professor → Aluno)
     activate Frontend
     Frontend -> Frontend : validação local\n(quantidade > 0, aluno selecionado)
     Frontend -> TransacaoCtrl : POST /transacoes\n{professorId, alunoId, quantidade, descricao}
+    activate TransacaoCtrl
     TransacaoCtrl -> TransacaoService : criarTransacao(TransacaoRequestDTO)
     TransacaoService -> PostgreSQL : findById(professorId) → ProfessorEntity {saldo}
 
@@ -207,6 +208,7 @@ group UC07 — Distribuir Moedas (Professor → Aluno)
 
         TransacaoService --> TransacaoCtrl : TransacaoResponseDTO
         TransacaoCtrl --> Frontend : 201 Created + TransacaoResponseDTO
+        deactivate TransacaoCtrl
         Frontend --> Professor : exibe confirmação de envio
         deactivate Frontend
     end
@@ -232,6 +234,7 @@ group UC09 — Consultar Extrato (Aluno / Professor)
     Aluno -> Frontend : acessa aba "Extrato"
     activate Frontend
     Frontend -> TransacaoCtrl : GET /transacoes?alunoId={id}\nou GET /transacoes?professorId={id}
+    activate TransacaoCtrl
     TransacaoCtrl -> TransacaoService : listarTransacoes(filtro)
     TransacaoService -> PostgreSQL : findByAlunoId(id)\nou findByProfessorId(id)
     PostgreSQL --> TransacaoService : List<TransacaoEntity>
@@ -242,6 +245,7 @@ group UC09 — Consultar Extrato (Aluno / Professor)
     alt Nenhuma transação encontrada
         PostgreSQL --> TransacaoService : []
         TransacaoCtrl --> Frontend : 200 OK + []
+        deactivate TransacaoCtrl
         Frontend --> Aluno : exibe "Nenhuma transação realizada."
         deactivate Frontend
     end
