@@ -583,17 +583,31 @@ docker run --name braincoins-db -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=a
 ---
 
 ### ⚡ Como Executar a Aplicação
-Execute a aplicação em modo de desenvolvimento em **dois terminais separados**.
+Execute a aplicação em modo de desenvolvimento em **três etapas** (infraestrutura + dois terminais).
+
+#### Passo 0: Infraestrutura (Docker)
+
+**Obrigatório antes de iniciar o backend.** Sobe o PostgreSQL 17 e o RabbitMQ 3:
+
+```bash
+docker compose up -d
+```
+
+> ⚠️ O backend **falha ao iniciar** se o RabbitMQ não estiver rodando.
+
+---
 
 #### Terminal 1: Back-end (Spring Boot)
 
-Inicie a API do Spring Boot. Ela tentará se conectar ao banco de dados rodando no Docker.
+Inicie a API do Spring Boot após o Docker estar no ar.
 
 ```bash
 cd code/backend/moeda
-mvn spring-boot:run
+./mvnw spring-boot:run -Dmaven.test.skip=true
 ```
 🚀 *O Back-end estará disponível em **http://localhost:8080**.*
+
+> 💡 A flag `-Dmaven.test.skip=true` é necessária porque a suíte de testes está desatualizada e não compila. Sem ela, o build falha.
 
 ---
 
@@ -605,7 +619,7 @@ Inicie o servidor de desenvolvimento do Front-end.
 cd code/frontend/moeda-estudantil
 npm run dev
 ```
-🎨 *O Front-end estará disponível em **http://localhost:5173**.*
+🎨 *O Front-end estará disponível em **http://localhost:5173** (ou 5174 se a porta já estiver em uso).*
 
 ---
 

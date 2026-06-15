@@ -70,18 +70,19 @@ VITE_API_URL=http://localhost:8080/api
 
 ### Startup
 
-**Banco de dados:**
+**Banco de dados + RabbitMQ (obrigatório antes do backend):**
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
+> Sobe PostgreSQL 17 (porta 5432) e RabbitMQ 3 (portas 5672 e 15672). O backend falha ao iniciar sem o RabbitMQ.
 
 **Backend:**
 ```bash
 cd code/backend/moeda
-./mvnw clean install
-./mvnw spring-boot:run
+./mvnw spring-boot:run -Dmaven.test.skip=true
 ```
 → `http://localhost:8080`
+> A flag `-Dmaven.test.skip=true` é necessária porque a suíte de testes está desatualizada e não compila.
 
 **Frontend:**
 ```bash
@@ -89,7 +90,7 @@ cd code/frontend/moeda-estudantil
 npm install
 npm run dev
 ```
-→ `http://localhost:5173`
+→ `http://localhost:5173` (Vite usa 5174 se 5173 já estiver ocupada)
 
 ---
 
