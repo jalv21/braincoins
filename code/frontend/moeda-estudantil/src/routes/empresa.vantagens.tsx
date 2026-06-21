@@ -33,7 +33,7 @@ export const Route = createFileRoute("/empresa/vantagens")({
 const inputCls =
   "w-full px-3 py-2 rounded-xl bg-white/15 border border-white/25 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-mint";
 
-const API_BASE = "http://localhost:8080";
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 function EmpresaVantagens() {
   const { currentUserId, currentUser } = useStore();
