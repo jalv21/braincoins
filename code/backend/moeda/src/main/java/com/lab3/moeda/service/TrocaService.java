@@ -1,8 +1,6 @@
 package com.lab3.moeda.service;
 
-import com.lab3.moeda.config.RabbitConfig;
 import com.lab3.moeda.util.EmailTemplates;
-import com.lab3.moeda.dto.TrocaAceitaEventDTO;
 import com.lab3.moeda.dto.request.TrocaRequestDTO;
 import com.lab3.moeda.dto.response.AlunoDisponivelResponseDTO;
 import com.lab3.moeda.dto.response.ResgateResumoDTO;
@@ -15,7 +13,6 @@ import com.lab3.moeda.model.TrocaEntity;
 import com.lab3.moeda.repository.AlunoRepository;
 import com.lab3.moeda.repository.ResgateRepository;
 import com.lab3.moeda.repository.TrocaRepository;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,18 +35,15 @@ public class TrocaService {
     private final AlunoRepository alunoRepository;
     private final ResgateRepository resgateRepository;
     private final EmailService emailService;
-    private final RabbitTemplate rabbitTemplate;
 
     public TrocaService(TrocaRepository trocaRepository,
                         AlunoRepository alunoRepository,
                         ResgateRepository resgateRepository,
-                        EmailService emailService,
-                        RabbitTemplate rabbitTemplate) {
+                        EmailService emailService) {
         this.trocaRepository = trocaRepository;
         this.alunoRepository = alunoRepository;
         this.resgateRepository = resgateRepository;
         this.emailService = emailService;
-        this.rabbitTemplate = rabbitTemplate;
     }
 
     @Transactional
@@ -140,10 +134,17 @@ public class TrocaService {
         if (desejado.getStatus() != StatusResgate.ATIVO || desejado.getAluno().getId() != troca.getAlunoDestinatario().getId())
             throw new IllegalStateException("Resgate não está mais disponível para troca.");
 
-        troca.setStatus(StatusTroca.PROCESSANDO);
+        ResgateEntity resgateOferecido = troca.getResgateOferecido();
+        ResgateEntity resgateDesejado = troca.getResgateDesejado();
+        resgateOferecido.setAluno(troca.getAlunoDestinatario());
+        resgateDesejado.setAluno(troca.getAlunoSolicitante());
+        resgateRepository.save(resgateOferecido);
+        resgateRepository.save(resgateDesejado);
+
+        troca.setStatus(StatusTroca.ACEITA);
         trocaRepository.save(troca);
 
-        rabbitTemplate.convertAndSend(RabbitConfig.FILA_ACEITE_TROCA, new TrocaAceitaEventDTO(trocaId));
+        enviarEmailAceite(troca);
 
         return toResponseDTO(troca);
     }

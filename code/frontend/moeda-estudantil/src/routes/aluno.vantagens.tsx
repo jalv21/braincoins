@@ -35,7 +35,7 @@ export const Route = createFileRoute("/aluno/vantagens")({
   component: Vantagens,
 });
 
-const API_BASE = "http://localhost:8080";
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8080";
 const fotoSrc = (foto: string | null) =>
   foto ? (foto.startsWith("/uploads/") ? API_BASE + foto : foto) : null;
 
