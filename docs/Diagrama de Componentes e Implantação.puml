@@ -2,13 +2,29 @@
 !define SPRITESURL https://raw.githubusercontent.com/plantuml-stdlib/gilbarbara-plantuml-sprites/v1.1/sprites
 !define IMAGESSURL https://raw.githubusercontent.com/plantuml-stdlib/gilbarbara-plantuml-sprites/v1.1/pngs
 
+skinparam node {
+    BackgroundColor #F5F5F5
+    BorderColor #555555
+    FontStyle bold
+}
+
+skinparam component {
+    BackgroundColor #e8f4ff
+    BorderColor #336699
+}
+
+skinparam database {
+    BackgroundColor #FFF5CC
+    BorderColor #AA8800
+}
+
 node "Dispositivo do Usuário" as UserDevice {
     node "Navegador Web" as UserBrowser {
         component "<img:IMAGESSURL/create-react-app.png>\nAplicação Front-End\nReact + Vite + TypeScript" as Frontend
     }
 }
 
-node "Servidor da Aplicação\nHospedado em nuvem (Vercel)" as ApplicationServer {
+node "<img:IMAGESSURL/vercel.png>\nServidor da Aplicação\nHospedado em nuvem (Vercel)" as ApplicationServer {
     component "<img:IMAGESSURL/java.png>\nAPI REST BrainCoins\nJava Spring Boot" as restApi
     component "<img:IMAGESSURL/java.png>\nautenticação\nJava Spring Boot" as AuthService
     component "<img:IMAGESSURL/java.png>\nalunos\nJava Spring Boot" as AlunoService
