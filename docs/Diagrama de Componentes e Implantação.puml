@@ -1,25 +1,27 @@
 @startuml diagrama-componentes-implantacao
+!define SPRITESURL https://raw.githubusercontent.com/plantuml-stdlib/gilbarbara-plantuml-sprites/v1.1/sprites
+!define IMAGESSURL https://raw.githubusercontent.com/plantuml-stdlib/gilbarbara-plantuml-sprites/v1.1/pngs
 
 node "Dispositivo do Usuário" as UserDevice {
     node "Navegador Web" as UserBrowser {
-        component "Aplicação Front-End\nReact + Vite + TypeScript" as Frontend
+        component "<img:IMAGESSURL/create-react-app.png>\nAplicação Front-End\nReact + Vite + TypeScript" as Frontend
     }
 }
 
 node "Servidor da Aplicação\nHospedado em nuvem (Vercel)" as ApplicationServer {
-    component "API REST BrainCoins\nJava Spring Boot" as restApi
-    component "autenticação\nJava Spring Boot" as AuthService
-    component "alunos\nJava Spring Boot" as AlunoService
-    component "email\nJava Spring Boot" as EmailService
-    component "empresas\nJava Spring Boot" as EmpresaService
-    component "file storage\nJava Spring Boot" as FileStorage
-    component "instituicoes\nJava Spring Boot" as InstituicaoService
-    component "professores\nJava Spring Boot" as ProfessorService
-    component "resgate\nJava Spring Boot" as ResgateService
-    component "transacoes\nJava Spring Boot" as TransacaoService
-    component "trocas\nJava Spring Boot" as TrocasService
-    queue "Fila de Trocas\nRabbitMQ" as TrocasQueue
-    component "vantagens\nJava Spring Boot" as VantagemService
+    component "<img:IMAGESSURL/java.png>\nAPI REST BrainCoins\nJava Spring Boot" as restApi
+    component "<img:IMAGESSURL/java.png>\nautenticação\nJava Spring Boot" as AuthService
+    component "<img:IMAGESSURL/java.png>\nalunos\nJava Spring Boot" as AlunoService
+    component "<img:IMAGESSURL/java.png>\nemail\nJava Spring Boot" as EmailService
+    component "<img:IMAGESSURL/java.png>\nempresas\nJava Spring Boot" as EmpresaService
+    component "<img:IMAGESSURL/java.png>\nfile storage\nJava Spring Boot" as FileStorage
+    component "<img:IMAGESSURL/java.png>\ninstituicoes\nJava Spring Boot" as InstituicaoService
+    component "<img:IMAGESSURL/java.png>\nprofessores\nJava Spring Boot" as ProfessorService
+    component "<img:IMAGESSURL/java.png>\nresgate\nJava Spring Boot" as ResgateService
+    component "<img:IMAGESSURL/java.png>\ntransacoes\nJava Spring Boot" as TransacaoService
+    component "<img:IMAGESSURL/java.png>\ntrocas\nJava Spring Boot" as TrocasService
+    queue "<img:IMAGESSURL/rabbitmq.png>\nFila de Trocas\nRabbitMQ" as TrocasQueue
+    component "<img:IMAGESSURL/java.png>\nvantagens\nJava Spring Boot" as VantagemService
 
     interface "REST" as REST_auth
     interface "REST" as REST_alunos
@@ -36,8 +38,8 @@ node "Servidor da Aplicação\nHospedado em nuvem (Vercel)" as ApplicationServer
 }
 interface "HTTP" as HTTP_api
 
-node "Docker Container" as DockerContainer {
-    database "Banco de Dados\nPostgreSQL" as DB
+node "<img:IMAGESSURL/docker.png>\nDocker Container" as DockerContainer {
+    database "<img:IMAGESSURL/postgresql.png>\nBanco de Dados\nPostgreSQL" as DB
 }
 interface "TCP/IP" as TCP_banco
 
@@ -79,5 +81,7 @@ InstituicaoService -down-( TCP_banco
 ProfessorService -down-( TCP_banco
 ResgateService -down-( TCP_banco
 TransacaoService -down-( TCP_banco
+VantagemService -down-( TCP_banco
+TrocasService -down-( TCP_banco
 
 @enduml
