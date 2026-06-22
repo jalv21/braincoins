@@ -2,38 +2,82 @@
 
 node "Dispositivo do Usuário" as UserDevice {
     node "Navegador Web" as UserBrowser {
-        component "Aplicação Front-End" as Frontend
+        component "Aplicação Front-End\nReact + Vite + TypeScript" as Frontend
     }
 }
 
-node "Servidor da Aplicação" as ApplicationServer {
-    component "API REST BrainCoins" as restApi
-    component "autenticação" as AuthService
-    component "trocas" as TrocasService
-    queue "Fila de Trocas" as TrocasQueue
+node "Servidor da Aplicação\nHospedado em nuvem (Vercel)" as ApplicationServer {
+    component "API REST BrainCoins\nJava Spring Boot" as restApi
+    component "autenticação\nJava Spring Boot" as AuthService
+    component "alunos\nJava Spring Boot" as AlunoService
+    component "email\nJava Spring Boot" as EmailService
+    component "empresas\nJava Spring Boot" as EmpresaService
+    component "file storage\nJava Spring Boot" as FileStorage
+    component "instituicoes\nJava Spring Boot" as InstituicaoService
+    component "professores\nJava Spring Boot" as ProfessorService
+    component "resgate\nJava Spring Boot" as ResgateService
+    component "transacoes\nJava Spring Boot" as TransacaoService
+    component "trocas\nJava Spring Boot" as TrocasService
+    queue "Fila de Trocas\nRabbitMQ" as TrocasQueue
+    component "vantagens\nJava Spring Boot" as VantagemService
 
     interface "REST" as REST_auth
+    interface "REST" as REST_alunos
+    interface "REST" as REST_email
+    interface "REST" as REST_empresas
+    interface "REST" as REST_storage
+    interface "REST" as REST_instituicoes
+    interface "REST" as REST_professores
+    interface "REST" as REST_resgate
+    interface "REST" as REST_transacoes
     interface "REST" as REST_trocas
+    interface "REST" as REST_trocas_queue
+    interface "REST" as REST_vantagens
 }
 interface "HTTP" as HTTP_api
 
 node "Docker Container" as DockerContainer {
-    database "Banco de Dados" as DB
+    database "Banco de Dados\nPostgreSQL" as DB
 }
 interface "TCP/IP" as TCP_banco
-
-
 
 Frontend -down-( HTTP_api
 restApi -up- HTTP_api
 
 AuthService -up- REST_auth
 restApi -down-( REST_auth
+AlunoService -up- REST_alunos
+restApi -down-( REST_alunos
+EmailService -up- REST_email
+restApi -down-( REST_email
+EmpresaService -up- REST_empresas
+restApi -down-( REST_empresas
+FileStorage -up- REST_storage
+restApi -down-( REST_storage
+InstituicaoService -up- REST_instituicoes
+restApi -down-( REST_instituicoes
+ProfessorService -up- REST_professores
+restApi -down-( REST_professores
+ResgateService -up- REST_resgate
+restApi -down-( REST_resgate
+TransacaoService -up- REST_transacoes
+restApi -down-( REST_transacoes
 TrocasService -up- REST_trocas
 restApi -down-( REST_trocas
+TrocasService -left- REST_trocas_queue
+TrocasQueue -down-( REST_trocas_queue
+VantagemService -up- REST_vantagens
+restApi -down-( REST_vantagens
 
 DB -up- TCP_banco
 AuthService -down-( TCP_banco
-TrocasService -down-( TCP_banco
+AlunoService -down-( TCP_banco
+EmailService -down-( TCP_banco
+EmpresaService -down-( TCP_banco
+FileStorage -down-( TCP_banco
+InstituicaoService -down-( TCP_banco
+ProfessorService -down-( TCP_banco
+ResgateService -down-( TCP_banco
+TransacaoService -down-( TCP_banco
 
 @enduml
