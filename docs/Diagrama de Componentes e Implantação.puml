@@ -20,11 +20,11 @@ skinparam database {
 
 node "Dispositivo do Usuário" as UserDevice {
     node "Navegador Web" as UserBrowser {
-        component "<img:IMAGESSURL/create-react-app.png>\nAplicação Front-End\nReact + Vite + TypeScript" as Frontend
+        component "<img:IMAGESSURL/create-react-app.png>\nAplicação Front-End\nReact + Vite + TypeScript\nHospedado em nuvem (Vercel)" as Frontend
     }
 }
 
-node "<img:IMAGESSURL/vercel.png>\nServidor da Aplicação\nHospedado em nuvem (Vercel)" as ApplicationServer {
+node "Servidor da Aplicação\nHospedado em nuvem (Render)\n<img:IMAGESSURL/docker.png>" as ApplicationServer {
     component "<img:IMAGESSURL/java.png>\nAPI REST BrainCoins\nJava Spring Boot" as restApi
     component "<img:IMAGESSURL/java.png>\nautenticação\nJava Spring Boot" as AuthService
     component "<img:IMAGESSURL/java.png>\nalunos\nJava Spring Boot" as AlunoService
@@ -54,7 +54,7 @@ node "<img:IMAGESSURL/vercel.png>\nServidor da Aplicação\nHospedado em nuvem (
 }
 interface "HTTP" as HTTP_api
 
-node "<img:IMAGESSURL/docker.png>\nDocker Container" as DockerContainer {
+node "<img:IMAGESSURL/neon.png>\nNuvem (Neon)" as NeonCloud {
     database "<img:IMAGESSURL/postgresql.png>\nBanco de Dados\nPostgreSQL" as DB
 }
 interface "TCP/IP" as TCP_banco
